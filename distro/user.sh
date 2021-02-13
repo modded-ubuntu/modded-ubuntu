@@ -37,7 +37,6 @@ login() {
     wget https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/gui.sh
     mv -vf gui.sh /home/$user/gui.sh
     chmod +x /home/$user/gui.sh
-    termux-reload-settings
     clear
     echo
     echo -e "\n${R} [${W}-${R}]${G} Restart your Termux & Type ${C}ubuntu"${W}
