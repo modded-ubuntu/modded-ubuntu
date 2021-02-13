@@ -1,0 +1,9 @@
+#!/bin/bash
+[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+export PULSE_SERVER=127.0.0.1
+XAUTHORITY=$HOME/.Xauthority
+export XAUTHORITY                                                         
+LANG=en_US.UTF-8
+export LANG
+echo $$ > /tmp/xsession.pid
+dbus-launch --exit-with-session startxfce4 &
