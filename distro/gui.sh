@@ -157,8 +157,26 @@ vnc() {
 
 note() {
     banner
-    echo -e "${R} [${W}-${R}]${G} Successfully Installed !"${W}
+    echo -e " ${G} Successfully Installed !"${W}
     sleep 1
+    echo
+    echo -e " ${G}Type ${C}vncstart${G} to run Vncserver."${W}
+    echo -e " ${G}Type ${C}vncstop${G} to stop Vncserver."${W}
+    echo
+    echo -e " ${C}Install VNC VIEWER Apk on your Device."${W}
+    echo
+    echo -e " ${C}Open VNC VIEWER & Click on + Button."${W}
+    echo
+    echo -e " ${C}Enter the Address localhost:1 & Name anything you like."${W}
+    echo
+    echo -e " ${C}Set the Picture Quality to High for better Quality."${W}
+    echo
+    echo -e " ${C}Click on Connect & Input the Password."${W}
+    echo
+    echo -e " ${C}Enjoy :D"${W}
+    echo
+    echo
+
 }
 
 package
