@@ -22,7 +22,6 @@ sudo() {
     apt update -y
     apt install sudo -y
     apt install wget -y
-    sudo apt install wget -y
     echo -e "\n${R} [${W}-${R}]${G} Sudo Successfully Installed !"${W}
 }
 
