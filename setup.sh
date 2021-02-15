@@ -28,9 +28,9 @@ package() {
         for hulu in "${packs[@]}"; do
             type -p "$hulu" &>/dev/null || {
                 echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$hulu${C}"${W}
-                apt update -y
-                apt upgrade -y
-                apt install "$hulu" -y
+                apt update -y &> /dev/null
+                apt upgrade -y &> /dev/null
+                apt install "$hulu" -y &> /dev/null
             }
         done
     fi
