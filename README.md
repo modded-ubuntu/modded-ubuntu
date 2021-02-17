@@ -67,7 +67,7 @@
 - **Type `vncstart` to run Vncserver**
 - **Type `vncstop` to stop Vncserver**
 
-- **Type `bash remove.sh` to remove Ubuntu Moddes Os**
+- **Type `bash remove.sh` to remove Ubuntu Modded Os**
 
 
 ### Credits : 
