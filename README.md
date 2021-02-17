@@ -67,6 +67,8 @@
 - **Type `vncstart` to run Vncserver**
 - **Type `vncstop` to stop Vncserver**
 
+- **Type `bash remove.sh` to remove Ububtu Moddes Os**
+
 
 ### Credits : 
 
