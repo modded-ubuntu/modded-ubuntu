@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-vncserver -name remote-desktop -localhost no :1
+vncserver -geometry 1500x720 -name remote-desktop -localhost no :1
