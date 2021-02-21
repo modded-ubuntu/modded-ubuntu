@@ -22,8 +22,8 @@ package() {
     echo -e "${R} [${W}-${R}]${C} Purging packages..."${W}
     proot-distro remove ubuntu-20.04
     rm -rf $PREFIX/bin/ubuntu
-    sed -i 's/pulseaudio/#pulseaudio/g' .bashrc
-    sed -i 's/pacmd/#pacmd/g' .bashrc
+    sed -i 's/pulseaudio/#pulseaudio/g' ~/.bashrc
+    sed -i 's/pacmd/#pacmd/g' ~/.bashrc
     echo -e "${R} [${W}-${R}]${C} Purging Completed !"${W}
 
 }
