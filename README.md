@@ -71,7 +71,7 @@
 
 ### Video Tutorial : 
 
-[![Watch the Tutorial](./distro/image1.jpg)](https://modded-ubuntu.github.io/tutorial.html)
+[![Watch the Tutorial](./distro/image1.jpg)](https://mega.nz/embed/QvIC1TLQ#3z27MRNPwANAg6JTtx1Ei8kDouOZsZgk00bg4TsJMNQ!1m)
 
 ### Credits : 
 
