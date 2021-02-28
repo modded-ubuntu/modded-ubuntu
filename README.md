@@ -69,7 +69,9 @@
 
 - **Type `bash remove.sh` to remove Ubuntu Modded Os**
 
-### Video Tutorial : [Click Here](https://www.dailymotion.com/video/x7zg27v)
+### Video Tutorial : 
+
+[![Watch the video](./distro/image1.jpg)](https://www.dailymotion.com/video/x7zg27v)
 
 ### Credits : 
 
