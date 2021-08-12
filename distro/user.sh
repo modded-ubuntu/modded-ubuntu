@@ -31,7 +31,7 @@ login() {
     echo -e "${W}"
     echo "$user ALL=(ALL:ALL) ALL" >> /etc/sudoers
     adduser $user
-    echo "proot-distro login --user $user ubuntu-20.04" > $PREFIX/bin/ubuntu
+    echo "proot-distro login --user $user ubuntu-21.04" > $PREFIX/bin/ubuntu
     chmod +x $PREFIX/bin/ubuntu
     wget https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/gui.sh
     mv -vf gui.sh /home/$user/gui.sh
