@@ -40,15 +40,15 @@ distro() {
     echo -e "\n${R} [${W}-${R}]${C} Checking for Distro..."${W}
     termux-reload-settings
     
-    if [[ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu-20.04" ]]; then
+    if [[ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu" ]]; then
         echo -e "\n${R} [${W}-${R}]${G} Distro already installed."${W}
         exit 0
     else
-        proot-distro install ubuntu-20.04
+        proot-distro install ubuntu
         termux-reload-settings
     fi
     
-    if [[ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu-20.04" ]]; then
+    if [[ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu" ]]; then
         echo -e "\n${R} [${W}-${R}]${G} Installed Successfully !!"${W}
     else
         echo -e "\n${R} [${W}-${R}]${G} Error Installing Distro !\n"${W}
@@ -70,21 +70,21 @@ permission() {
     banner
     echo -e "${R} [${W}-${R}]${C} Setting up Environment..."${W}
 
-    if [[ -e "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu-20.04/root/user.sh" ]]; then
-        chmod +x $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu-20.04/root/user.sh
+    if [[ -e "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh" ]]; then
+        chmod +x $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
     else
         wget https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/user.sh
-        mv -f user.sh $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu-20.04/root/user.sh
-        chmod +x $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu-20.04/root/user.sh
+        mv -f user.sh $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
+        chmod +x $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
     fi
     
-    echo "proot-distro login ubuntu-20.04" > $PREFIX/bin/ubuntu
+    echo "proot-distro login ubuntu" > $PREFIX/bin/ubuntu
 
     if [[ -e "$PREFIX/bin/ubuntu" ]]; then
         chmod +x $PREFIX/bin/ubuntu
         termux-reload-settings
         banner
-        echo -e "\n${R} [${W}-${R}]${G} Ubuntu-20.04(CLI) is now Installed on your Termux"${W}
+        echo -e "\n${R} [${W}-${R}]${G} ubuntu(CLI) is now Installed on your Termux"${W}
         echo -e "\n${R} [${W}-${R}]${G} Restart your Termux to Prevent Some Issues."${W}
         echo -e "\n${R} [${W}-${R}]${G} Type ${C}ubuntu${G} to run Ubuntu CLI."${W}
         echo -e "\n${R} [${W}-${R}]${G} If you Want to Use UBUNTU in GUI MODE then ,"${W}
