@@ -99,6 +99,7 @@ refs() {
     sudo apt install apt-transport-https -y
     sudo apt update -y
     sudo apt install code -y
+    sudo sed -i 's|Exec=/usr/share/code/code|Exec=/usr/share/code/code --no-sandbox|g' /usr/share/applications/code.desktop
 
     git clone --depth=1 https://github.com/vinceliuice/Layan-gtk-theme.git $HOME/Layan-gtk-theme
     sudo chmod +x $HOME/Layan-gtk-theme/install.sh
