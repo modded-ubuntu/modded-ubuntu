@@ -88,10 +88,5 @@ Termux Proot Distro - https://github.com/termux/proot-distro
 - **Mustakim Ahmed** (https://github.com/BDhackers009)
 - **Tahmid Rayat** (https://github.com/htr-tech)
 
-
-### OUR TEAM : **TERMUX HACKER BD**
-- **JOIN OUR GROUP** - [**CLICK HERE**](https://www.facebook.com/groups/2724034734541553)
-
-
 ### If you like our work then dont forget to give a Star :)
 
