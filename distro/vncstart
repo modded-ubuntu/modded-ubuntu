@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-vncserver -geometry 1500x720 -name remote-desktop -localhost no :1
+dbus-launch 
+vncserver -geometry 1500x720 -name -xstartup /usr/bin/xfce4 remote-desktop -localhost no :1
