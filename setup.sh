@@ -40,7 +40,7 @@ distro() {
     echo -e "\n${R} [${W}-${R}]${C} Checking for Distro..."${W}
     termux-reload-settings
     
-    if [[ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu ]]; then
+    if [[ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu" ]]; then
         echo -e "\n${R} [${W}-${R}]${G} Distro already installed."${W}
         exit 0
     else
