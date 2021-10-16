@@ -40,7 +40,7 @@ distro() {
     echo -e "\n${R} [${W}-${R}]${C} Checking for Distro..."${W}
     termux-reload-settings
     
-    if [[ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu-20.04" ]]; then
+    if [[ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu ]]; then
         echo -e "\n${R} [${W}-${R}]${G} Distro already installed."${W}
         exit 0
     else
@@ -84,7 +84,7 @@ permission() {
         chmod +x $PREFIX/bin/ubuntu
         termux-reload-settings
         banner
-        echo -e "\n${R} [${W}-${R}]${G} Ubuntu-20.04(CLI) is now Installed on your Termux"${W}
+        echo -e "\n${R} [${W}-${R}]${G} Ubuntu-21.04(CLI) is now Installed on your Termux"${W}
         echo -e "\n${R} [${W}-${R}]${G} Restart your Termux to Prevent Some Issues."${W}
         echo -e "\n${R} [${W}-${R}]${G} Type ${C}ubuntu${G} to run Ubuntu CLI."${W}
         echo -e "\n${R} [${W}-${R}]${G} If you Want to Use UBUNTU in GUI MODE then ,"${W}
