@@ -26,7 +26,7 @@ package() {
     echo "" > /var/lib/dpkg/info/udisks2.postinst
     sudo dpkg --configure -a
     sudo apt-mark hold udisks2
-    packs=(sudo wget curl nano git keyboard-configuration tzdata xfce4 xfce4-goodies xfce4-terminal firefox menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common dbus-x11 fonts-beng fonts-beng-extra vlc gtk2-engines-murrine gtk2-engines-pixbuf)
+    packs=(sudo wget curl nano git keyboard-configuration tzdata xfce4 xfce4-goodies xfce4-terminal librsvg2-common firefox menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common dbus-x11 fonts-beng fonts-beng-extra vlc gtk2-engines-murrine gtk2-engines-pixbuf)
     for hulu in "${packs[@]}"; do
         type -p "$hulu" &>/dev/null || {
             echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$hulu${C}"${W}
