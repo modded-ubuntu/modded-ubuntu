@@ -32,7 +32,7 @@ login() {
     echo "$user ALL=(ALL:ALL) ALL" >> /etc/sudoers
     adduser $user
     echo "proot-distro login --user $user ubuntu" > /data/data/com.termux/files/usr/bin/ubuntu
-    chmod +x /data/data/com.termux/files/usr/bin/ubuntu 
+    #chmod +x /data/data/com.termux/files/usr/bin/ubuntu 
     wget https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/gui.sh
     mv -vf gui.sh /home/$user/gui.sh
     chmod +x /home/$user/gui.sh
