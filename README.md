@@ -22,7 +22,7 @@
 - 2 Browsers (Chromium & Mozilla Firefox)
 - Supports Bangla Fonts
 - VLC Media Player
-- Visual Studio Code
+- Visual Studio Code (buggy on arm )
 - Easy for Beginners
 
 ### Installation
@@ -85,8 +85,8 @@ Termux Proot Distro - https://github.com/termux/proot-distro
 
 ### Maintainers
 
-- **Mustakim Ahmed** (https://github.com/BDhackers009)
-- **Tahmid Rayat** (https://github.com/htr-tech)
+- [**Mustakim Ahmed**] (https://github.com/BDhackers009)
+- [**Tahmid Rayat**] (https://github.com/htr-tech)
 
 ### If you like our work then dont forget to give a Star :)
 
