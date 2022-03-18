@@ -58,12 +58,12 @@ distro() {
 
 sound() {
     echo -e "\n${R} [${W}-${R}]${C} Fixing Sound Problem..."${W}
-    if [[ ! -e "$HOME/.bashrc" ]]; then
-        touch $HOME/.bashrc
+    if [[ ! -e "$HOME/.sound" ]]; then
+        touch $HOME/.sound
     fi
     
-    echo "pulseaudio --start --exit-idle-time=-1" >> $HOME/.bashrc
-    echo "pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" >> $HOME/.bashrc
+    echo "pulseaudio --start --exit-idle-time=-1" >> $HOME/.sound
+    echo "pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" >> $HOME/.sound
 }
 
 permission() {
@@ -78,13 +78,13 @@ permission() {
         chmod +x $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
     fi
     
-    echo "proot-distro login ubuntu" > $PREFIX/bin/ubuntu
+    echo "proot-distro login ubuntu --bind /dev/null:/proc/sys/kernel/cap_last_last --shared-tmp --fix-low-ports" > $PREFIX/bin/ubuntu
 
     if [[ -e "$PREFIX/bin/ubuntu" ]]; then
         chmod +x $PREFIX/bin/ubuntu
         termux-reload-settings
         banner
-        echo -e "\n${R} [${W}-${R}]${G} Ubuntu-21.04(CLI) is now Installed on your Termux"${W}
+        echo -e "\n${R} [${W}-${R}]${G} Ubuntu-21.10(CLI) is now Installed on your Termux"${W}
         echo -e "\n${R} [${W}-${R}]${G} Restart your Termux to Prevent Some Issues."${W}
         echo -e "\n${R} [${W}-${R}]${G} Type ${C}ubuntu${G} to run Ubuntu CLI."${W}
         echo -e "\n${R} [${W}-${R}]${G} If you Want to Use UBUNTU in GUI MODE then ,"${W}

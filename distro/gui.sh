@@ -17,6 +17,47 @@ banner() {
 
 }
 
+browser_installer() {
+	banner
+	echo 
+	echo "Select which browser do you want."
+	echo
+	echo "1. firefox"
+	echo
+	echo "2. chromium"
+	echo 
+	echo "3. firefox & chromium (both)"
+	echo
+	read -p "select an option(Default 1): " selected_b
+	echo
+	if [[ ${selected_b} == "1" ]]; then
+		clear
+		echo "installing Firefox browser.."
+		echo 
+		sudo apt install firefox -y 
+	elif [[ ${selected_b} == "2" ]]; then
+		clear
+		echo "installing Chromium browser.."
+		echo
+		chromium
+	elif [[ ${selected_b} == "3" ]]; then
+		clear
+		echo "installing Firefox and Chromium browser.."
+		echo
+		sudo apt install firefox -y 
+		chromium
+	elif [[ ${selected_b} == "" ]]; then
+		clear
+		echo "installing Firefox browser.."
+		echo 
+		sudo apt install firefox -y
+	else 
+		echo "installing Firefox browser.."
+		echo 
+		sudo apt install firefox -y
+	fi
+}
+		
 package() {
     banner
     echo -e "${R} [${W}-${R}]${C} Checking required packages..."${W}
@@ -26,7 +67,7 @@ package() {
     echo "" > /var/lib/dpkg/info/udisks2.postinst
     sudo dpkg --configure -a
     sudo apt-mark hold udisks2
-    packs=(sudo wget curl nano git keyboard-configuration tzdata xfce4 xfce4-goodies xfce4-terminal librsvg2-common firefox menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common dbus-x11 fonts-beng fonts-beng-extra vlc gtk2-engines-murrine gtk2-engines-pixbuf)
+    packs=(sudo wget curl nano git keyboard-configuration tzdata xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common dbus-x11 fonts-beng fonts-beng-extra vlc gtk2-engines-murrine gtk2-engines-pixbuf)
     for hulu in "${packs[@]}"; do
         type -p "$hulu" &>/dev/null || {
             echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$hulu${C}"${W}
@@ -85,24 +126,78 @@ font() {
     done
 }
 
+vscode_installer() {
+	banner
+	echo
+	echo "installing Visual Studio Code (vscode).."
+	echo
+	wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+    sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
+    sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+    sudo apt install apt-transport-https -y
+    sudo apt update -y
+    sudo apt install code -y
+}
+sublime_installer() {
+	banner
+	echo 
+	echo "installing Sublime Text Editor.."
+	echo
+	wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+	sudo apt-get install apt-transport-https
+	echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
+	sudo apt-get update
+	sudo apt-get install sublime-text -y 
+}
+ide_installer() {
+	banner
+	echo
+	echo "Choose Coding software(IDE) [only for aarch64/arm64 devices.]"
+	echo
+	echo "1. Sublime Text Editor(lightweight [recommended])"
+	echo 
+	echo "2. Visual Studio Code(vscode) [very nice IDE but ram hungry]"
+	echo
+	echo "3. VSCODE & SUBLIME (both IDEs)"
+	echo
+	read -p "Select option(Default 1): " selected_ide
+	if [[ ${selected_ide} == "1" ]]; then
+		sublime_installer
+	elif [[ ${selected_ide} == "2" ]]; then
+		vscode_installer
+	elif [[ ${selected_ide} == "3" ]]; then
+		banner
+		echo
+		echo "Installing both IDEs (A bamboo is waiting for your Ram:) )"
+		echo 
+		sublime_installer
+		vscode_installer
+	elif [[ ${selected_ide} == "" ]]; then
+		sublime_installer
+	else
+		sublime_installer
+	fi
+}
+
 refs() {
     sudo apt-get update -y
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
     sudo apt-get upgrade -y
     sudo apt autoremove -y
     banner
-    echo -e "${R} [${W}-${R}]${C} Installing Visual Studio..."${W}
-
-    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
-    sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
-    sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
-    sudo apt install apt-transport-https -y
-    sudo apt update -y
-    sudo apt install code -y
-
+	echo
     git clone --depth=1 https://github.com/vinceliuice/Layan-gtk-theme.git $HOME/Layan-gtk-theme
     sudo chmod +x $HOME/Layan-gtk-theme/install.sh
     sudo bash $HOME/Layan-gtk-theme/install.sh
+	
+	git clone --depth=1 https://github.com/vinceliuice/WhiteSur-gtk-theme $HOME/WhiteSur-gtk-theme
+	sudo chmod +x $HOME/WhiteSur-gtk-theme/install.sh
+	sudo bash $HOME/WhiteSur-gtk-theme/install.sh
+	
+	git clone --depth=1 https://github.com/vinceliuice/WhiteSur-icon-theme $HOME/WhiteSur-icon-theme
+	sudo chmod +x $HOME/WhiteSur-icon-theme/install.sh
+	sudo bash $HOME/WhiteSur-icon-theme/install.sh -t blue -b
+	
 
     git clone --depth=1 https://github.com/vinceliuice/Qogir-icon-theme.git $HOME/Qogir-icon-theme
     sudo chmod +x $HOME/Qogir-icon-theme/install.sh
@@ -179,10 +274,17 @@ note() {
 
 }
 
+add_sound() {
+	echo "$(echo "bash ~/.sound" | cat - /data/data/com.termux/files/usr/bin/ubuntu)" > /data/data/com.termux/files/usr/bin/ubuntu
+
+}
 package
-chromium
-theme
+browser_installer
+ide_installer
+#chromium
+#theme
 font
 refs
+add_sound
 vnc
 note
