@@ -197,7 +197,7 @@ refs() {
 	
 	git clone --depth=1 https://github.com/vinceliuice/WhiteSur-icon-theme $HOME/WhiteSur-icon-theme
 	sudo chmod +x $HOME/WhiteSur-icon-theme/install.sh
-	sudo bash $HOME/WhiteSur-icon-theme/install.sh -t blue -b
+	sudo bash $HOME/WhiteSur-icon-theme/install.sh -b
 	
 
     git clone --depth=1 https://github.com/vinceliuice/Qogir-icon-theme.git $HOME/Qogir-icon-theme
