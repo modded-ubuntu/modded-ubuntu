@@ -31,7 +31,7 @@
 
   - `pkg update -y && pkg upgrade -y`
   - `pkg install git wget -y`
-  - `git clone git://github.com/modded-ubuntu/modded-ubuntu.git`
+  - `git clone https://github.com/modded-ubuntu/modded-ubuntu.git`
   - `cd modded-ubuntu`
   - `bash setup.sh`
 
