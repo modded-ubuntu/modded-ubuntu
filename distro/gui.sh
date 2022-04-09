@@ -131,6 +131,7 @@ vscode_installer() {
 	echo
 	echo "installing Visual Studio Code (vscode).."
 	echo
+  sudo apt install gnupg -y 
 	wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
     sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
     sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
@@ -143,6 +144,7 @@ sublime_installer() {
 	echo 
 	echo "installing Sublime Text Editor.."
 	echo
+  sudo apt install gnupg -y
 	sudo apt install  software-properties-common gnupg --no-install-recommends -y
 	wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
 	sudo apt-get install apt-transport-https
