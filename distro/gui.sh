@@ -138,6 +138,10 @@ vscode_installer() {
     sudo apt install apt-transport-https -y
     sudo apt update -y
     sudo apt install code -y
+  echo "Patching vscode..."
+  echo
+  sleep .5
+  mv /data/data/com.termux/files/home/modded-ubuntu/patches/code.desktop /usr/share/applications/
 }
 sublime_installer() {
 	banner
