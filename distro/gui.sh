@@ -17,6 +17,77 @@ banner() {
 
 }
 
+video_player_installer() {
+	banner
+	echo
+	echo "Select video player from bellow"
+	echo
+	echo "1. mpv (recommended)"
+	echo
+	echo "2. vlc media player"
+	echo
+	echo "3. both vlc and mpv"
+	echo
+	echo "4. skip this part"
+	echo
+	read -p "select an option(Default 1): " select_vd
+	echo
+	if [[ ${select_vd} == "1" ]]: then
+		mpv_installer
+	elif [[ ${select_vd} == "2" ]]; then
+		vlc_installer
+	elif [[ ${select_vd} == "3" ]]; then
+		mpv_installer
+		sleep 1
+		vlc_installer
+	elif [[ ${select_vd} == "4" ]]; then
+		echo "moving to the next part"
+		sleep 1.7
+		clear
+	elif [[ ${select_vd} == "" ]]; then
+		mpv_installer
+	fi
+
+}
+
+mpv_installer() {
+
+	clear
+	banner
+	echo
+	echo "Checking if mpv is available or not"
+	if [[ $(command -v mpv) ]]; then
+		echo 
+		echo "mpv is already Installed"
+		sleep 1
+	else
+		echo "mpv is not installed. Installing mpv.."
+		echo
+		sleep 1
+		sudo apt update && sudo apt install mpv -y
+	fi
+}
+
+vlc_installer() {
+
+	clear
+	banner
+	echo
+	echo "Checking if vlc is available or not"
+	if [[ $(command -v vlc) ]]; then
+		echo 
+		echo "vlc is already Installed"
+		sleep 1
+	else
+		echo "vlc  is not installed. Installing mpv.."
+		echo
+		sleep 1
+		sudo apt update && sudo apt install vlc -y
+	fi
+
+}
+
+
 browser_installer() {
 	banner
 	echo 
@@ -67,7 +138,7 @@ package() {
     echo "" > /var/lib/dpkg/info/udisks2.postinst
     sudo dpkg --configure -a
     sudo apt-mark hold udisks2
-    packs=(sudo wget curl nano git keyboard-configuration tzdata xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common dbus-x11 fonts-beng fonts-beng-extra vlc gtk2-engines-murrine gtk2-engines-pixbuf)
+    packs=(sudo wget curl nano git keyboard-configuration tzdata xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common dbus-x11 fonts-beng fonts-beng-extra  gtk2-engines-murrine gtk2-engines-pixbuf)
     for hulu in "${packs[@]}"; do
         type -p "$hulu" &>/dev/null || {
             echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$hulu${C}"${W}
@@ -177,6 +248,7 @@ ide_installer() {
 		echo
 		echo "Installing both IDEs (A bamboo is waiting for your Ram:) )"
 		echo 
+		sleep 2
 		sublime_installer
 		vscode_installer
 	elif [[ ${selected_ide} == "" ]]; then
@@ -289,9 +361,10 @@ add_sound() {
 package
 browser_installer
 ide_installer
+video_player_installer
 #chromium
 #theme
-font
+#font
 refs
 add_sound
 vnc
