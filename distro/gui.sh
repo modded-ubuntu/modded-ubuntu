@@ -32,7 +32,7 @@ video_player_installer() {
 	echo
 	read -p "select an option(Default 1): " select_vd
 	echo
-	if [[ ${select_vd} == "1" ]]: then
+	if [[ ${select_vd} == "1" ]]; then
 		mpv_installer
 	elif [[ ${select_vd} == "2" ]]; then
 		vlc_installer
