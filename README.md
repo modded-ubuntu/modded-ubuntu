@@ -28,8 +28,8 @@
 - Comes with some cool themes.
 
 ### Installation
-
-- First Clone the Repository & Run the setup File
+- Firstly install [Termux](https://termux.com) apk from [HERE](https://f-droid.org/repo/com.termux_118.apk)
+- Secondly Clone the Repository & Run the setup File
 
   - `pkg update -y && pkg upgrade -y`
   - `pkg install git wget -y`
