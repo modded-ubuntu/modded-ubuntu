@@ -503,5 +503,6 @@ extra_things
 #font
 refs
 add_sound
+clenup
 vnc
 note
