@@ -16,7 +16,133 @@ banner() {
     printf "\033[0m\n"
 
 }
+extra_things() {
+	clear
+	banner
+	echo
+	echo "-----Select Browser-----"
+	echo
+	echo "1. firefox (recommended)"
+	echo
+	echo "2. chromium."
+	echo 
+	echo "3. both firefox and chromium"
+	echo
+	echo "4. skip this part"
+	echo
+	read -p "Select option(default 1): " select_browser
+	echo
+	sleep 1.5
+	clear
+	banner
+	echo
+	echo "-----Select IDE (not for arm devices)-----"
+	echo
+	echo "1. Sublime Text Editor (recommended)"
+	echo
+	echo "2. Visual Studio Code (VSCODE)"
+	echo
+	echo "3. Both vscode and sublime"
+	echo
+	echo "4. skip this part"
+	echo
+	read -p "Select option(default 1): " select_ide
+	echo
+	sleep 1.5
+	clear
+	banner
+	echo "-----Select Media Player-----"
+	echo 
+	echo "1. mpv media player(recommended)"
+	echo
+	echo "2. VLC media player"
+	echo
+	echo "3. both VLC and mpv"
+	echo
+	echo "4. skip this part"
+	echo
+	read -p "Select option(default 1): " select_media
+	clear
+	banner
+	if [[ $select_browser == "1" ]]; then
+		firefox_install	 
+	elif [[ $select_browser == "2" ]]; then
+		clear
+		banner
+		sleep 1
+		chromium
+	elif [[ $select_browser == "3" ]]; then
+		firefox_install
+		chromium
+	elif [[ $select_browser == "4" ]]; then
+		echo
+		echo "Skiping Browser Installation"
+		echo
+		sleep 2
+		clear
+	elif [[ $select_browser == "" ]]; then
+		firefox_install
+	else 
+		firefox_install
+	fi
+	if [[ $select_ide == "1" ]]; then
+		sublime_installer
+	elif [[ $select_ide == "2" ]]; then
+		vscode_installer
+	elif [[ $select_ide == "3" ]]; then
+		sublime_installer
+		sleep 1
+		vscode_installer
+	elif [[ $select_ide == "4" ]]; then
+		echo
+		echo "Skiping IDE Installation"
+		echo
+		sleep 2
+		clear
+	else
+		sublime_installer
+	fi
+	if [[ $select_media == "1" ]]; then
+		mpv_installer
+	elif [[ $select_media == "2" ]]; then
+		vlc_installer
+	elif [[ $select_media == "3" ]]; then
+		mpv_installer
+		sleep 1
+		vlc_installer
+	elif [[ $select_media == "4" ]]; then
+		echo
+		echo "Skiping IDE Installation"
+		echo
+		sleep 2
+		clear
+	else
+		mpv_installer
+	fi
+}
 
+firefox_install() {
+		clear
+		banner
+		sleep 1
+		echo "Checking if  Firefox browser installed already.."
+		echo
+		echo
+		if [[ $(command -v firefox) ]]; then
+			echo "Firefox is already installed.."
+			sleep .5
+			clear
+		else
+			clear
+			banner
+			sleep 1
+			echo "Firefox not found.Installing now.."
+			echo
+			echo
+			sudo apt update;sudo apt install firefox -y 
+		fi
+
+}
 video_player_installer() {
 	banner
 	echo
@@ -146,8 +272,7 @@ package() {
         }
     done
     sudo apt-get update -y
-    sudo apt-get upgrade -y
-    sudo apt-get clean
+    sudo apt-get upgrade -y 
 }
 
 chromium() {
@@ -157,8 +282,8 @@ chromium() {
     for hula in "${chrome[@]}"; do
         type -p "$hula" &>/dev/null || {
             echo -e "\n${R} [${W}-${R}]${G} Purging package : ${Y}$hula${C}"${W}
-            apt purge "$hula" -y && apt autoremove -y
-            sudo apt purge "$hula" -y && sudo apt autoremove -y
+            apt purge "$hula" -y 
+            sudo apt purge "$hula" -y 
         }
     done
     sudo apt update -y
@@ -215,6 +340,7 @@ vscode_installer() {
   mv /data/data/com.termux/files/home/modded-ubuntu/patches/code.desktop /usr/share/applications/
 }
 sublime_installer() {
+	clear
 	banner
 	echo 
 	echo "installing Sublime Text Editor.."
@@ -262,7 +388,6 @@ refs() {
     sudo apt-get update -y
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
     sudo apt-get upgrade -y
-    sudo apt autoremove -y
 	sudo apt install gtk2-engines-murrine gtk2-engines-pixbuf sassc optipng inkscape libglib2.0-dev-bin -y 
     banner
 	echo
@@ -276,20 +401,18 @@ refs() {
 	
 	git clone --depth=1 https://github.com/vinceliuice/WhiteSur-icon-theme $HOME/WhiteSur-icon-theme
 	sudo chmod +x $HOME/WhiteSur-icon-theme/install.sh
-	sudo bash $HOME/WhiteSur-icon-theme/install.sh -b
+	sudo bash $HOME/WhiteSur-icon-theme/install.sh 
 	
 
     git clone --depth=1 https://github.com/vinceliuice/Qogir-icon-theme.git $HOME/Qogir-icon-theme
     sudo chmod +x $HOME/Qogir-icon-theme/install.sh
-    sudo bash $HOME/Qogir-icon-theme/install.sh
+    sudo bash $HOME/Qogir-icon-theme/install.sh --name ubuntu  
 
     git clone --depth=1 https://github.com/s-h-3-l-l/katoolin3.git $HOME/katoolin3
     sudo chmod +x $HOME/katoolin3/install.sh
     cd $HOME/katoolin3 && sudo bash install.sh
 
     sudo apt update -y
-    sudo apt autoremove -y
-
 }
 
 vnc() {
@@ -358,14 +481,28 @@ add_sound() {
 	echo "$(echo "bash ~/.sound" | cat - /data/data/com.termux/files/usr/bin/ubuntu)" > /data/data/com.termux/files/usr/bin/ubuntu
 
 }
+clenup() {
+	clear
+	banner
+	echo
+	echo "Cleaning up system.."
+	echo
+	sleep 2
+	sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
+	sleep 2
+	sudo rm -rf $HOME/WhiteSur-gtk-theme $HOME/WhiteSur-icon-theme $HOME/Layan-gtk-theme $HOME/Qogir-icon-theme
+
+}
 package
-browser_installer
-ide_installer
-video_player_installer
+extra_things
+#browser_installer
+#ide_installer
+#video_player_installer
 #chromium
 #theme
 #font
 refs
 add_sound
+clenup
 vnc
 note
