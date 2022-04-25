@@ -408,11 +408,6 @@ refs() {
     sudo chmod +x $HOME/Qogir-icon-theme/install.sh
     sudo bash $HOME/Qogir-icon-theme/install.sh --name ubuntu  
 
-    git clone --depth=1 https://github.com/s-h-3-l-l/katoolin3.git $HOME/katoolin3
-    sudo chmod +x $HOME/katoolin3/install.sh
-	sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ED444FF07D8D0BF6
-    cd $HOME/katoolin3 && sudo bash install.sh
-
     sudo apt update -y
 }
 
