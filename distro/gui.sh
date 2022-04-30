@@ -385,11 +385,12 @@ ide_installer() {
 }
 
 refs() {
+    sudo apt update && yes | sudo apt install gnupg2
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
     sudo apt-get upgrade -y
-	sudo apt install gnupg2 gtk2-engines-murrine gtk2-engines-pixbuf sassc optipng inkscape libglib2.0-dev-bin -y 
+    sudo apt install gnupg2 gtk2-engines-murrine gtk2-engines-pixbuf sassc optipng inkscape libglib2.0-dev-bin -y 
     banner
-	echo
+    echo
     git clone --depth=1 https://github.com/vinceliuice/Layan-gtk-theme.git $HOME/Layan-gtk-theme
     sudo chmod +x $HOME/Layan-gtk-theme/install.sh
     sudo bash $HOME/Layan-gtk-theme/install.sh
