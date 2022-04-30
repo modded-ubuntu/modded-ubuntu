@@ -288,7 +288,7 @@ chromium() {
     done
     sudo apt update -y
     sudo apt upgrade -y
-    sudo apt install software-properties-common gnupg --no-install-recommends -y
+    sudo apt install software-properties-common gnupg2 --no-install-recommends -y
     banner
     echo -e "${R} [${W}-${R}]${C} Installing Chromium..."${W}
     sudo echo "deb http://ftp.debian.org/debian buster main
@@ -327,7 +327,7 @@ vscode_installer() {
 	echo
 	echo "installing Visual Studio Code (vscode).."
 	echo
-  sudo apt install gnupg -y 
+  sudo apt install gnupg2 -y 
 	wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
     sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
     sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
@@ -345,8 +345,8 @@ sublime_installer() {
 	echo 
 	echo "installing Sublime Text Editor.."
 	echo
-  sudo apt install gnupg -y
-	sudo apt install  software-properties-common gnupg --no-install-recommends -y
+  sudo apt install gnupg2 -y
+	sudo apt install  software-properties-common gnupg2 --no-install-recommends -y
 	wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
 	sudo apt-get install apt-transport-https
 	echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
@@ -385,8 +385,6 @@ ide_installer() {
 }
 
 refs() {
-    sudo apt-get update -y
-    sudo apt install gnupg2 -y
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
     sudo apt-get upgrade -y
 	sudo apt install gnupg2 gtk2-engines-murrine gtk2-engines-pixbuf sassc optipng inkscape libglib2.0-dev-bin -y 
@@ -408,10 +406,6 @@ refs() {
     git clone --depth=1 https://github.com/vinceliuice/Qogir-icon-theme.git $HOME/Qogir-icon-theme
     sudo chmod +x $HOME/Qogir-icon-theme/install.sh
     sudo bash $HOME/Qogir-icon-theme/install.sh --name ubuntu  
-
-    git clone --depth=1 https://github.com/s-h-3-l-l/katoolin3.git $HOME/katoolin3
-    sudo chmod +x $HOME/katoolin3/install.sh
-    cd $HOME/katoolin3 && sudo bash install.sh
 
     sudo apt update -y
 }
