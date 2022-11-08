@@ -87,6 +87,7 @@ Termux Proot Distro - https://github.com/termux/proot-distro
 ### Issues :
  Firefox browser not working:- [issue](https://github.com/modded-ubuntu/modded-ubuntu/issues/73)
 - solution:- [click here](https://www.omgubuntu.co.uk/2022/04/how-to-install-firefox-deb-apt-ubuntu-22-04/amp)
+- solution 2:- [click here](https://github.com/modded-ubuntu/modded-ubuntu/issues/76#issuecomment-1243747144) -- Thanks to [Reddysan1433](https://github.com/Reddysan1433)
 ### Maintainers
 
 - [**Mustakim Ahmed**](https://github.com/BDhackers009)
