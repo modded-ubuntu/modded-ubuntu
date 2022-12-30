@@ -1,3 +1,2 @@
 #!/usr/bin/env bash
-dbus-launch 
-vncserver -geometry 1500x720  -xstartup /usr/bin/xfce4-session
+dbus-launch vncserver -geometry 1500x720  -xstartup /usr/bin/xfce4-session
