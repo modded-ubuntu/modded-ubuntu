@@ -412,10 +412,13 @@ refs() {
 	sudo chmod +x $HOME/WhiteSur-icon-theme/install.sh
 	sudo bash $HOME/WhiteSur-icon-theme/install.sh 
 	
+	expect -c 'spawn apt-add-repository ppa:papirus/papirus; send "\r"; expect eof'
+	sudo apt-get update
+	sudo apt-get install papirus-icon-theme -y
 
-    git clone --depth=1 https://github.com/vinceliuice/Qogir-icon-theme.git $HOME/Qogir-icon-theme
-    sudo chmod +x $HOME/Qogir-icon-theme/install.sh
-    sudo bash $HOME/Qogir-icon-theme/install.sh -t ubuntu
+    #git clone --depth=1 https://github.com/vinceliuice/Qogir-icon-theme.git $HOME/Qogir-icon-theme
+    #sudo chmod +x $HOME/Qogir-icon-theme/install.sh
+    #sudo bash $HOME/Qogir-icon-theme/install.sh -t ubuntu
 
     sudo apt update -y
 }
@@ -505,7 +508,10 @@ clenup() {
 #}
 cng_bg() {
         sudo mv -rf /usr/share/backgrounds/xfce/xfce-verticals.png  /usr/share/backgrounds/xfce/xfceverticals-old.png
-        sudo wget -q -O /usr/share/backgrounds/xfce/xfce-verticals.png  https://w.wallhaven.cc/full/l3/wallhaven-l3kq9y.png
+        sudo wget -q -O /usr/share/backgrounds/xfce/xfce-verticals.png https://w.wallhaven.cc/full/zx/wallhaven-zxd31y.jpg
+        sudo wget -q -O /usr/share/backgrounds/xfce/wallpaper2.jpg https://w.wallhaven.cc/full/47/wallhaven-47pwle.jpg
+        sudo wget -q -O /usr/share/backgrounds/xfce/wallpaper3.jpg https://w.wallhaven.cc/full/4o/wallhaven-4o5ljl.jpg
+        sudo wget -q -O /usr/share/backgrounds/xfce/wallpaper4.jpg https://w.wallhaven.cc/full/8x/wallhaven-8x962o.jpg
 }
 
 package
