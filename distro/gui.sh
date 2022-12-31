@@ -490,10 +490,15 @@ clenup() {
 
 }
 
+#cng_bg() {
+#	sudo mv /usr/share/backgrounds/xfce/xfce-verticals.jpg /usr/share/backgrounds/xfce/xfceverticals-old.jpg
+#	sudo wget -q -P /usr/share/backgrounds/xfce/ -O xfce-verticals.png https://w.wallhaven.cc/full/l3/wallhaven-l3kq9y.png
+#}
 cng_bg() {
-	sudo mv /usr/share/backgrounds/xfce/xfce-verticals.jpg /usr/share/backgrounds/xfce/xfceverticals-old.jpg
-	sudo wget -q -P /usr/share/backgrounds/xfce/ -O xfce-verticals.png https://w.wallhaven.cc/full/l3/wallhaven-l3kq9y.png
+        sudo mv -rf /usr/share/backgrounds/xfce/xfce-verticals.png  /usr/share/backgrounds/xfce/xfceverticals-old.png
+        sudo wget -q -O /usr/share/backgrounds/xfce/xfce-verticals.png  https://w.wallhaven.cc/full/l3/wallhaven-l3kq9y.png
 }
+
 package
 extra_things
 #browser_installer
