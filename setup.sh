@@ -18,9 +18,17 @@ banner() {
 
 }
 
+storage_setup() {
+    if [ ! -d '/data/data/com.termux/files/home/storage' ];then
+        termux-setup-storage
+    else 
+        echo ''
+    fi
+}
+
 package() {
     echo -e "${R} [${W}-${R}]${C} Checking required packages..."${W}
-    termux-setup-storage
+    #termux-setup-storage
     if [[ `command -v pulseaudio` && `command -v proot-distro` && `command -v wget` ]]; then
         echo -e "\n${R} [${W}-${R}]${G} Packages already installed."${W}
     else
@@ -97,6 +105,7 @@ permission() {
         fi
 }
 
+storage_setup
 banner
 package
 distro
