@@ -34,7 +34,7 @@ login() {
     useradd -m -s $(which bash) ${user}
     echo "${user}:${pass}" | chpasswd
     echo "$user ALL=(ALL:ALL) ALL" >> /etc/sudoers
-    echo "proot-distro login --user $user ubuntu --bind /dev/null:/proc/sys/kernel/cap_last_last --shared-tmp" > /data/data/com.termux/files/usr/bin/ubuntu
+    echo "proot-distro login --user $user ubuntu --bind /dev/null:/proc/sys/kernel/cap_last_last --shared-tmp --fix-low-ports" > /data/data/com.termux/files/usr/bin/ubuntu
     #chmod +x /data/data/com.termux/files/usr/bin/ubuntu 
     if [[ -e '/data/data/com.termux/files/home/modded-ubuntu/distro/gui.sh' ]];then
         cp /data/data/com.termux/files/home/modded-ubuntu/distro/gui.sh /home/$user/gui.sh
