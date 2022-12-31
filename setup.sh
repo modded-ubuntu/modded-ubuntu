@@ -80,6 +80,9 @@ permission() {
 
     if [[ -e "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh" ]]; then
         chmod +x $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
+    elif [[ -e "/data/data/com.termux/files/home/modded-ubuntu/distro/user.sh" ]];then
+        cp /data/data/com.termux/files/home/modded-ubuntu/distro/user.sh $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
+        chmod +x $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
     else
         wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/user.sh
         mv -f user.sh $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
