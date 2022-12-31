@@ -1,0 +1,6 @@
+#!/bin/bash
+
+clear
+echo
+echo "Software installer for modded-ubuntu"
+echo
