@@ -406,7 +406,7 @@ refs() {
 
     git clone --depth=1 https://github.com/vinceliuice/Qogir-icon-theme.git $HOME/Qogir-icon-theme
     sudo chmod +x $HOME/Qogir-icon-theme/install.sh
-    sudo bash $HOME/Qogir-icon-theme/install.sh --name ubuntu  
+    sudo bash $HOME/Qogir-icon-theme/install.sh -t ubuntu
 
     sudo apt update -y
 }
