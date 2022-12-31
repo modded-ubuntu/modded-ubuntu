@@ -143,10 +143,10 @@ firefox_install() {
 			expect -c 'spawn  sudo add-apt-repository ppa:mozillateam/ppa; send "\r"; expect eof'
 			sleep 0.4
 			echo '
-			Package: *
-			Pin: release o=LP-PPA-mozillateam
-			Pin-Priority: 1001
-			' | sudo tee /etc/apt/preferences.d/mozilla-firefox
+Package: *
+Pin: release o=LP-PPA-mozillateam
+Pin-Priority: 1001
+' | sudo tee /etc/apt/preferences.d/mozilla-firefox
 
 			sleep 0.4
 			echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
