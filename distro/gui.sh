@@ -139,7 +139,20 @@ firefox_install() {
 			echo "Firefox not found.Installing now.."
 			echo
 			echo
+			#sudo apt update;sudo apt install firefox -y 
+			expect -c 'spawn apt-add-repository ppa:mozillateam/ppa; send "\r"; expect eof'
+			sleep 0.4
+			echo '
+			Package: *
+			Pin: release o=LP-PPA-mozillateam
+			Pin-Priority: 1001
+			' | sudo tee /etc/apt/preferences.d/mozilla-firefox
+
+			sleep 0.4
+			echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
+			sleep 0.4
 			sudo apt update;sudo apt install firefox -y 
+		
 		fi
 
 }
@@ -229,9 +242,7 @@ browser_installer() {
 	echo
 	if [[ ${selected_b} == "1" ]]; then
 		clear
-		echo "installing Firefox browser.."
-		echo 
-		sudo apt install firefox -y 
+		firefox_install 
 	elif [[ ${selected_b} == "2" ]]; then
 		clear
 		echo "installing Chromium browser.."
@@ -241,17 +252,15 @@ browser_installer() {
 		clear
 		echo "installing Firefox and Chromium browser.."
 		echo
-		sudo apt install firefox -y 
+		firefox_install
 		chromium
 	elif [[ ${selected_b} == "" ]]; then
 		clear
-		echo "installing Firefox browser.."
-		echo 
-		sudo apt install firefox -y
+		
+		firefox_install
 	else 
-		echo "installing Firefox browser.."
-		echo 
-		sudo apt install firefox -y
+		clear
+		firefox_install
 	fi
 }
 		
@@ -264,7 +273,7 @@ package() {
     echo "" > /var/lib/dpkg/info/udisks2.postinst
     sudo dpkg --configure -a
     sudo apt-mark hold udisks2
-    packs=(sudo wget gnupg2 curl nano git at-spi2-core tzdata xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common tigervnc-tools dbus-x11 fonts-beng fonts-beng-extra  gtk2-engines-murrine gtk2-engines-pixbuf)
+    packs=(sudo wget gnupg2 curl nano git expect at-spi2-core tzdata xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common tigervnc-tools dbus-x11 fonts-beng fonts-beng-extra  gtk2-engines-murrine gtk2-engines-pixbuf)
     for hulu in "${packs[@]}"; do
         type -p "$hulu" &>/dev/null || {
             echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$hulu${C}"${W}
@@ -423,7 +432,7 @@ vnc() {
         rm -rf $HOME/.vnc/xstartup
     fi
 
-    wget https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/xstartup
+    wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/xstartup
     mv -f xstartup $HOME/.vnc/xstartup
     chmod +x $HOME/.vnc/xstartup
 
@@ -431,7 +440,7 @@ vnc() {
         rm -rf /usr/local/bin/vncstart
     fi
 
-    wget https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/vncstart
+    wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/vncstart
     mv -f vncstart /usr/local/bin/vncstart
     chmod +x /usr/local/bin/vncstart
 
@@ -439,7 +448,7 @@ vnc() {
         rm -rf /usr/local/bin/vncstop
     fi
 
-    wget https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/vncstop
+    wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/vncstop
     mv -f vncstop /usr/local/bin/vncstop
     chmod +x /usr/local/bin/vncstop
 
