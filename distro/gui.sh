@@ -140,7 +140,7 @@ firefox_install() {
 			echo
 			echo
 			#sudo apt update;sudo apt install firefox -y 
-			expect -c 'spawn apt-add-repository ppa:mozillateam/ppa; send "\r"; expect eof'
+			expect -c 'spawn  sudo add-apt-repository ppa:mozillateam/ppa; send "\r"; expect eof'
 			sleep 0.4
 			echo '
 			Package: *
@@ -412,7 +412,7 @@ refs() {
 	sudo chmod +x $HOME/WhiteSur-icon-theme/install.sh
 	sudo bash $HOME/WhiteSur-icon-theme/install.sh 
 	
-	expect -c 'spawn apt-add-repository ppa:papirus/papirus; send "\r"; expect eof'
+	expect -c 'spawn  sudo add-apt-repository ppa:mozillateam/ppa; send "\r"; expect eof'
 	sudo apt-get update
 	sudo apt-get install papirus-icon-theme -y
 
