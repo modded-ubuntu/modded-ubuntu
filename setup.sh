@@ -78,7 +78,7 @@ permission() {
         chmod +x $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
     fi
     
-    echo "proot-distro login ubuntu --bind /dev/null:/proc/sys/kernel/cap_last_last --shared-tmp" > $PREFIX/bin/ubuntu
+    echo "proot-distro login ubuntu --bind /dev/null:/proc/sys/kernel/cap_last_last --shared-tmp --fix-low-ports" > $PREFIX/bin/ubuntu
 
     if [[ -e "$PREFIX/bin/ubuntu" ]]; then
         chmod +x $PREFIX/bin/ubuntu

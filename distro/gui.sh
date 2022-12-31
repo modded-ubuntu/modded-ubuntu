@@ -423,7 +423,7 @@ vnc() {
         rm -rf $HOME/.vnc/xstartup
     fi
 
-    wget https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/xstartup
+    wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/xstartup
     mv -f xstartup $HOME/.vnc/xstartup
     chmod +x $HOME/.vnc/xstartup
 
@@ -431,7 +431,7 @@ vnc() {
         rm -rf /usr/local/bin/vncstart
     fi
 
-    wget https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/vncstart
+    wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/vncstart
     mv -f vncstart /usr/local/bin/vncstart
     chmod +x /usr/local/bin/vncstart
 
@@ -439,7 +439,7 @@ vnc() {
         rm -rf /usr/local/bin/vncstop
     fi
 
-    wget https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/vncstop
+    wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/vncstop
     mv -f vncstop /usr/local/bin/vncstop
     chmod +x /usr/local/bin/vncstop
 
