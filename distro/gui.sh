@@ -491,8 +491,8 @@ clenup() {
 }
 
 cng_bg() {
-	mv /usr/share/backgrounds/xfce-teal.jpg /usr/share/backgrounds/xfceteal-old.jpg
-	wget -q -P /usr/share/backgrounds/ -O xfce-teal.jpg https://w.wallhaven.cc/full/l3/wallhaven-l3kq9y.png
+	sudo mv /usr/share/backgrounds/xfce/xfce-verticals.jpg /usr/share/backgrounds/xfce/xfceverticals-old.jpg
+	sudo wget -q -P /usr/share/backgrounds/xfce/ -O xfce-verticals.png https://w.wallhaven.cc/full/l3/wallhaven-l3kq9y.png
 }
 package
 extra_things
