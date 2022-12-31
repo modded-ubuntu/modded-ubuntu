@@ -412,7 +412,7 @@ refs() {
 	sudo chmod +x $HOME/WhiteSur-icon-theme/install.sh
 	sudo bash $HOME/WhiteSur-icon-theme/install.sh 
 	
-	expect -c 'spawn  sudo add-apt-repository ppa:mozillateam/ppa; send "\r"; expect eof'
+	expect -c 'spawn  sudo add-apt-repository ppa:papirus/papirus; send "\r"; expect eof'
 	sudo apt-get update
 	sudo apt-get install papirus-icon-theme -y
 
