@@ -1,5 +1,5 @@
 #!/bin/bash
-
+ROOT_FS='/data/data/com.termux/files/usr/var/lib/proot-distro/installed-rootfs/ubuntu/'
 R="$(printf '\033[1;31m')"
 G="$(printf '\033[1;32m')"
 Y="$(printf '\033[1;33m')"
@@ -36,9 +36,14 @@ login() {
     echo "$user ALL=(ALL:ALL) ALL" >> /etc/sudoers
     echo "proot-distro login --user $user ubuntu --bind /dev/null:/proc/sys/kernel/cap_last_last --shared-tmp" > /data/data/com.termux/files/usr/bin/ubuntu
     #chmod +x /data/data/com.termux/files/usr/bin/ubuntu 
-    wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/gui.sh
-    mv -vf gui.sh /home/$user/gui.sh
-    chmod +x /home/$user/gui.sh
+    if [[ -f '/data/data/com.termux/files/home/modded-ubuntu/distro/gui.sh' ]];then
+        cp /data/data/com.termux/files/home/modded-ubuntu/distro/gui.sh /home/$user/gui.sh
+        chmod +x /home/$user/gui.sh
+    else
+        wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/gui.sh
+        mv -vf gui.sh /home/$user/gui.sh
+        chmod +x /home/$user/gui.sh
+    fi
     clear
     echo
     echo -e "\n${R} [${W}-${R}]${G} Restart your Termux & Type ${C}ubuntu"${W}
