@@ -10,5 +10,5 @@ Pin-Priority: 1001
 
 echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
 
-sudo apt install firefox -y
+#sudo apt install firefox -y
 
