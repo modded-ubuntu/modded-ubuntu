@@ -1,6 +1,8 @@
 sudo snap remove firefox
+sudo apt install software-properties-common expect -y
 
-sudo add-apt-repository ppa:mozillateam/ppa
+#sudo add-apt-repository ppa:mozillateam/ppa
+expect -c 'spawn sudo add-apt-repository ppa:mozillateam/ppa; send "\r"; expect eof'
 
 echo '
 Package: *
