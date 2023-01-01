@@ -1,8 +1,15 @@
-sudo snap remove firefox
-sudo apt install software-properties-common expect -y
+if [[ `command -v snap` ]]; then
+	sudo snap remove firefox
+else 
+	echo ""
+fi
 
+echo "deb https://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu jammy main" | sudo tee /etc/apt/sources.list.d/mozillateam-ubuntu-ppa-jammy.list
 #sudo add-apt-repository ppa:mozillateam/ppa
-expect -c 'spawn sudo add-apt-repository ppa:mozillateam/ppa; send "\r"; expect eof'
+#expect -c 'spawn sudo add-apt-repository ppa:mozillateam/ppa; send "\r"; expect eof'
+sudo apt-key add $(curl https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test/distro/firefox.key)
+
+
 
 echo '
 Package: *
@@ -12,5 +19,5 @@ Pin-Priority: 1001
 
 echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
 
-#sudo apt install firefox -y
+sudo apt install firefox -y
 
