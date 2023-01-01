@@ -7,7 +7,7 @@ fi
 echo "deb https://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu jammy main" | sudo tee /etc/apt/sources.list.d/mozillateam-ubuntu-ppa-jammy.list
 #sudo add-apt-repository ppa:mozillateam/ppa
 #expect -c 'spawn sudo add-apt-repository ppa:mozillateam/ppa; send "\r"; expect eof'
-sudo curl https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test/distro/firefox.key -o /tmp/firefox.key
+sudo curl -s https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test/distro/firefox.key -o /tmp/firefox.key
 sudo apt-key add /tmp/firefox.key
 #sudo gpg --keyserver keyserver.ubuntu.com --recv-keys 0AB215679C571D1C8325275B9BDB3D89CE49EC21
 
