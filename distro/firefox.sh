@@ -7,9 +7,10 @@ fi
 echo "deb https://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu jammy main" | sudo tee /etc/apt/sources.list.d/mozillateam-ubuntu-ppa-jammy.list
 #sudo add-apt-repository ppa:mozillateam/ppa
 #expect -c 'spawn sudo add-apt-repository ppa:mozillateam/ppa; send "\r"; expect eof'
-sudo apt-key add $(curl https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test/distro/firefox.key)
+curl https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test/distro/firefox.key -o ./firefox.key
+sudo apt-key add ./firefox.key
 
-
+sleep 0.4
 
 echo '
 Package: *
@@ -21,3 +22,4 @@ echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codenam
 
 sudo apt install firefox -y
 
+sudo rm -rf ./firefox.key 
