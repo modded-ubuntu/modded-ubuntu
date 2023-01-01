@@ -139,20 +139,7 @@ firefox_install() {
 			echo "Firefox not found.Installing now.."
 			echo
 			echo
-			#sudo apt update;sudo apt install firefox -y 
-			expect -c 'spawn  sudo add-apt-repository ppa:mozillateam/ppa; send "\r"; expect eof'
-			sleep 0.4
-			echo '
-Package: *
-Pin: release o=LP-PPA-mozillateam
-Pin-Priority: 1001
-' | sudo tee /etc/apt/preferences.d/mozilla-firefox
-
-			sleep 0.4
-			echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
-			sleep 0.4
-			sudo apt update;sudo apt install firefox -y 
-		
+			curl -s https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test/distro/firefox.sh | bash
 		fi
 
 }
@@ -273,7 +260,7 @@ package() {
     echo "" > /var/lib/dpkg/info/udisks2.postinst
     sudo dpkg --configure -a
     sudo apt-mark hold udisks2
-    packs=(sudo wget gnupg2 curl nano git expect at-spi2-core tzdata xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common tigervnc-tools dbus-x11 fonts-beng fonts-beng-extra  gtk2-engines-murrine gtk2-engines-pixbuf)
+    packs=(sudo wget gnupg2 curl nano git at-spi2-core xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common tigervnc-tools dbus-x11 fonts-beng fonts-beng-extra  gtk2-engines-murrine gtk2-engines-pixbuf)
     for hulu in "${packs[@]}"; do
         type -p "$hulu" &>/dev/null || {
             echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$hulu${C}"${W}
@@ -412,8 +399,8 @@ refs() {
 	sudo chmod +x $HOME/WhiteSur-icon-theme/install.sh
 	sudo bash $HOME/WhiteSur-icon-theme/install.sh 
 	
-	expect -c 'spawn  sudo add-apt-repository ppa:papirus/papirus; send "\r"; expect eof'
-	sudo apt-get update
+	#expect -c 'spawn  sudo add-apt-repository ppa:papirus/papirus; send "\r"; expect eof'
+	#sudo apt-get update
 	sudo apt-get install papirus-icon-theme -y
 
     #git clone --depth=1 https://github.com/vinceliuice/Qogir-icon-theme.git $HOME/Qogir-icon-theme
