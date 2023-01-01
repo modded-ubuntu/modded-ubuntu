@@ -9,9 +9,9 @@ echo "deb https://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu jammy main" | 
 #expect -c 'spawn sudo add-apt-repository ppa:mozillateam/ppa; send "\r"; expect eof'
 #curl https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test/distro/firefox.key -o ./firefox.key
 #sudo apt-key add ./firefox.key
-sudo gpg --keyserver keyserver.ubuntu.com --recv-keys 0AB215679C571D1C8325275B9BDB3D89CE49EC21
+#sudo gpg --keyserver keyserver.ubuntu.com --recv-keys 0AB215679C571D1C8325275B9BDB3D89CE49EC21
 
-sleep 0.4
+sudo curl "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x0ab215679c571d1c8325275b9bdb3d89ce49ec21" -o /etc/apt/trusted.gpg.d/firefox.gpg
 
 echo '
 Package: *
@@ -21,5 +21,5 @@ Pin-Priority: 1001
 
 echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
 
-#sudo apt install firefox -y
+sudo apt-get update && sudo apt install firefox -y
 
