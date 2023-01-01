@@ -44,6 +44,15 @@ package() {
     fi
 }
 
+#install_modded_pd() {
+#    if [[ `command -v proot-distro` ]];then
+#        pkg uninstall proot-distro -y
+#        pkg install git
+#        git clone https://github.com/termux/proot-distro
+#        cd proot-distro
+#        ./install.sh
+#}
+
 distro() {
     echo -e "\n${R} [${W}-${R}]${C} Checking for Distro..."${W}
     termux-reload-settings
