@@ -91,13 +91,7 @@ permission() {
 
     # change proot-distro with modified one.
 
-    if [[ -e "/data/data/com.termux/files/usr/bin/proot-distro" ]]; then
-        mv -rf /data/data/com.termux/files/usr/bin/proot-distro /data/data/com.termux/files/usr/bin/proot-distro.bak 
-        curl -L https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test/distro/proot-distro.sh -o /data/data/com.termux/files/usr/bin/proot-distro
-        chmod +x /data/data/com.termux/files/usr/bin/proot-distro
-    else 
-        echo ""
-    fi
+   
     
     echo "proot-distro login ubuntu" > $PREFIX/bin/ubuntu
 
