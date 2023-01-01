@@ -541,7 +541,7 @@ run_proot_cmd() {
 
 	proot \
 		$qemu_arg -L \
-		--kernel-release=5.4.0-faked \
+		--kernel-release=5.4.0-pro \
 		--link2symlink \
 		--kill-on-exit \
 		--rootfs="${INSTALLED_ROOTFS_DIR}/${distro_name}" \
@@ -549,6 +549,7 @@ run_proot_cmd() {
 		--cwd=/root \
 		--bind=/dev \
 		--bind="/dev/urandom:/dev/random" \
+		--bind="/dev/null:/proc/sys/kernel/cap_last_last" \
 		--bind=/proc \
 		--bind="/proc/self/fd:/dev/fd" \
 		--bind="/proc/self/fd/0:/dev/stdin" \
@@ -608,7 +609,7 @@ setup_fake_proc() {
 
 	if [ ! -f "${INSTALLED_ROOTFS_DIR}/${distro_name}/proc/.version" ]; then
 		cat <<- EOF > "${INSTALLED_ROOTFS_DIR}/${distro_name}/proc/.version"
-		Linux version 5.4.0-faked (termux@androidos) (gcc version 4.9.x (Faked /proc/version by Proot-Distro) ) #1 SMP PREEMPT Fri Jul 10 00:00:00 UTC 2020
+		Linux version 5.4.0-pro (termux@androidos) (gcc version 4.9.x (Faked /proc/version by Proot-Distro) ) #1 SMP PREEMPT Fri Jul 10 00:00:00 UTC 2020
 		EOF
 	fi
 
@@ -936,11 +937,11 @@ command_login() {
 	local no_link2symlink=false
 	local no_sysvipc=false
 	local no_kill_on_exit=false
-	local fix_low_ports=false
-	local make_host_tmp_shared=false
+	local fix_low_ports=true
+	local make_host_tmp_shared=true
 	local distro_name=""
 	local login_user="root"
-	local kernel_release="5.4.0-faked"
+	local kernel_release="5.4.0-pro"
 	local -a custom_fs_bindings
 	local need_qemu=false
 

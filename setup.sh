@@ -88,8 +88,18 @@ permission() {
         mv -f user.sh $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
         chmod +x $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
     fi
+
+    # change proot-distro with modified one.
+
+    if [[ -e "/data/data/com.termux/file/usr/bin/proot-distro" ]]; then
+        mv -rf /data/data/com.termux/file/usr/bin/proot-distro /data/data/com.termux/file/usr/bin/proot-distro.bak 
+        curl -L https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test/distro/proot-distro.sh -o /data/data/com.termux/file/usr/bin/proot-distro
+        chmod +x /data/data/com.termux/file/usr/bin/proot-distro
+    else 
+        echo ""
+    fi
     
-    echo "proot-distro login ubuntu --bind /dev/null:/proc/sys/kernel/cap_last_last --shared-tmp --fix-low-ports" > $PREFIX/bin/ubuntu
+    echo "proot-distro login ubuntu" > $PREFIX/bin/ubuntu
 
     if [[ -e "$PREFIX/bin/ubuntu" ]]; then
         chmod +x $PREFIX/bin/ubuntu
