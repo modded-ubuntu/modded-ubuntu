@@ -412,6 +412,10 @@ refs() {
     tar -xf Papirus-Dark-Custom.tar.xz -C ~/.icons/
     sudo ln -vs ~/.icons/Papirus-Dark-Custom /usr/share/icons/
 
+    git clone https://github.com/alvatip/Nordzy-cursors
+	cd Nordzy-cursors
+	./install.sh
+
     sudo apt update -y
 }
 
@@ -490,7 +494,7 @@ clenup() {
 	sleep 2
 	sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
 	sleep 2
-	sudo rm -rf $HOME/WhiteSur-gtk-theme $HOME/WhiteSur-icon-theme $HOME/Layan-gtk-theme $HOME/Qogir-icon-theme
+	sudo rm -rf $HOME/WhiteSur-gtk-theme $HOME/WhiteSur-icon-theme $HOME/Layan-gtk-theme $HOME/Nordzy-cursors $HOME/Papirus-Dark-Custom.tar.xz
 
 }
 
