@@ -512,6 +512,7 @@ config_ubuntu() {
 	cd ~/
 	wget -q --show-progress https://github.com/modded-ubuntu/modded-ubuntu-config/raw/main/fonts.tar.gz
 	wget -q --show-progress https://github.com/modded-ubuntu/modded-ubuntu-config/raw/main/ubuntu-settings.tar.gz
+	mkdir -pv ~/.fonts
 	tar -xvzf fonts.tar.gz -C ~/
 	tar -xvzf ubuntu-settings.tar.gz -C ~/
 }
