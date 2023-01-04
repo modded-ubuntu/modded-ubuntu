@@ -22,12 +22,11 @@ package() {
     echo -e "${R} [${W}-${R}]${C} Purging packages..."${W}
     proot-distro remove ubuntu && proot-distro clear-cache
     rm -rf $PREFIX/bin/ubuntu
-    sed -i 's/pulseaudio/#pulseaudio/g' ~/.sound
-    sed -i 's/pacmd/#pacmd/g' ~/.sound
+    sed -i '/pulseaudio --start --exit-idle-time=-1/d' ~/.sound
+    sed -i '/pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1/d' ~/.sound
     echo -e "${R} [${W}-${R}]${C} Purging Completed !"${W}
 
 }
 
 banner
 package
-
