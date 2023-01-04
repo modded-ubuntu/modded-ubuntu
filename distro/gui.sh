@@ -139,7 +139,8 @@ firefox_install() {
 			echo "Firefox not found.Installing now.."
 			echo
 			echo
-			curl -s https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test/distro/firefox.sh | bash
+			sudo apt install curl gnupg2 -y
+			curl -sL https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test/distro/firefox.sh | bash
 		fi
 
 }
@@ -401,11 +402,15 @@ refs() {
 	
 	#expect -c 'spawn  sudo add-apt-repository ppa:papirus/papirus; send "\r"; expect eof'
 	#sudo apt-get update
-	sudo apt-get install papirus-icon-theme -y
+	#sudo apt-get install papirus-icon-theme -y
 
     #git clone --depth=1 https://github.com/vinceliuice/Qogir-icon-theme.git $HOME/Qogir-icon-theme
     #sudo chmod +x $HOME/Qogir-icon-theme/install.sh
     #sudo bash $HOME/Qogir-icon-theme/install.sh -t ubuntu
+    mkdir -pv ~/.icons
+    wget -q --show-progress https://github.com/owl4ce/dotfiles/releases/download/ng/Papirus-Dark-Custom.tar.xz
+    tar -xf Papirus-Dark-Custom.tar.xz -C ~/.icons/
+    sudo ln -vs ~/.icons/Papirus-Dark-Custom /usr/share/icons/
 
     sudo apt update -y
 }
@@ -489,10 +494,7 @@ clenup() {
 
 }
 
-#cng_bg() {
-#	sudo mv /usr/share/backgrounds/xfce/xfce-verticals.jpg /usr/share/backgrounds/xfce/xfceverticals-old.jpg
-#	sudo wget -q -P /usr/share/backgrounds/xfce/ -O xfce-verticals.png https://w.wallhaven.cc/full/l3/wallhaven-l3kq9y.png
-#}
+
 cng_bg() {
         sudo mv -rf /usr/share/backgrounds/xfce/xfce-verticals.png  /usr/share/backgrounds/xfce/xfceverticals-old.png
         sudo wget -q -O /usr/share/backgrounds/xfce/xfce-verticals.png https://w.wallhaven.cc/full/zx/wallhaven-zxd31y.jpg
