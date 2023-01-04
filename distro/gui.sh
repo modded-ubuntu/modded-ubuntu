@@ -412,7 +412,7 @@ refs() {
     tar -xf Papirus-Dark-Custom.tar.xz -C ~/.icons/
     sudo ln -vs ~/.icons/Papirus-Dark-Custom /usr/share/icons/
 
-    git clone https://github.com/alvatip/Nordzy-cursors
+    git clone https://github.com/alvatip/Nordzy-cursors --depth=1
 	cd Nordzy-cursors
 	./install.sh
 
