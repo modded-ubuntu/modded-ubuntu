@@ -416,7 +416,7 @@ refs() {
 	cd Nordzy-cursors
 	./install.sh
 
-    sudo apt update -y
+    #sudo apt update -y
 }
 
 vnc() {
@@ -507,6 +507,15 @@ cng_bg() {
         sudo wget -q -O /usr/share/backgrounds/xfce/wallpaper4.jpg https://w.wallhaven.cc/full/8x/wallhaven-8x962o.jpg
 }
 
+config_ubuntu() {
+	banner
+	cd ~/
+	wget -q --show-progress https://github.com/modded-ubuntu/modded-ubuntu-config/raw/main/fonts.tar.gz
+	wget -q --show-progress https://github.com/modded-ubuntu/modded-ubuntu-config/raw/main/ubuntu-settings.tar.gz
+	tar -xvzf fonts.tar.gz -C ~/
+	tar -xvzf ubuntu-settings.tar.gz -C ~/
+}
+
 package
 extra_things
 #browser_installer
@@ -518,6 +527,7 @@ extra_things
 refs
 add_sound
 cng_bg
+config_ubuntu
 clenup
 vnc
 note
