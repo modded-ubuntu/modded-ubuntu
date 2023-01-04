@@ -16,6 +16,7 @@ banner() {
     printf "\033[0m\n"
 
 }
+
 extra_things() {
 	clear
 	banner
@@ -139,10 +140,12 @@ firefox_install() {
 			echo "Firefox not found.Installing now.."
 			echo
 			echo
-			sudo apt update;sudo apt install firefox -y 
+			sudo apt install curl gnupg2 -y
+			curl -fSsL https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu-config/main/firefox.sh | bash
 		fi
 
 }
+
 video_player_installer() {
 	banner
 	echo
@@ -229,9 +232,7 @@ browser_installer() {
 	echo
 	if [[ ${selected_b} == "1" ]]; then
 		clear
-		echo "installing Firefox browser.."
-		echo 
-		sudo apt install firefox -y 
+		firefox_install 
 	elif [[ ${selected_b} == "2" ]]; then
 		clear
 		echo "installing Chromium browser.."
@@ -241,17 +242,14 @@ browser_installer() {
 		clear
 		echo "installing Firefox and Chromium browser.."
 		echo
-		sudo apt install firefox -y 
+		firefox_install
 		chromium
 	elif [[ ${selected_b} == "" ]]; then
 		clear
-		echo "installing Firefox browser.."
-		echo 
-		sudo apt install firefox -y
+		firefox_install
 	else 
-		echo "installing Firefox browser.."
-		echo 
-		sudo apt install firefox -y
+		clear
+		firefox_install 
 	fi
 }
 		
@@ -264,7 +262,7 @@ package() {
     echo "" > /var/lib/dpkg/info/udisks2.postinst
     sudo dpkg --configure -a
     sudo apt-mark hold udisks2
-    packs=(sudo wget gnupg2 curl nano git keyboard-configuration tzdata xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common tigervnc-tools dbus-x11 fonts-beng fonts-beng-extra  gtk2-engines-murrine gtk2-engines-pixbuf)
+    packs=(sudo wget gnupg2 curl nano git at-spi2-core xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common tigervnc-tools dbus-x11 fonts-beng fonts-beng-extra  gtk2-engines-murrine gtk2-engines-pixbuf)
     for hulu in "${packs[@]}"; do
         type -p "$hulu" &>/dev/null || {
             echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$hulu${C}"${W}
@@ -272,7 +270,7 @@ package() {
         }
     done
     sudo apt-get update -y
-    sudo apt-get upgrade -y 
+    sudo apt-get upgrade -y
 }
 
 chromium() {
@@ -327,17 +325,17 @@ vscode_installer() {
 	echo
 	echo "installing Visual Studio Code (vscode).."
 	echo
-  sudo apt install gnupg2 -y 
+	sudo apt install gnupg2 -y 
 	wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
     sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
     sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
     sudo apt install apt-transport-https -y
     sudo apt update -y
     sudo apt install code -y
-  echo "Patching vscode..."
-  echo
-  sleep .5
-  mv /data/data/com.termux/files/home/modded-ubuntu/patches/code.desktop /usr/share/applications/
+	echo "Patching vscode..."
+	echo
+	sleep .5
+	mv /data/data/com.termux/files/home/modded-ubuntu/patches/code.desktop /usr/share/applications/
 }
 sublime_installer() {
 	clear
@@ -345,7 +343,7 @@ sublime_installer() {
 	echo 
 	echo "installing Sublime Text Editor.."
 	echo
-  sudo apt install gnupg2 -y
+	sudo apt install gnupg2 -y
 	sudo apt install  software-properties-common gnupg2 --no-install-recommends -y
 	wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
 	sudo apt-get install apt-transport-https
@@ -403,41 +401,35 @@ refs() {
 	sudo chmod +x $HOME/WhiteSur-icon-theme/install.sh
 	sudo bash $HOME/WhiteSur-icon-theme/install.sh 
 	
+	mkdir -pv ~/.icons
+	wget -q --show-progress https://github.com/owl4ce/dotfiles/releases/download/ng/Papirus-Dark-Custom.tar.xz
+	tar -xf Papirus-Dark-Custom.tar.xz -C ~/.icons/
+	sudo ln -vs ~/.icons/Papirus-Dark-Custom /usr/share/icons/
 
-    git clone --depth=1 https://github.com/vinceliuice/Qogir-icon-theme.git $HOME/Qogir-icon-theme
-    sudo chmod +x $HOME/Qogir-icon-theme/install.sh
-    sudo bash $HOME/Qogir-icon-theme/install.sh --name ubuntu  
+	git clone https://github.com/alvatip/Nordzy-cursors --depth=1
+	cd Nordzy-cursors
+	./install.sh
 
-    sudo apt update -y
 }
 
 vnc() {
     banner
     echo -e "${R} [${W}-${R}]${C} Setting up VNC Server..."${W}
 
-    if [[ ! -d "$HOME/.vnc" ]]; then
-        mkdir -p "$HOME/.vnc"
-    fi
-
-    if [[ -e "$HOME/.vnc/xstartup" ]]; then
-        rm -rf $HOME/.vnc/xstartup
-    fi
+    [[ ! -d "$HOME/.vnc" ]] && mkdir -p "$HOME/.vnc"
+    [[ -e "$HOME/.vnc/xstartup" ]] && rm -rf "$HOME/.vnc/xstartup"
 
     wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/xstartup
     mv -f xstartup $HOME/.vnc/xstartup
     chmod +x $HOME/.vnc/xstartup
 
-    if [[ -e "/usr/local/bin/vncstart" ]]; then
-        rm -rf /usr/local/bin/vncstart
-    fi
+    [[ -e "/usr/local/bin/vncstart" ]] && rm -rf /usr/local/bin/vncstart
 
     wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/vncstart
     mv -f vncstart /usr/local/bin/vncstart
     chmod +x /usr/local/bin/vncstart
 
-    if [[ -e "/usr/local/bin/vncstop" ]]; then
-        rm -rf /usr/local/bin/vncstop
-    fi
+    [[ -e "/usr/local/bin/vncstop" ]] && rm -rf /usr/local/bin/vncstop
 
     wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/vncstop
     mv -f vncstop /usr/local/bin/vncstop
@@ -477,18 +469,39 @@ add_sound() {
 	echo "$(echo "bash ~/.sound" | cat - /data/data/com.termux/files/usr/bin/ubuntu)" > /data/data/com.termux/files/usr/bin/ubuntu
 
 }
+
+cng_bg() {
+        sudo mv -rf /usr/share/backgrounds/xfce/xfce-verticals.png  /usr/share/backgrounds/xfce/xfceverticals-old.png
+        sudo wget -q -O /usr/share/backgrounds/xfce/xfce-verticals.png https://w.wallhaven.cc/full/zx/wallhaven-zxd31y.jpg
+        sudo wget -q -O /usr/share/backgrounds/xfce/wallpaper2.jpg https://w.wallhaven.cc/full/47/wallhaven-47pwle.jpg
+        sudo wget -q -O /usr/share/backgrounds/xfce/wallpaper3.jpg https://w.wallhaven.cc/full/4o/wallhaven-4o5ljl.jpg
+        sudo wget -q -O /usr/share/backgrounds/xfce/wallpaper4.jpg https://w.wallhaven.cc/full/8x/wallhaven-8x962o.jpg
+}
+
+config_ubuntu() {
+	banner
+	cd ~/
+	wget -q --show-progress https://github.com/modded-ubuntu/modded-ubuntu-config/raw/main/fonts.tar.gz
+	wget -q --show-progress https://github.com/modded-ubuntu/modded-ubuntu-config/raw/main/ubuntu-settings.tar.gz
+	wget -q --show-progress https://github.com/modded-ubuntu/modded-ubuntu-config/raw/main/wallpaper.tar.gz
+	
+	mkdir -pv ~/.fonts
+	tar -xvzf fonts.tar.gz -C ~/
+	tar -xvzf ubuntu-settings.tar.gz -C ~/
+	tar -xvzf wallpaper.tar.gz -C /usr/share/backgrounds/xfce/
+}
+
 clenup() {
 	clear
 	banner
-	echo
 	echo "Cleaning up system.."
 	echo
-	sleep 2
-	sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
-	sleep 2
-	sudo rm -rf $HOME/WhiteSur-gtk-theme $HOME/WhiteSur-icon-theme $HOME/Layan-gtk-theme $HOME/Qogir-icon-theme
-
+	sudo apt update
+	sudo apt upgrade -y
+	sudo apt autoremove -y
+	sudo rm -rf $HOME/WhiteSur-gtk-theme $HOME/WhiteSur-icon-theme $HOME/Layan-gtk-theme $HOME/Nordzy-cursors ~/*.tar.gz
 }
+
 package
 extra_things
 #browser_installer
@@ -499,6 +512,8 @@ extra_things
 #font
 refs
 add_sound
+cng_bg
+config_ubuntu
 clenup
 vnc
 note

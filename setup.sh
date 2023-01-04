@@ -20,17 +20,18 @@ banner() {
 
 package() {
     echo -e "${R} [${W}-${R}]${C} Checking required packages..."${W}
-    termux-setup-storage
-    if [[ `command -v pulseaudio` && `command -v proot-distro` && `command -v wget` ]]; then
+
+    [ ! -d '/data/data/com.termux/files/home/storage' ] && termux-setup-storage
+
+    if [[ $(command -v pulseaudio) && $(command -v proot-distro) && $(command -v wget) ]]; then
         echo -e "\n${R} [${W}-${R}]${G} Packages already installed."${W}
     else
+        yes | pkg upgrade
         packs=(pulseaudio proot-distro wget)
-        for hulu in "${packs[@]}"; do
-            type -p "$hulu" &>/dev/null || {
-                echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$hulu${C}"${W}
-                apt update -y
-                apt upgrade -y
-                apt install "$hulu" -y
+        for x in "${packs[@]}"; do
+            type -p "$x" &>/dev/null || {
+                echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$x${C}"${W}
+                apt install "$x" -y
             }
         done
     fi
@@ -72,13 +73,18 @@ permission() {
 
     if [[ -e "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh" ]]; then
         chmod +x $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
+    elif [[ -e "/data/data/com.termux/files/home/modded-ubuntu/distro/user.sh" ]]; then
+        echo "$(getprop persist.sys.timezone)" > $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/etc/timezone
+        cp /data/data/com.termux/files/home/modded-ubuntu/distro/user.sh $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
+        chmod +x $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
     else
         wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/user.sh
         mv -f user.sh $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
         chmod +x $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
     fi
-    
-    echo "proot-distro login ubuntu --bind /dev/null:/proc/sys/kernel/cap_last_last --shared-tmp --fix-low-ports" > $PREFIX/bin/ubuntu
+
+    # echo "proot-distro login ubuntu --bind /dev/null:/proc/sys/kernel/cap_last_last --shared-tmp --fix-low-ports" > $PREFIX/bin/ubuntu
+    echo "proot-distro login ubuntu" > $PREFIX/bin/ubuntu
 
     if [[ -e "$PREFIX/bin/ubuntu" ]]; then
         chmod +x $PREFIX/bin/ubuntu
