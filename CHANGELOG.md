@@ -6,6 +6,7 @@
 ## [2.0.0] - 2023-01-04
 
 ### Added
+- Options to choose browser,IDE,media player (to reduce storage consumtion)
 - Nordzy cursor theme
 - Papirus icon theme
 - Custom config (to customize the ui by default)
