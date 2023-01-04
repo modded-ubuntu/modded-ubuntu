@@ -494,7 +494,7 @@ clenup() {
 	sleep 2
 	sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
 	sleep 2
-	sudo rm -rf $HOME/WhiteSur-gtk-theme $HOME/WhiteSur-icon-theme $HOME/Layan-gtk-theme $HOME/Nordzy-cursors $HOME/Papirus-Dark-Custom.tar.xz
+	sudo rm -rf $HOME/WhiteSur-gtk-theme $HOME/WhiteSur-icon-theme $HOME/Layan-gtk-theme $HOME/Nordzy-cursors ~/*.tar.gz
 
 }
 
