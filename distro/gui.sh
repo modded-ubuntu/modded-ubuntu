@@ -415,6 +415,9 @@ refs() {
     git clone https://github.com/alvatip/Nordzy-cursors --depth=1
 	cd Nordzy-cursors
 	./install.sh
+	
+	sudo wget -q --show-progress  https://github.com/modded-ubuntu/modded-ubuntu-config/blob/main/wallpaper.tar.gz
+    sudo tar -xvzf wallpaper.tar.gz -C /usr/share/backgrounds/xfce/
 
     #sudo apt update -y
 }
@@ -505,6 +508,7 @@ cng_bg() {
         sudo wget -q -O /usr/share/backgrounds/xfce/wallpaper2.jpg https://w.wallhaven.cc/full/47/wallhaven-47pwle.jpg
         sudo wget -q -O /usr/share/backgrounds/xfce/wallpaper3.jpg https://w.wallhaven.cc/full/4o/wallhaven-4o5ljl.jpg
         sudo wget -q -O /usr/share/backgrounds/xfce/wallpaper4.jpg https://w.wallhaven.cc/full/8x/wallhaven-8x962o.jpg
+
 }
 
 config_ubuntu() {
