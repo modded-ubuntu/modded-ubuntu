@@ -18,7 +18,7 @@
 
 - Fixed Audio Output
 - Lightweight {Requires at least 4GB Storage}
-- ~~Katoolin3 tool for installing kali tools
+- ~~Katoolin3 tool for installing kali tools~~
 - 2 Browsers (Chromium & Mozilla Firefox)
 - Supports Bangla Fonts
 - VLC Media Player and MPV media player
