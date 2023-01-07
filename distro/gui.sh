@@ -6,6 +6,11 @@ Y="$(printf '\033[1;33m')"
 W="$(printf '\033[1;37m')"
 C="$(printf '\033[1;36m')"
 
+if [ "$(id -u)" -ne 0 ]; then
+	echo -ne " ${R}Run this program as root!"${W}
+    exit 1
+fi
+
 banner() {
     clear
     printf "\033[33m    _  _ ___  _  _ _  _ ___ _  _    _  _ ____ ___  \033[0m\n"
@@ -140,7 +145,7 @@ firefox_install() {
 			echo "Firefox not found.Installing now.."
 			echo
 			echo
-			sudo apt install curl gnupg2 -y
+			apt install curl gnupg2 -y
 			curl -fSsL https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu-config/main/firefox.sh | bash
 		fi
 
@@ -193,7 +198,7 @@ mpv_installer() {
 		echo "mpv is not installed. Installing mpv.."
 		echo
 		sleep 1
-		sudo apt update && sudo apt install mpv -y
+		apt update && apt install mpv -y
 	fi
 }
 
@@ -211,7 +216,7 @@ vlc_installer() {
 		echo "vlc  is not installed. Installing mpv.."
 		echo
 		sleep 1
-		sudo apt update && sudo apt install vlc -y
+		apt update && apt install vlc -y
 	fi
 
 }
@@ -256,21 +261,21 @@ browser_installer() {
 package() {
     banner
     echo -e "${R} [${W}-${R}]${C} Checking required packages..."${W}
-    sudo apt-get update -y
-    sudo apt install udisks2 -y
-    sudo rm /var/lib/dpkg/info/udisks2.postinst
+    apt-get update -y
+    apt install udisks2 -y
+    rm /var/lib/dpkg/info/udisks2.postinst
     echo "" > /var/lib/dpkg/info/udisks2.postinst
-    sudo dpkg --configure -a
-    sudo apt-mark hold udisks2
+    dpkg --configure -a
+    apt-mark hold udisks2
     packs=(sudo wget gnupg2 curl nano git at-spi2-core xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common tigervnc-tools dbus-x11 fonts-beng fonts-beng-extra  gtk2-engines-murrine gtk2-engines-pixbuf)
     for hulu in "${packs[@]}"; do
         type -p "$hulu" &>/dev/null || {
             echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$hulu${C}"${W}
-            sudo apt-get install "$hulu" -y --no-install-recommends
+            apt-get install "$hulu" -y --no-install-recommends
         }
     done
-    sudo apt-get update -y
-    sudo apt-get upgrade -y
+    apt-get update -y
+    apt-get upgrade -y
 }
 
 chromium() {
@@ -281,32 +286,32 @@ chromium() {
         type -p "$hula" &>/dev/null || {
             echo -e "\n${R} [${W}-${R}]${G} Purging package : ${Y}$hula${C}"${W}
             apt purge "$hula" -y 
-            sudo apt purge "$hula" -y 
+            apt purge "$hula" -y 
         }
     done
-    sudo apt update -y
-    sudo apt upgrade -y
-    sudo apt install software-properties-common gnupg2 --no-install-recommends -y
+    apt update -y
+    apt upgrade -y
+    apt install software-properties-common gnupg2 --no-install-recommends -y
     banner
     echo -e "${R} [${W}-${R}]${C} Installing Chromium..."${W}
-    sudo echo "deb http://ftp.debian.org/debian buster main
+    echo "deb http://ftp.debian.org/debian buster main
 deb http://ftp.debian.org/debian buster-updates main" >> /etc/apt/sources.list
-    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys DCC9EFBF77E11517
-    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138
-    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys AA8E81B4331F7F50
-    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 112695A0E562B32A
-    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
-    sudo apt update -y
-    sudo apt install chromium -y
-    sudo sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
-    sudo apt-get upgrade -y
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys DCC9EFBF77E11517
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys AA8E81B4331F7F50
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 112695A0E562B32A
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
+    apt update -y
+    apt install chromium -y
+    sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
+    apt-get upgrade -y
 }
 
 theme() {
     theme=(Bright Xfce-flat Daloa Xfce-kde2 Xfce-kolors Xfce-4.4 Xfce-light Xfce-4.6 Xfce-orange Emacs Xfce-b5 Xfce-redmondxp Xfce-basic Xfce-saltlake Moheli Xfce-cadmium Xfce-smooth Xfce-curve Xfce-stellar Retro Xfce-dawn Xfce-winter Smoke Xfce-dusk)
     for rmi in "${theme[@]}"; do
         type -p "$rmi" &>/dev/null || {
-            sudo rm -rf /usr/share/themes/"$rmi"
+            rm -rf /usr/share/themes/"$rmi"
         }
     done
 }
@@ -315,7 +320,7 @@ font() {
     fonts=(hicolor LoginIcons ubuntu-mono-light)
     for rmf in "${fonts[@]}"; do
         type -p "$rmf" &>/dev/null || {
-            sudo rm -rf /usr/share/icons/"$rmf"
+            rm -rf /usr/share/icons/"$rmf"
         }
     done
 }
@@ -325,13 +330,13 @@ vscode_installer() {
 	echo
 	echo "installing Visual Studio Code (vscode).."
 	echo
-	sudo apt install gnupg2 -y 
+	apt install gnupg2 -y 
 	wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
-    sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
-    sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
-    sudo apt install apt-transport-https -y
-    sudo apt update -y
-    sudo apt install code -y
+    install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
+    sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+    apt install apt-transport-https -y
+    apt update -y
+    apt install code -y
 	echo "Patching vscode..."
 	echo
 	sleep .5
@@ -343,13 +348,13 @@ sublime_installer() {
 	echo 
 	echo "installing Sublime Text Editor.."
 	echo
-	sudo apt install gnupg2 -y
-	sudo apt install  software-properties-common gnupg2 --no-install-recommends -y
-	wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
-	sudo apt-get install apt-transport-https
-	echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
-	sudo apt-get update
-	sudo apt-get install sublime-text -y 
+	apt install gnupg2 -y
+	apt install  software-properties-common gnupg2 --no-install-recommends -y
+	wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | apt-key add -
+	apt-get install apt-transport-https
+	echo "deb https://download.sublimetext.com/ apt/stable/" | tee /etc/apt/sources.list.d/sublime-text.list
+	apt-get update
+	apt-get install sublime-text -y 
 }
 ide_installer() {
 	banner
@@ -383,28 +388,28 @@ ide_installer() {
 }
 
 refs() {
-    sudo apt update && yes | sudo apt install gnupg2
-    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
-    sudo apt-get upgrade -y
-    sudo apt install gnupg2 gtk2-engines-murrine gtk2-engines-pixbuf sassc optipng inkscape libglib2.0-dev-bin -y 
+    apt update && yes | apt install gnupg2
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
+    apt-get upgrade -y
+    apt install gnupg2 gtk2-engines-murrine gtk2-engines-pixbuf sassc optipng inkscape libglib2.0-dev-bin -y 
     banner
     echo
     git clone --depth=1 https://github.com/vinceliuice/Layan-gtk-theme.git $HOME/Layan-gtk-theme
-    sudo chmod +x $HOME/Layan-gtk-theme/install.sh
-    sudo bash $HOME/Layan-gtk-theme/install.sh
+    chmod +x $HOME/Layan-gtk-theme/install.sh
+    bash $HOME/Layan-gtk-theme/install.sh
 	
 	git clone --depth=1 https://github.com/vinceliuice/WhiteSur-gtk-theme $HOME/WhiteSur-gtk-theme
-	sudo chmod +x $HOME/WhiteSur-gtk-theme/install.sh
-	sudo bash $HOME/WhiteSur-gtk-theme/install.sh
+	chmod +x $HOME/WhiteSur-gtk-theme/install.sh
+	bash $HOME/WhiteSur-gtk-theme/install.sh
 	
 	git clone --depth=1 https://github.com/vinceliuice/WhiteSur-icon-theme $HOME/WhiteSur-icon-theme
-	sudo chmod +x $HOME/WhiteSur-icon-theme/install.sh
-	sudo bash $HOME/WhiteSur-icon-theme/install.sh 
+	chmod +x $HOME/WhiteSur-icon-theme/install.sh
+	bash $HOME/WhiteSur-icon-theme/install.sh 
 	
 	mkdir -pv ~/.icons
 	wget -q --show-progress https://github.com/owl4ce/dotfiles/releases/download/ng/Papirus-Dark-Custom.tar.xz
 	tar -xf Papirus-Dark-Custom.tar.xz -C ~/.icons/
-	sudo ln -vs ~/.icons/Papirus-Dark-Custom /usr/share/icons/
+	ln -vs ~/.icons/Papirus-Dark-Custom /usr/share/icons/
 
 	git clone https://github.com/alvatip/Nordzy-cursors --depth=1
 	cd Nordzy-cursors
@@ -482,7 +487,7 @@ config_ubuntu() {
 	tar -xvzf ubuntu-settings.tar.gz -C ~/
 
 	wget -q --show-progress https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/wallpaper.tar.gz
-	sudo mv -rf /usr/share/backgrounds/xfce/xfce-verticals.png  /usr/share/backgrounds/xfce/xfceverticals-old.png
+	mv -rf /usr/share/backgrounds/xfce/xfce-verticals.png  /usr/share/backgrounds/xfce/xfceverticals-old.png
 	tar -xvzf wallpaper.tar.gz -C /usr/share/backgrounds/xfce/
 	
 }
@@ -492,10 +497,10 @@ clenup() {
 	banner
 	echo "Cleaning up system.."
 	echo
-	sudo apt update
-	sudo apt upgrade -y
-	sudo apt autoremove -y
-	sudo rm -rf $HOME/WhiteSur-gtk-theme $HOME/WhiteSur-icon-theme $HOME/Layan-gtk-theme $HOME/Nordzy-cursors ~/*.tar.gz
+	apt update
+	apt upgrade -y
+	apt autoremove -y
+	rm -rf $HOME/WhiteSur-gtk-theme $HOME/WhiteSur-icon-theme $HOME/Layan-gtk-theme $HOME/Nordzy-cursors ~/*.tar.gz
 }
 
 package
