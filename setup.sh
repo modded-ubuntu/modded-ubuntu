@@ -90,7 +90,7 @@ permission() {
         chmod +x $PREFIX/bin/ubuntu
         termux-reload-settings
         banner
-        echo -e "\n${R} [${W}-${R}]${G} Ubuntu-21.10(CLI) is now Installed on your Termux"${W}
+        echo -e "\n${R} [${W}-${R}]${G} Ubuntu-22.04(CLI) is now Installed on your Termux"${W}
         echo -e "\n${R} [${W}-${R}]${G} Restart your Termux to Prevent Some Issues."${W}
         echo -e "\n${R} [${W}-${R}]${G} Type ${C}ubuntu${G} to run Ubuntu CLI."${W}
         echo -e "\n${R} [${W}-${R}]${G} If you Want to Use UBUNTU in GUI MODE then ,"${W}
