@@ -6,6 +6,7 @@ Y="$(printf '\033[1;33m')"
 W="$(printf '\033[1;37m')"
 C="$(printf '\033[1;36m')"
 arch=$(uname -m)
+username=$(getent group sudo | awk -F ':' '{print $4}' | cut -d ',' -f1)
 
 check_root(){
 	if [ "$(id -u)" -ne 0 ]; then
@@ -204,12 +205,12 @@ vnc() {
 	banner
 	echo
 	echo -e "${R} [${W}-${R}]${C} Setting up VNC Server..."${W}
-	[[ ! -d "$HOME/.vnc" ]] && mkdir -p "$HOME/.vnc"
+	[[ ! -d "/home/$username/.vnc" ]] && mkdir -p "/home/$username/.vnc"
 
-	downloader "$HOME/.vnc/xstartup" "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/xstartup"
+	downloader "/home/$username/.vnc/xstartup" "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/xstartup"
 	downloader "/usr/local/bin/vncstart" "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/vncstart"
 	downloader "/usr/local/bin/vncstop" "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/vncstop"
-	chmod +x $HOME/.vnc/xstartup /usr/local/bin/vncstart /usr/local/bin/vncstop
+	chmod +x /home/$username/.vnc/xstartup /usr/local/bin/vncstart /usr/local/bin/vncstop
 
 	echo "$(echo "bash ~/.sound" | cat - /data/data/com.termux/files/usr/bin/ubuntu)" > /data/data/com.termux/files/usr/bin/ubuntu
 	echo "export DISPLAY=":1"" >> /etc/profile
@@ -222,15 +223,15 @@ config() {
 	echo
 	mkdir -pv ~/.fonts
 	mv -rf /usr/share/backgrounds/xfce/xfce-verticals.png  /usr/share/backgrounds/xfce/xfceverticals-old.png
-	temp_folder=$(mktemp -d -p $HOME)
+	temp_folder=$(mktemp -d -p /home/$username/)
 	cd $temp_folder
 	downloader "fonts.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/fonts.tar.gz"
 	downloader "wallpaper.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/wallpaper.tar.gz"
 	downloader "ubuntu-settings.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/ubuntu-settings.tar.gz"
 	
-	tar -xvzf fonts.tar.gz -C "$HOME/"
+	tar -xvzf fonts.tar.gz -C "/home/$username/"
 	tar -xvzf wallpaper.tar.gz -C /usr/share/backgrounds/xfce/
-	tar -xvzf ubuntu-settings.tar.gz -C "$HOME/"	
+	tar -xvzf ubuntu-settings.tar.gz -C "/home/$username/"	
 	rm -fr $temp_folder
 
 }
@@ -243,17 +244,17 @@ refs() {
     apt install gnupg2 gtk2-engines-murrine gtk2-engines-pixbuf sassc optipng inkscape libglib2.0-dev-bin -y 
     banner
     echo
-    git clone --depth=1 https://github.com/vinceliuice/Layan-gtk-theme.git $HOME/Layan-gtk-theme
-    chmod +x $HOME/Layan-gtk-theme/install.sh
-    bash $HOME/Layan-gtk-theme/install.sh
+    git clone --depth=1 https://github.com/vinceliuice/Layan-gtk-theme.git /home/$username/Layan-gtk-theme
+    chmod +x /home/$username/Layan-gtk-theme/install.sh
+    bash /home/$username/Layan-gtk-theme/install.sh
 	
-	git clone --depth=1 https://github.com/vinceliuice/WhiteSur-gtk-theme $HOME/WhiteSur-gtk-theme
-	chmod +x $HOME/WhiteSur-gtk-theme/install.sh
-	bash $HOME/WhiteSur-gtk-theme/install.sh
+	git clone --depth=1 https://github.com/vinceliuice/WhiteSur-gtk-theme /home/$username/WhiteSur-gtk-theme
+	chmod +x /home/$username/WhiteSur-gtk-theme/install.sh
+	bash /home/$username/WhiteSur-gtk-theme/install.sh
 	
-	git clone --depth=1 https://github.com/vinceliuice/WhiteSur-icon-theme $HOME/WhiteSur-icon-theme
-	chmod +x $HOME/WhiteSur-icon-theme/install.sh
-	bash $HOME/WhiteSur-icon-theme/install.sh 
+	git clone --depth=1 https://github.com/vinceliuice/WhiteSur-icon-theme /home/$username/WhiteSur-icon-theme
+	chmod +x /home/$username/WhiteSur-icon-theme/install.sh
+	bash /home/$username/WhiteSur-icon-theme/install.sh 
 	
 	mkdir -pv ~/.icons
 	wget -q --show-progress https://github.com/owl4ce/dotfiles/releases/download/ng/Papirus-Dark-Custom.tar.xz
@@ -274,7 +275,7 @@ cleanup() {
 	apt update
 	apt upgrade -y
 	apt autoremove -y
-	rm -rf $HOME/WhiteSur-gtk-theme $HOME/WhiteSur-icon-theme $HOME/Layan-gtk-theme $HOME/Nordzy-cursors ~/*.tar.gz
+	rm -rf /home/$username/WhiteSur-gtk-theme /home/$username/WhiteSur-icon-theme /home/$username/Layan-gtk-theme /home/$username/Nordzy-cursors ~/*.tar.gz
 }
 
 # ----------- UNWANTED FUNCS -----------
