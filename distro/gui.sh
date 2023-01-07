@@ -470,25 +470,21 @@ add_sound() {
 
 }
 
-cng_bg() {
-        sudo mv -rf /usr/share/backgrounds/xfce/xfce-verticals.png  /usr/share/backgrounds/xfce/xfceverticals-old.png
-        sudo wget -q -O /usr/share/backgrounds/xfce/xfce-verticals.png https://w.wallhaven.cc/full/zx/wallhaven-zxd31y.jpg
-        sudo wget -q -O /usr/share/backgrounds/xfce/wallpaper2.jpg https://w.wallhaven.cc/full/47/wallhaven-47pwle.jpg
-        sudo wget -q -O /usr/share/backgrounds/xfce/wallpaper3.jpg https://w.wallhaven.cc/full/4o/wallhaven-4o5ljl.jpg
-        sudo wget -q -O /usr/share/backgrounds/xfce/wallpaper4.jpg https://w.wallhaven.cc/full/8x/wallhaven-8x962o.jpg
-}
-
 config_ubuntu() {
 	banner
 	cd ~/
-	wget -q --show-progress https://github.com/modded-ubuntu/modded-ubuntu-config/raw/main/fonts.tar.gz
-	wget -q --show-progress https://github.com/modded-ubuntu/modded-ubuntu-config/raw/main/ubuntu-settings.tar.gz
-	wget -q --show-progress https://github.com/modded-ubuntu/modded-ubuntu-config/raw/main/wallpaper.tar.gz
-	
+
+	wget -q --show-progress https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/fonts.tar.gz
 	mkdir -pv ~/.fonts
 	tar -xvzf fonts.tar.gz -C ~/
+
+	wget -q --show-progress https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/ubuntu-settings.tar.gz
 	tar -xvzf ubuntu-settings.tar.gz -C ~/
+
+	wget -q --show-progress https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/wallpaper.tar.gz
+	sudo mv -rf /usr/share/backgrounds/xfce/xfce-verticals.png  /usr/share/backgrounds/xfce/xfceverticals-old.png
 	tar -xvzf wallpaper.tar.gz -C /usr/share/backgrounds/xfce/
+	
 }
 
 clenup() {
@@ -512,7 +508,6 @@ extra_things
 #font
 refs
 add_sound
-cng_bg
 config_ubuntu
 clenup
 vnc
