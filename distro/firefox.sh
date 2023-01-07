@@ -164,7 +164,7 @@ EOF
 
 echo "deb https://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu jammy main" | tee /etc/apt/sources.list.d/mozillateam-ubuntu-ppa-jammy.list
 
-print_key | apt-key add -
+print_key | gpg --dearmor > /etc/apt/trusted.gpg.d/firefox.gpg
 
 if [ ! -f $PREFFILE ]; then
     mkdir -p /etc/apt/preferences.d/

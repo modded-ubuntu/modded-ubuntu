@@ -10,7 +10,7 @@ username=$(getent group sudo | awk -F ':' '{print $4}' | cut -d ',' -f1)
 
 check_root(){
 	if [ "$(id -u)" -ne 0 ]; then
-		echo -ne " ${R}Run this program as root!"${W}
+		echo -ne " ${R}Run this program as root!\n\n"${W}
 		exit 1
 	fi
 }
@@ -97,7 +97,7 @@ install_sublime() {
 	[[ $(command -v subl) ]] && echo "${Y}Sublime is already Installed!${W}" || {
 		apt install gnupg2 software-properties-common --no-install-recommends -y
 		echo "deb https://download.sublimetext.com/ apt/stable/" | tee /etc/apt/sources.list.d/sublime-text.list
-		curl -fsSL https://download.sublimetext.com/sublimehq-pub.gpg | apt-key add -
+		curl -fsSL https://download.sublimetext.com/sublimehq-pub.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/sublime.gpg
 		apt update -y
 		apt install sublime-text -y 
 		echo -e "${G} Sublime Text Editor Installed Successfully\n"
@@ -256,10 +256,10 @@ refs() {
 	chmod +x /home/$username/WhiteSur-icon-theme/install.sh
 	bash /home/$username/WhiteSur-icon-theme/install.sh 
 	
-	mkdir -pv ~/.icons
+	mkdir -pv /home/$username/.icons
 	wget -q --show-progress https://github.com/owl4ce/dotfiles/releases/download/ng/Papirus-Dark-Custom.tar.xz
-	tar -xf Papirus-Dark-Custom.tar.xz -C ~/.icons/
-	ln -vs ~/.icons/Papirus-Dark-Custom /usr/share/icons/
+	tar -xf Papirus-Dark-Custom.tar.xz -C /home/$username/.icons/
+	ln -vs /home/$username/.icons/Papirus-Dark-Custom /usr/share/icons/
 
 	git clone https://github.com/alvatip/Nordzy-cursors --depth=1
 	cd Nordzy-cursors
@@ -275,7 +275,7 @@ cleanup() {
 	apt update
 	apt upgrade -y
 	apt autoremove -y
-	rm -rf /home/$username/WhiteSur-gtk-theme /home/$username/WhiteSur-icon-theme /home/$username/Layan-gtk-theme /home/$username/Nordzy-cursors ~/*.tar.gz
+	rm -rf /home/$username/WhiteSur-gtk-theme /home/$username/WhiteSur-icon-theme /home/$username/Layan-gtk-theme /home/$username/Nordzy-cursors /home/$username/*.tar.gz
 }
 
 # ----------- UNWANTED FUNCS -----------
