@@ -89,7 +89,7 @@ install_vscode() {
 		apt install code -y
 		echo "Patching.."
 		mv /data/data/com.termux/files/home/modded-ubuntu/patches/code.desktop /usr/share/applications/
-		echo -e "${G} Visual Studio Code Installed Successfully\n"
+		echo -e "${C} Visual Studio Code Installed Successfully\n${W}"
 	}
 }
 
@@ -97,10 +97,10 @@ install_sublime() {
 	[[ $(command -v subl) ]] && echo "${Y}Sublime is already Installed!${W}" || {
 		apt install gnupg2 software-properties-common --no-install-recommends -y
 		echo "deb https://download.sublimetext.com/ apt/stable/" | tee /etc/apt/sources.list.d/sublime-text.list
-		curl -fsSL https://download.sublimetext.com/sublimehq-pub.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/sublime.gpg
+		curl -fsSL https://download.sublimetext.com/sublimehq-pub.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/sublime.gpg 2> /dev/null
 		apt update -y
 		apt install sublime-text -y 
-		echo -e "${G} Sublime Text Editor Installed Successfully\n"
+		echo -e "${C} Sublime Text Editor Installed Successfully\n${W}"
 	}
 }
 
