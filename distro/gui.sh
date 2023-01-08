@@ -222,7 +222,7 @@ config() {
 	banner
 	echo
 	mkdir -pv ~/.fonts
-	mv -rf /usr/share/backgrounds/xfce/xfce-verticals.png  /usr/share/backgrounds/xfce/xfceverticals-old.png
+	mv -vf /usr/share/backgrounds/xfce/xfce-verticals.png  /usr/share/backgrounds/xfce/xfceverticals-old.png
 	temp_folder=$(mktemp -d -p /home/$username/)
 	cd $temp_folder
 	downloader "fonts.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/fonts.tar.gz"
@@ -257,8 +257,8 @@ refs() {
 	bash /home/$username/WhiteSur-icon-theme/install.sh 
 	
 	mkdir -pv /home/$username/.icons
-	wget -q --show-progress https://github.com/owl4ce/dotfiles/releases/download/ng/Papirus-Dark-Custom.tar.xz
-	tar -xf Papirus-Dark-Custom.tar.xz -C /home/$username/.icons/
+	wget -q --show-progress /home/$username/ https://github.com/owl4ce/dotfiles/releases/download/ng/Papirus-Dark-Custom.tar.xz
+	tar -xf /home/$username/Papirus-Dark-Custom.tar.xz -C /home/$username/.icons/
 	ln -vs /home/$username/.icons/Papirus-Dark-Custom /usr/share/icons/
 
 	git clone https://github.com/alvatip/Nordzy-cursors --depth=1
