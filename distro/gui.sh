@@ -58,10 +58,10 @@ package() {
 	dpkg --configure -a
 	apt-mark hold udisks2
 	
-	packs=(sudo gnupg2 curl nano git at-spi2-core xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common tigervnc-tools dbus-x11 fonts-beng fonts-beng-extra gtk2-engines-murrine gtk2-engines-pixbuf apt-transport-https)
+	packs=(sudo gnupg2 curl nano git xz-utils at-spi2-core xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common tigervnc-tools dbus-x11 fonts-beng fonts-beng-extra gtk2-engines-murrine gtk2-engines-pixbuf apt-transport-https)
 	for hulu in "${packs[@]}"; do
 		type -p "$hulu" &>/dev/null || {
-			echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$hulu${C}"${W}
+			echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$hulu${W}"
 			apt-get install "$hulu" -y --no-install-recommends
 		}
 	done
@@ -105,7 +105,7 @@ install_sublime() {
 }
 
 install_chromium() {
-	[[ $(command -v chromium) ]] && echo "${Y}Chromium is already Installed!${W}" || {
+	[[ $(command -v chromium) ]] && echo "${Y}Chromium is already Installed!${W}\n" || {
 		echo -e "${G}Installing ${Y}Chromium${W}"
 		apt purge chromium* chromium-browser* snapd -y
 		apt install gnupg2 software-properties-common --no-install-recommends -y
@@ -118,15 +118,15 @@ install_chromium() {
 		apt update -y
 		apt install chromium -y
 		sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
-		echo -e "${G} Chromium Installed Successfully\n"
+		echo -e "${G} Chromium Installed Successfully\n${W}"
 	}
 }
 
 install_firefox() {
-	[[ $(command -v firefox) ]] && echo "${Y}Firefox is already Installed!${W}" || {
+	[[ $(command -v firefox) ]] && echo "${Y}Firefox is already Installed!${W}\n" || {
 		echo -e "${G}Installing ${Y}Firefox${W}"
 		bash <(curl -fsSL "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu-config/main/firefox.sh")
-		echo -e "${G} Firefox Installed Successfully\n"
+		echo -e "${G} Firefox Installed Successfully\n${W}"
 	}
 }
 
@@ -215,7 +215,7 @@ downloader(){
 
 vnc() {
 	banner
-	echo -e "${R} [${W}-${R}]${C} Setting up VNC Server..."${W}
+	echo -e "${R} [${W}-${R}]${C} Setting up VNC Server...\n"${W}
 	[[ ! -d "/home/$username/.vnc" ]] && mkdir -p "/home/$username/.vnc"
 
 	downloader "/home/$username/.vnc/xstartup" "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/xstartup"
@@ -229,6 +229,24 @@ vnc() {
 	source /etc/profile
 }
 
+rem_theme() {
+	theme=(Bright Daloa Emacs Moheli Retro Smoke)
+	for rmi in "${theme[@]}"; do
+		type -p "$rmi" &>/dev/null || {
+			rm -rf /usr/share/themes/"$rmi"
+		}
+	done
+}
+
+rem_icon() {
+	fonts=(hicolor LoginIcons ubuntu-mono-light)
+	for rmf in "${fonts[@]}"; do
+		type -p "$rmf" &>/dev/null || {
+			rm -rf /usr/share/icons/"$rmf"
+		}
+	done
+}
+
 config() {
 	banner
 	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
@@ -238,7 +256,7 @@ config() {
 	temp_folder=$(mktemp -d -p "$HOME")
 	{ banner; sleep 1; cd $temp_folder; }
 
-	echo -e "${R} [${W}-${R}]${C} Downloading Required Files.."${W}
+	echo -e "${R} [${W}-${R}]${C} Downloading Required Files..\n"${W}
 	downloader "fonts.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/fonts.tar.gz"
 	downloader "icons.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/icons.tar.gz"
 	downloader "wallpaper.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/wallpaper.tar.gz"
@@ -246,7 +264,7 @@ config() {
 	downloader "Layan-gtk.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/Layan-gtk.tar.gz"
 	downloader "Papirus-Dark-Custom.tar.xz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/Papirus-Dark-Custom.tar.xz" # https://github.com/owl4ce/dotfiles/
 
-	echo -e "${R} [${W}-${R}]${C} Unpacking Files.."${W}
+	echo -e "${R} [${W}-${R}]${C} Unpacking Files..\n"${W}
 	tar -xvzf fonts.tar.gz -C "/usr/local/share/fonts/"
 	tar -xvzf icons.tar.gz -C "/usr/share/icons/"
 	tar -xvzf wallpaper.tar.gz -C "/usr/share/backgrounds/xfce/"
@@ -255,39 +273,19 @@ config() {
 	tar -xvzf ubuntu-settings.tar.gz -C "/home/$username/"	
 	rm -fr $temp_folder
 
-	echo -e "${R} [${W}-${R}]${C} Rebuilding Font Cache.."${W}
+	echo -e "${R} [${W}-${R}]${C} Purging Unnecessary Files.."${W}
+	rem_theme
+	rem_icon
+
+	echo -e "${R} [${W}-${R}]${C} Rebuilding Font Cache..\n"${W}
 	fc-cache -fv
 
-	echo -e "${R} [${W}-${R}]${C} Upgrading the System.."${W}
+	echo -e "${R} [${W}-${R}]${C} Upgrading the System..\n"${W}
 	apt update
 	yes | apt upgrade
 	yes | apt autoremove
 
 }
-
-
-# ----------- UNWANTED FUNCS -----------
-
-rem_theme() {
-	theme=(Bright Xfce-flat Daloa Xfce-kde2 Xfce-kolors Xfce-4.4 Xfce-light Xfce-4.6 Xfce-orange Emacs Xfce-b5 Xfce-redmondxp Xfce-basic Xfce-saltlake Moheli Xfce-cadmium Xfce-smooth Xfce-curve Xfce-stellar Retro Xfce-dawn Xfce-winter Smoke Xfce-dusk)
-	for rmi in "${theme[@]}"; do
-		type -p "$rmi" &>/dev/null || {
-			rm -rf /usr/share/themes/"$rmi"
-		}
-	done
-}
-
-rem_font() {
-	fonts=(hicolor LoginIcons ubuntu-mono-light)
-	for rmf in "${fonts[@]}"; do
-		type -p "$rmf" &>/dev/null || {
-			rm -rf /usr/share/icons/"$rmf"
-		}
-	done
-}
-
-# rem_theme
-# rem_font
 
 # ----------------------------
 
