@@ -21,13 +21,13 @@ banner() {
 package() {
     echo -e "${R} [${W}-${R}]${C} Checking required packages..."${W}
 
-    [ ! -d '/data/data/com.termux/files/home/storage' ] && termux-setup-storage
+    [ ! -d '/data/data/com.termux/files/home/storage' ] && echo -e "${R} [${W}-${R}]${C} Setting up Storage.."${W} && termux-setup-storage
 
-    if [[ $(command -v pulseaudio) && $(command -v proot-distro) && $(command -v wget) ]]; then
+    if [[ $(command -v pulseaudio) && $(command -v proot-distro) ]]; then
         echo -e "\n${R} [${W}-${R}]${G} Packages already installed."${W}
     else
         yes | pkg upgrade
-        packs=(pulseaudio proot-distro wget)
+        packs=(pulseaudio proot-distro)
         for x in "${packs[@]}"; do
             type -p "$x" &>/dev/null || {
                 echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$x${C}"${W}
@@ -78,8 +78,7 @@ permission() {
         cp /data/data/com.termux/files/home/modded-ubuntu/distro/user.sh $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
         chmod +x $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
     else
-        wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/user.sh
-        mv -f user.sh $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
+        curl -fsSL "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/user.sh" -O $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
         chmod +x $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/user.sh
     fi
 

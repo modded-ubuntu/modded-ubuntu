@@ -58,7 +58,7 @@ package() {
 	dpkg --configure -a
 	apt-mark hold udisks2
 	
-	packs=(sudo wget gnupg2 curl nano git at-spi2-core xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common tigervnc-tools dbus-x11 fonts-beng fonts-beng-extra gtk2-engines-murrine gtk2-engines-pixbuf apt-transport-https)
+	packs=(sudo gnupg2 curl nano git at-spi2-core xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common tigervnc-tools dbus-x11 fonts-beng fonts-beng-extra gtk2-engines-murrine gtk2-engines-pixbuf apt-transport-https)
 	for hulu in "${packs[@]}"; do
 		type -p "$hulu" &>/dev/null || {
 			echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$hulu${C}"${W}
@@ -104,17 +104,44 @@ install_sublime() {
 	}
 }
 
+install_chromium() {
+	[[ $(command -v chromium) ]] && echo "${Y}Chromium is already Installed!${W}" || {
+		echo -e "${G}Installing ${Y}Chromium${W}"
+		apt purge chromium* chromium-browser* snapd -y
+		apt install gnupg2 software-properties-common --no-install-recommends -y
+		echo -e "deb http://ftp.debian.org/debian buster main\ndeb http://ftp.debian.org/debian buster-updates main" >> /etc/apt/sources.list
+		apt-key adv --keyserver keyserver.ubuntu.com --recv-keys DCC9EFBF77E11517
+		apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138
+		apt-key adv --keyserver keyserver.ubuntu.com --recv-keys AA8E81B4331F7F50
+		apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 112695A0E562B32A
+		apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
+		apt update -y
+		apt install chromium -y
+		sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
+		echo -e "${G} Chromium Installed Successfully\n"
+	}
+}
+
+install_firefox() {
+	[[ $(command -v firefox) ]] && echo "${Y}Firefox is already Installed!${W}" || {
+		echo -e "${G}Installing ${Y}Firefox${W}"
+		bash <(curl -fsSL "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu-config/main/firefox.sh")
+		echo -e "${G} Firefox Installed Successfully\n"
+	}
+}
+
 install_softwares() {
-	{ clear; banner; }
+	banner
 	cat <<- EOF
 		${Y} ---${G} Select Browser ${Y}---
 
 		${C} [${W}1${C}] Firefox (Default)
 		${C} [${W}2${C}] Chromium
+		${C} [${W}3${C}] Both (Firefox + Chromium)
 
 	EOF
 	read -n1 -p "${R} [${G}~${R}]${Y} Select an Option: ${G}" BROWSER_OPTION
-	{ clear; banner; }
+	banner
 
 	[[ ("$arch" != 'armhf') || ("$arch" != *'armv7'*) ]] && {
 		cat <<- EOF
@@ -127,7 +154,7 @@ install_softwares() {
 
 		EOF
 		read -n1 -p "${R} [${G}~${R}]${Y} Select an Option: ${G}" IDE_OPTION
-		{ clear; banner; }
+		banner
 	}
 	
 	cat <<- EOF
@@ -140,30 +167,15 @@ install_softwares() {
 
 	EOF
 	read -n1 -p "${R} [${G}~${R}]${Y} Select an Option: ${G}" PLAYER_OPTION
-	{ clear; banner; sleep 1; }
+	{ banner; sleep 1; }
 
 	if [[ ${BROWSER_OPTION} == 2 ]]; then
-		[[ $(command -v chromium) ]] && echo "${Y}Chromium is already Installed!${W}" || {
-			echo -e "${G}Installing ${Y}Chromium${W}"
-			apt purge chromium* chromium-browser* snapd -y
-			apt install gnupg2 software-properties-common --no-install-recommends -y
-			echo -e "deb http://ftp.debian.org/debian buster main\ndeb http://ftp.debian.org/debian buster-updates main" >> /etc/apt/sources.list
-			apt-key adv --keyserver keyserver.ubuntu.com --recv-keys DCC9EFBF77E11517
-			apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138
-			apt-key adv --keyserver keyserver.ubuntu.com --recv-keys AA8E81B4331F7F50
-			apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 112695A0E562B32A
-			apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
-			apt update -y
-			apt install chromium -y
-			sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
-			echo -e "${G} Chromium Installed Successfully\n"
-		}
+		install_chromium
+	elif [[ ${BROWSER_OPTION} == 3 ]]; then
+		install_firefox
+		install_chromium
 	else
-		[[ $(command -v firefox) ]] && echo "${Y}Firefox is already Installed!${W}" || {
-			echo -e "${G}Installing ${Y}Firefox${W}"
-			bash <(curl -fsSL "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu-config/main/firefox.sh")
-			echo -e "${G} Chromium Installed Successfully\n"
-		}
+		install_firefox
 	fi
 
 	[[ ("$arch" != 'armhf') || ("$arch" != *'armv7'*) ]] && {
@@ -203,7 +215,6 @@ downloader(){
 
 vnc() {
 	banner
-	echo
 	echo -e "${R} [${W}-${R}]${C} Setting up VNC Server..."${W}
 	[[ ! -d "/home/$username/.vnc" ]] && mkdir -p "/home/$username/.vnc"
 
@@ -220,63 +231,40 @@ vnc() {
 
 config() {
 	banner
-	echo
-	mkdir -pv ~/.fonts
-	mv -vf /usr/share/backgrounds/xfce/xfce-verticals.png  /usr/share/backgrounds/xfce/xfceverticals-old.png
-	temp_folder=$(mktemp -d -p /home/$username/)
-	cd $temp_folder
+	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
+	yes | apt upgrade
+	yes | apt install gtk2-engines-murrine gtk2-engines-pixbuf sassc optipng inkscape libglib2.0-dev-bin
+	mv -vf /usr/share/backgrounds/xfce/xfce-verticals.png /usr/share/backgrounds/xfce/xfceverticals-old.png
+	temp_folder=$(mktemp -d -p "$HOME")
+	{ banner; sleep 1; cd $temp_folder; }
+
+	echo -e "${R} [${W}-${R}]${C} Downloading Required Files.."${W}
 	downloader "fonts.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/fonts.tar.gz"
+	downloader "icons.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/icons.tar.gz"
 	downloader "wallpaper.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/wallpaper.tar.gz"
 	downloader "ubuntu-settings.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/ubuntu-settings.tar.gz"
-	
-	tar -xvzf fonts.tar.gz -C "/home/$username/"
-	tar -xvzf wallpaper.tar.gz -C /usr/share/backgrounds/xfce/
+	downloader "Layan-gtk.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/Layan-gtk.tar.gz"
+	downloader "Papirus-Dark-Custom.tar.xz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/Papirus-Dark-Custom.tar.xz" # https://github.com/owl4ce/dotfiles/
+
+	echo -e "${R} [${W}-${R}]${C} Unpacking Files.."${W}
+	tar -xvzf fonts.tar.gz -C "/usr/local/share/fonts/"
+	tar -xvzf icons.tar.gz -C "/usr/share/icons/"
+	tar -xvzf wallpaper.tar.gz -C "/usr/share/backgrounds/xfce/"
+	tar -xvf Papirus-Dark-Custom.tar.xz -C "/usr/share/icons/"
+	tar -xvzf Layan-gtk.tar.gz -C "/usr/share/themes/"
 	tar -xvzf ubuntu-settings.tar.gz -C "/home/$username/"	
 	rm -fr $temp_folder
 
-}
+	echo -e "${R} [${W}-${R}]${C} Rebuilding Font Cache.."${W}
+	fc-cache -fv
 
-
-refs() {
-    yes | apt upgrade
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
-    apt-get upgrade -y
-    apt install gnupg2 gtk2-engines-murrine gtk2-engines-pixbuf sassc optipng inkscape libglib2.0-dev-bin -y 
-    banner
-    echo
-    git clone --depth=1 https://github.com/vinceliuice/Layan-gtk-theme.git /home/$username/Layan-gtk-theme
-    chmod +x /home/$username/Layan-gtk-theme/install.sh
-    bash /home/$username/Layan-gtk-theme/install.sh
-	
-	git clone --depth=1 https://github.com/vinceliuice/WhiteSur-gtk-theme /home/$username/WhiteSur-gtk-theme
-	chmod +x /home/$username/WhiteSur-gtk-theme/install.sh
-	bash /home/$username/WhiteSur-gtk-theme/install.sh
-	
-	git clone --depth=1 https://github.com/vinceliuice/WhiteSur-icon-theme /home/$username/WhiteSur-icon-theme
-	chmod +x /home/$username/WhiteSur-icon-theme/install.sh
-	bash /home/$username/WhiteSur-icon-theme/install.sh 
-	
-	mkdir -pv /home/$username/.icons
-	wget -q --show-progress /home/$username/ https://github.com/owl4ce/dotfiles/releases/download/ng/Papirus-Dark-Custom.tar.xz
-	tar -xf /home/$username/Papirus-Dark-Custom.tar.xz -C /home/$username/.icons/
-	ln -vs /home/$username/.icons/Papirus-Dark-Custom /usr/share/icons/
-
-	git clone https://github.com/alvatip/Nordzy-cursors --depth=1
-	cd Nordzy-cursors
-	./install.sh
-
-}
-
-cleanup() {
-	clear
-	banner
-	echo "Cleaning up system.."
-	echo
+	echo -e "${R} [${W}-${R}]${C} Upgrading the System.."${W}
 	apt update
-	apt upgrade -y
-	apt autoremove -y
-	rm -rf /home/$username/WhiteSur-gtk-theme /home/$username/WhiteSur-icon-theme /home/$username/Layan-gtk-theme /home/$username/Nordzy-cursors /home/$username/*.tar.gz
+	yes | apt upgrade
+	yes | apt autoremove
+
 }
+
 
 # ----------- UNWANTED FUNCS -----------
 
@@ -306,10 +294,7 @@ rem_font() {
 check_root
 package
 install_softwares
-
-refs
 config
-cleanup
 vnc
 note
 
