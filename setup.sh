@@ -63,14 +63,14 @@ distro() {
 
 sound() {
 	echo -e "\n${R} [${W}-${R}]${C} Fixing Sound Problem..."${W}
-	if [[ ! -e "$HOME/.sound" ]] && touch "$HOME/.sound"
+	[ ! -e "$HOME/.sound" ] && touch "$HOME/.sound"
 	echo "pulseaudio --start --exit-idle-time=-1" >> "$HOME/.sound"
 	echo "pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" >> "$HOME/.sound"
 }
 
 downloader(){
 	path="$1"
-	[[ -e "$path" ]] && rm -rf "$path"
+	[ -e "$path" ] && rm -rf "$path"
 	echo "Downloading $(basename $1)..."
 	curl --progress-bar --insecure --fail \
 		 --retry-connrefused --retry 3 --retry-delay 2 \
