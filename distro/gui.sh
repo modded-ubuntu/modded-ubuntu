@@ -219,7 +219,7 @@ vnc() {
 	[[ ! -d "/home/$username/.vnc" ]] && mkdir -p "/home/$username/.vnc"
 
 	downloader "/home/$username/.vnc/xstartup" "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/xstartup"
-	downloader "/usr/local/bin/vncstart" "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/vncstart"
+	downloader "/usr/local/bin/vncstart" "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/v2.0/distro/vncstart"
 	downloader "/usr/local/bin/vncstop" "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/vncstop"
 	chmod +x /home/$username/.vnc/xstartup /usr/local/bin/vncstart /usr/local/bin/vncstop
 
