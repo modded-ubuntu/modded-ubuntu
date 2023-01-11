@@ -28,7 +28,7 @@ banner() {
 
 note() {
 	banner
-	echo -e " ${G} [!] Successfully Installed !\n"${W}
+	echo -e " ${G} [-] Successfully Installed !\n"${W}
 	sleep 1
 	cat <<- EOF
 		 ${G}[-] Type ${C}vncstart${G} to run Vncserver.
@@ -88,7 +88,7 @@ install_vscode() {
 		apt update -y
 		apt install code -y
 		echo "Patching.."
-		mv /data/data/com.termux/files/home/modded-ubuntu/patches/code.desktop /usr/share/applications/
+		curl -fsSL https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/patches/code.desktop > /usr/share/applications/code.desktop
 		echo -e "${C} Visual Studio Code Installed Successfully\n${W}"
 	}
 }
@@ -125,7 +125,7 @@ install_chromium() {
 install_firefox() {
 	[[ $(command -v firefox) ]] && echo "${Y}Firefox is already Installed!${W}\n" || {
 		echo -e "${G}Installing ${Y}Firefox${W}"
-		bash <(curl -fsSL "https://raw.githubusercontent.com/modded-ubuntu/config/main/firefox.sh")
+		bash <(curl -fsSL "https://raw.githubusercontent.com/modded-ubuntu/config/main/firefox.sh") # Edit this line after merge
 		echo -e "${G} Firefox Installed Successfully\n${W}"
 	}
 }
@@ -208,21 +208,13 @@ install_softwares() {
 downloader(){
 	path="$1"
 	[[ -e "$path" ]] && rm -rf "$path"
+	echo "Downloading $(basename $1)..."
 	curl --progress-bar --insecure --fail \
 		 --retry-connrefused --retry 3 --retry-delay 2 \
 		  --location --output ${path} "$2"
 }
 
-vnc() {
-	banner
-	echo -e "${R} [${W}-${R}]${C} Setting up VNC Server...\n"${W}
-	[[ ! -d "/home/$username/.vnc" ]] && mkdir -p "/home/$username/.vnc"
-
-	downloader "/home/$username/.vnc/xstartup" "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/xstartup"
-	downloader "/usr/local/bin/vncstart" "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/v2.0/distro/vncstart"
-	downloader "/usr/local/bin/vncstop" "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/vncstop"
-	chmod +x /home/$username/.vnc/xstartup /usr/local/bin/vncstart /usr/local/bin/vncstop
-
+sound_fix() {
 	echo "$(echo "bash ~/.sound" | cat - /data/data/com.termux/files/usr/bin/ubuntu)" > /data/data/com.termux/files/usr/bin/ubuntu
 	echo "export DISPLAY=":1"" >> /etc/profile
 	echo "export PULSE_SERVER=127.0.0.1" >> /etc/profile 
@@ -249,6 +241,8 @@ rem_icon() {
 
 config() {
 	banner
+	sound_fix
+
 	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
 	yes | apt upgrade
 	yes | apt install gtk2-engines-murrine gtk2-engines-pixbuf sassc optipng inkscape libglib2.0-dev-bin
@@ -260,16 +254,14 @@ config() {
 	downloader "fonts.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/fonts.tar.gz"
 	downloader "icons.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/icons.tar.gz"
 	downloader "wallpaper.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/wallpaper.tar.gz"
+	downloader "gtk-themes.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/gtk-themes.tar.gz"
 	downloader "ubuntu-settings.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/ubuntu-settings.tar.gz"
-	downloader "Layan-gtk.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/Layan-gtk.tar.gz"
-	downloader "Papirus-Dark-Custom.tar.xz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/Papirus-Dark-Custom.tar.xz" # https://github.com/owl4ce/dotfiles/
 
 	echo -e "${R} [${W}-${R}]${C} Unpacking Files..\n"${W}
 	tar -xvzf fonts.tar.gz -C "/usr/local/share/fonts/"
 	tar -xvzf icons.tar.gz -C "/usr/share/icons/"
 	tar -xvzf wallpaper.tar.gz -C "/usr/share/backgrounds/xfce/"
-	tar -xvf Papirus-Dark-Custom.tar.xz -C "/usr/share/icons/"
-	tar -xvzf Layan-gtk.tar.gz -C "/usr/share/themes/"
+	tar -xvzf gtk-themes.tar.gz -C "/usr/share/themes/"
 	tar -xvzf ubuntu-settings.tar.gz -C "/home/$username/"	
 	rm -fr $temp_folder
 
@@ -283,6 +275,7 @@ config() {
 	echo -e "${R} [${W}-${R}]${C} Upgrading the System..\n"${W}
 	apt update
 	yes | apt upgrade
+	apt clean
 	yes | apt autoremove
 
 }
@@ -293,6 +286,5 @@ check_root
 package
 install_softwares
 config
-vnc
 note
 
