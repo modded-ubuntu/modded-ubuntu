@@ -74,6 +74,11 @@
 
 [![Watch the Tutorial](./distro/image1.jpg)](https://mega.nz/embed/QvIC1TLQ#3z27MRNPwANAg6JTtx1Ei8kDouOZsZgk00bg4TsJMNQ!1m)
 
+#
+### Click to see the [Changelog](./CHANGELOG.md)
+Licensed under [Apache License](./LICENSE)
+#
+
 ### Credits : 
 
 ```
@@ -83,14 +88,13 @@ Full Credit of the Ubuntu image goes to them .
 
 Termux Proot Distro - https://github.com/termux/proot-distro
 ```
-### Issues :
- [**FIXED**] Firefox browser not working:- [issue](https://github.com/modded-ubuntu/modded-ubuntu/issues/73)
-- solution:- [click here](https://www.omgubuntu.co.uk/2022/04/how-to-install-firefox-deb-apt-ubuntu-22-04/amp)
-- solution 2:- [click here](https://github.com/modded-ubuntu/modded-ubuntu/issues/76#issuecomment-1243747144) -- Thanks to [Reddysan1433](https://github.com/Reddysan1433)
+
 ### Maintainers
 
 - [**Mustakim Ahmed**](https://github.com/BDhackers009)
 - [**Tahmid Rayat**](https://github.com/htr-tech)
+- [**0xBaryonyx**](https://github.com/Mahfuz-THBD)
+
 
 ### If you like our work then dont forget to give a Star :)
 
