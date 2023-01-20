@@ -3,7 +3,7 @@
 </p>
 <p align="center">
 <img src="https://img.shields.io/badge/MADE%20IN-BANGLADESH-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge">
-<img src="https://img.shields.io/badge/Version-1.0-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/Version-2.0-blue?style=for-the-badge">
 </p>
 <p align="center">
 <img src="https://img.shields.io/badge/Written%20In-Bash-darkgreen?style=flat-square">
@@ -18,7 +18,6 @@
 
 - Fixed Audio Output
 - Lightweight {Requires at least 4GB Storage}
-- Katoolin3 tool for installing kali tools
 - 2 Browsers (Chromium & Mozilla Firefox)
 - Supports Bangla Fonts
 - VLC Media Player and MPV media player
@@ -31,9 +30,9 @@
 - Firstly install [Termux](https://termux.com) apk from [HERE](https://f-droid.org/repo/com.termux_118.apk)
 - Secondly Clone the Repository & Run the setup File
 
-  - `pkg update -y && pkg upgrade -y`
+  - `yes | pkg upgrade`
   - `pkg install git wget -y`
-  - `git clone https://github.com/modded-ubuntu/modded-ubuntu.git`
+  - `git clone --depth=1 https://github.com/modded-ubuntu/modded-ubuntu.git`
   - `cd modded-ubuntu`
   - `bash setup.sh`
 
