@@ -30,23 +30,23 @@
 - Firstly install [Termux](https://termux.com) apk from [HERE](https://f-droid.org/repo/com.termux_118.apk)
 - Secondly Clone the Repository & Run the setup File
 
-   `yes | pkg upgrade`
-   `pkg install git wget -y`
-   `git clone --depth=1 https://github.com/modded-ubuntu/modded-ubuntu.git`
-   `cd modded-ubuntu`
-   `bash setup.sh`
+  - `yes | pkg upgrade`
+  - `pkg install git wget -y`
+  - `git clone --depth=1 https://github.com/modded-ubuntu/modded-ubuntu.git`
+  - `cd modded-ubuntu`
+  - `bash setup.sh`
 
 - Then Restart your Termux & Type the following commands
 
-   `ubuntu`
-   `bash user.sh`
+   - `ubuntu`
+   - `bash user.sh`
 
 - Type your ubuntu root username. Must be lowercase & no space included.
 
 - Then Again Restart your Termux & Type the following commands
 
-   `ubuntu`
-   `bash gui.sh`
+   - `ubuntu`
+   - `bash gui.sh`
 
 - **You have to note your VNC password !!**
 
