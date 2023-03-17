@@ -46,7 +46,7 @@
 - Then Again Restart your Termux & Type the following commands
 
    - `ubuntu`
-   - `bash gui.sh`
+   - `sudo bash gui.sh`
 
 - **You have to note your VNC password !!**
 
