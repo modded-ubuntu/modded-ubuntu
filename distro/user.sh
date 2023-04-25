@@ -51,7 +51,7 @@ login() {
     clear
     echo
     echo -e "\n${R} [${W}-${R}]${G} Restart your Termux & Type ${C}ubuntu"${W}
-    echo -e "\n${R} [${W}-${R}]${G} Then Type ${C}bash gui.sh "${W}
+    echo -e "\n${R} [${W}-${R}]${G} Then Type ${C}sudo bash gui.sh "${W}
     echo
 
 }
