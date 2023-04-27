@@ -111,9 +111,11 @@ ubuntu-version() {
         $(( ${#options[@]}+1 ))) echo -e "${R}Quitting.${W}"; exit;;
         *) echo -e "${R}Invalid option. Please select again.${W}";;
       esac
+	  sleep 1.9
     done
   else
     echo -e "${R}Ubuntu is not installed.${W}"
+	sleep 1.9
   fi
 }
 
