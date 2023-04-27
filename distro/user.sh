@@ -36,7 +36,8 @@ login() {
     usermod -aG sudo ${user}
     echo "${user}:${pass}" | chpasswd
     echo "$user ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
-    printf "#!/data/data/com.termux/files/usr/bin/bash\nproot-distro login --user $user %s ubuntu --bind /dev/null:/proc/sys/kernel/cap_last_last --shared-tmp --fix-low-ports\n" > /data/data/com.termux/files/usr/bin/ubuntu
+    printf "#!/data/data/com.termux/files/usr/bin/bash\nproot-distro login %s ubuntu --bind /dev/null:/proc/sys/kernel/cap_last_last --shared-tmp --fix-low-ports\n" > /data/data/com.termux/files/usr/bin/ubuntu
+
     #chmod +x /data/data/com.termux/files/usr/bin/ubuntu 
     
     if [[ -e '/data/data/com.termux/files/home/modded-ubuntu/distro/gui.sh' ]];then
