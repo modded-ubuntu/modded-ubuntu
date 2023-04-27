@@ -80,8 +80,8 @@ downloader(){
 ubuntu_version() {
   if [ -d "$UBUNTU_DIR" ]; then
     echo -e "${C}Please select Ubuntu version:${W}"
-    read -p $'\e[33m'" 1. Ubuntu 22.04 (jammy)
-    2. Ubuntu 23.04 (lunar)
+    read -p $'\e[33m'" 	1. Ubuntu 22.04 (jammy)
+    					2. Ubuntu 23.04 (lunar)
     ${W}"$'\n' VERSION_OPTION
 
     if [[ "$VERSION_OPTION" == "2" ]]; then
@@ -97,6 +97,23 @@ ubuntu_version() {
   # If user didn't select any option, default to Ubuntu 22.04 (jammy)
   if [[ -z "$VERSION_OPTION" ]]; then
     echo -e "${G}Ubuntu 22.04 (jammy) selected.${W}"
+  fi
+}
+ubuntu-version() {
+  if [ -d "$UBUNTU_DIR" ]; then
+    PS3="$(echo -e "${C}Please select Ubuntu version:${W} ")"
+    options=("Ubuntu 22.04 (jammy)" "Ubuntu 23.04 (lunar)")
+    select opt in "${options[@]}" "Quit"; do
+      case "$REPLY" in
+        1) echo -e "${G}Ubuntu 22.04 (jammy) selected.${W}"; break;;
+        2) sed -i 's/jammy/lunar/g' "$UBUNTU_DIR/etc/apt/sources.list"
+           echo -e "${G}Ubuntu 23.04 (lunar) selected.${W}"; break;;
+        $(( ${#options[@]}+1 ))) echo -e "${R}Quitting.${W}"; exit;;
+        *) echo -e "${R}Invalid option. Please select again.${W}";;
+      esac
+    done
+  else
+    echo -e "${R}Ubuntu is not installed.${W}"
   fi
 }
 
@@ -159,5 +176,5 @@ package
 distro
 sound
 permission
-ubuntu_version
+ubuntu-version
 msg
