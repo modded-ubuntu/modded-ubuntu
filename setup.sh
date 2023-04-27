@@ -77,6 +77,28 @@ downloader(){
 		  --location --output ${path} "$2"
 	echo
 }
+ubuntu_version() {
+  if [ -d "$UBUNTU_DIR" ]; then
+    read -p "$(echo -e ${C}Please select Ubuntu version: ${W}
+    ${Y}1. Ubuntu 22.04 (jammy)
+    2. Ubuntu 23.04 (lunar)
+    ${W})" VERSION_OPTION
+
+    if [[ "$VERSION_OPTION" == "2" ]]; then
+      sed -i 's/jammy/lunar/g' "$UBUNTU_DIR/etc/apt/sources.list"
+      echo -e "${G}Ubuntu 23.04 (lunar) selected.${W}"
+    else
+      echo -e "${G}Ubuntu 22.04 (jammy) selected.${W}"
+    fi
+  else
+    echo -e "${R}Ubuntu is not installed.${W}"
+  fi
+  
+  if [[ -z "$VERSION_OPTION" ]]; then
+    echo -e "${G}Ubuntu 22.04 (jammy) selected.${W}"
+  fi
+}
+
 
 setup_vnc() {
 	if [[ -d "$CURR_DIR/distro" ]] && [[ -e "$CURR_DIR/distro/vncstart" ]]; then
@@ -114,10 +136,12 @@ permission() {
 	chmod +x "$PREFIX/bin/ubuntu"
 	termux-reload-settings
 
+}
+msg() {
 	if [[ -e "$PREFIX/bin/ubuntu" ]]; then
 		banner
 		cat <<- EOF
-			${R} [${W}-${R}]${G} Ubuntu-22.04 (CLI) is now Installed on your Termux
+			${R} [${W}-${R}]${G} Ubuntu (CLI) is now Installed on your Termux
 			${R} [${W}-${R}]${G} Restart your Termux to Prevent Some Issues.
 			${R} [${W}-${R}]${G} Type ${C}ubuntu${G} to run Ubuntu CLI.
 			${R} [${W}-${R}]${G} If you Want to Use UBUNTU in GUI MODE then ,
@@ -128,10 +152,11 @@ permission() {
 		echo -e "\n${R} [${W}-${R}]${G} Error Installing Distro !"${W}
 		exit 0
 	fi
-
 }
 
 package
 distro
 sound
 permission
+ubuntu_version
+msg
