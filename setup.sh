@@ -79,21 +79,22 @@ downloader(){
 }
 ubuntu_version() {
   if [ -d "$UBUNTU_DIR" ]; then
-    read -p "$(echo -e ${C}Please select Ubuntu version: ${W}
-    ${Y}1. Ubuntu 22.04 {jammy}
-    2. Ubuntu 23.04 {lunar}
-    ${W})" VERSION_OPTION
+    echo -e "${C}Please select Ubuntu version:${W}"
+    read -p $'\e[33m'" 1. Ubuntu 22.04 (jammy)
+    2. Ubuntu 23.04 (lunar)
+    ${W}"$'\n' VERSION_OPTION
 
     if [[ "$VERSION_OPTION" == "2" ]]; then
       sed -i 's/jammy/lunar/g' "$UBUNTU_DIR/etc/apt/sources.list"
-      echo -e "${G}Ubuntu 23.04 {lunar} selected.${W}"
+      echo -e "${G}Ubuntu 23.04 (lunar) selected.${W}"
     else
-      echo -e "${G}Ubuntu 22.04 {jammy} selected.${W}"
+      echo -e "${G}Ubuntu 22.04 (jammy) selected.${W}"
     fi
   else
     echo -e "${R}Ubuntu is not installed.${W}"
   fi
-  
+
+  # If user didn't select any option, default to Ubuntu 22.04 (jammy)
   if [[ -z "$VERSION_OPTION" ]]; then
     echo -e "${G}Ubuntu 22.04 (jammy) selected.${W}"
   fi
