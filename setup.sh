@@ -86,9 +86,9 @@ ubuntu_version() {
 
     if [[ "$VERSION_OPTION" == "2" ]]; then
       sed -i 's/jammy/lunar/g' "$UBUNTU_DIR/etc/apt/sources.list"
-      echo -e "${G}Ubuntu 23.04 (lunar) selected.${W}"
+      echo -e "${G}Ubuntu 23.04 {lunar} selected.${W}"
     else
-      echo -e "${G}Ubuntu 22.04 (jammy) selected.${W}"
+      echo -e "${G}Ubuntu 22.04 {jammy} selected.${W}"
     fi
   else
     echo -e "${R}Ubuntu is not installed.${W}"
