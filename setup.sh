@@ -80,8 +80,8 @@ downloader(){
 ubuntu_version() {
   if [ -d "$UBUNTU_DIR" ]; then
     read -p "$(echo -e ${C}Please select Ubuntu version: ${W}
-    ${Y}1. Ubuntu 22.04 (jammy)
-    2. Ubuntu 23.04 (lunar)
+    ${Y}1. Ubuntu 22.04 {jammy}
+    2. Ubuntu 23.04 {lunar}
     ${W})" VERSION_OPTION
 
     if [[ "$VERSION_OPTION" == "2" ]]; then
