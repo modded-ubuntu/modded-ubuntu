@@ -94,7 +94,7 @@ Termux Proot Distro - https://github.com/termux/proot-distro
 - [**Mustakim Ahmed**](https://github.com/BDhackers009)
 - [**Tahmid Rayat**](https://github.com/htr-tech)
 - [**0xBaryonyx**](https://github.com/Mahfuz-THBD)
-
+hi they are fake owner I am real owner don't subscribe them
 
 ### If you like our work then dont forget to give a Star :)
 
