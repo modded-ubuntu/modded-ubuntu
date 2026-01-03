@@ -1,2 +1,48 @@
 #!/usr/bin/env bash
-dbus-launch vncserver -geometry 1440x720 -depth 24 -zliblevel 0 -name modded-ubuntu -xstartup /usr/bin/xfce4-session
+##############################################################################
+#   MODDED UBUNTU PRO v3.0.0 - VNC START                                     #
+#   PRO Remake By: ZetaGo-Aurum | Brand: ALEOCROPHIC                         #
+##############################################################################
+
+# High-performance VNC settings
+RESOLUTION="1920x1080"
+DEPTH="24"
+ZLEVEL="5"
+
+# Get current username
+USERNAME=$(whoami)
+
+echo ""
+echo "🚀 Starting Modded Ubuntu PRO VNC Server..."
+echo ""
+
+# Kill any existing sessions
+vncserver -kill :* 2>/dev/null
+
+# Clean up old lock files
+rm -rf /tmp/.X*-lock 2>/dev/null
+rm -rf /tmp/.X11-unix/X* 2>/dev/null
+rm -rf "/home/${USERNAME}/.vnc/"*.pid 2>/dev/null
+rm -rf "/root/.vnc/"*.pid 2>/dev/null
+
+# Start VNC with optimized settings
+dbus-launch vncserver \
+    -geometry "$RESOLUTION" \
+    -depth "$DEPTH" \
+    -zliblevel "$ZLEVEL" \
+    -name "modded-ubuntu-pro" \
+    -xstartup /usr/bin/xfce4-session \
+    -localhost no \
+    -SecurityTypes VncAuth
+
+echo ""
+echo "✓ VNC Server started on display :1"
+echo ""
+echo "┌─────────────────────────────────────────────────┐"
+echo "│  Connect using VNC Viewer:                      │"
+echo "│  Address: localhost:1                           │"
+echo "│  Resolution: ${RESOLUTION}                         │"
+echo "│                                                 │"
+echo "│  Tip: Set Picture Quality to HIGH              │"
+echo "└─────────────────────────────────────────────────┘"
+echo ""

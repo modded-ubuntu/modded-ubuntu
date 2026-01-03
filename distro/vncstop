@@ -1,5 +1,26 @@
 #!/usr/bin/env bash
-vncserver -kill :*
-rm -rf /username/.vnc/localhost:*.pid
-rm -rf /tmp/.X1-lock
-rm -rf /tmp/.X11-unix/X1
+##############################################################################
+#   MODDED UBUNTU PRO v3.0.0 - VNC STOP                                      #
+#   PRO Remake By: ZetaGo-Aurum | Brand: ALEOCROPHIC                         #
+##############################################################################
+
+# Get current username
+USERNAME=$(whoami)
+
+echo ""
+echo "🛑 Stopping Modded Ubuntu PRO VNC Server..."
+echo ""
+
+# Kill all VNC sessions
+vncserver -kill :* 2>/dev/null
+
+# Clean up PID files
+rm -rf "/home/${USERNAME}/.vnc/"*.pid 2>/dev/null
+rm -rf "/root/.vnc/"*.pid 2>/dev/null
+
+# Clean up lock files
+rm -rf /tmp/.X*-lock 2>/dev/null
+rm -rf /tmp/.X11-unix/X* 2>/dev/null
+
+echo "✓ VNC Server stopped and cleaned up"
+echo ""
