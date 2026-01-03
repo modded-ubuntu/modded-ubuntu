@@ -18,6 +18,38 @@
 
 ---
 
+## 📸 Screenshots
+
+<p align="center">
+<img src="./distro/screenshot_krita_splash.jpg" alt="Krita - Digital Painting" width="100%">
+<br><i>Krita - Professional Digital Painting Software</i>
+</p>
+
+<table>
+<tr>
+<td width="50%">
+<img src="./distro/screenshot_vscode.jpg" alt="VS Code" width="100%">
+<p align="center"><i>Visual Studio Code - Code Editor</i></p>
+</td>
+<td width="50%">
+<img src="./distro/screenshot_krita.jpg" alt="Krita Editor" width="100%">
+<p align="center"><i>Krita - Image Editor Interface</i></p>
+</td>
+</tr>
+<tr>
+<td width="50%">
+<img src="./distro/screenshot_kdenlive.jpg" alt="Kdenlive" width="100%">
+<p align="center"><i>Kdenlive - Video Editor</i></p>
+</td>
+<td width="50%">
+<img src="./distro/screenshot_lmms.jpg" alt="LMMS" width="100%">
+<p align="center"><i>LMMS - Music Production</i></p>
+</td>
+</tr>
+</table>
+
+---
+
 ## ⚡ Why PRO Edition?
 
 | Feature           | Original       | PRO Edition                    |
