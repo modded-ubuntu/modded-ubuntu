@@ -14,28 +14,28 @@
 ##############################################################################
 
 # ═══════════════════════════════════════════════════════════════════════════
-# COLOR PALETTE
+# COLOR PALETTE - Using $'...' syntax for proper escape sequence handling
 # ═══════════════════════════════════════════════════════════════════════════
-R="\033[1;31m"
-G="\033[1;32m"
-Y="\033[1;33m"
-B="\033[1;34m"
-M="\033[1;35m"
-C="\033[1;36m"
-W="\033[1;37m"
-D="\033[0m"
+R=$'\033[1;31m'
+G=$'\033[1;32m'
+Y=$'\033[1;33m'
+B=$'\033[1;34m'
+M=$'\033[1;35m'
+C=$'\033[1;36m'
+W=$'\033[1;37m'
+D=$'\033[0m'
 
-PURPLE="\033[38;5;141m"
-LPURPLE="\033[38;5;177m"
-PINK="\033[38;5;213m"
-CYAN_L="\033[38;5;81m"
-GREEN_L="\033[38;5;120m"
-ORANGE="\033[38;5;208m"
-GRAY="\033[38;5;245m"
-DGRAY="\033[38;5;238m"
+PURPLE=$'\033[38;5;141m'
+LPURPLE=$'\033[38;5;177m'
+PINK=$'\033[38;5;213m'
+CYAN_L=$'\033[38;5;81m'
+GREEN_L=$'\033[38;5;120m'
+ORANGE=$'\033[38;5;208m'
+GRAY=$'\033[38;5;245m'
+DGRAY=$'\033[38;5;238m'
 
-BG_DGRAY="\033[48;5;236m"
-BOLD="\033[1m"
+BG_DGRAY=$'\033[48;5;236m'
+BOLD=$'\033[1m'
 
 CURR_DIR=$(realpath "$(dirname "$BASH_SOURCE")")
 UBUNTU_DIR="$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu"
@@ -65,15 +65,21 @@ spinner() {
 progress_bar() {
     local current=$1
     local total=$2
-    local width=45
+    local pkg_name=$3
+    local width=30
     local percentage=$((current * 100 / total))
     local filled=$((width * current / total))
     local empty=$((width - filled))
     
-    printf "\r  ${PURPLE}[${GREEN_L}%s${GRAY}%s${PURPLE}]${D} ${W}%3d%%${D} " \
-        "$(printf '%*s' $filled '' | tr ' ' '━')" \
-        "$(printf '%*s' $empty '' | tr ' ' '░')" \
-        $percentage
+    # Build the bar characters
+    local bar_filled=""
+    local bar_empty=""
+    for ((i=0; i<filled; i++)); do bar_filled+="▓"; done
+    for ((i=0; i<empty; i++)); do bar_empty+="░"; done
+    
+    # Print with proper colors
+    printf "\r  ${PURPLE}[${GREEN_L}%s${GRAY}%s${PURPLE}]${D} ${W}%3d%%${D} ${GRAY}%s${D}                    " \
+        "$bar_filled" "$bar_empty" "$percentage" "$pkg_name"
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -83,7 +89,7 @@ progress_bar() {
 banner() {
     clear
     echo ""
-    echo -e "${ORANGE}"
+    echo "${ORANGE}"
     cat << 'EOF'
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
@@ -105,39 +111,40 @@ banner() {
     ║              🔄 U P D A T E R   v3.1.0 🔄                         ║
     ╚═══════════════════════════════════════════════════════════════════╝
 EOF
-    echo -e "${D}"
-    echo -e "${CYAN_L}  ┌───────────────────────────────────────────────────────────────────┐${D}"
-    echo -e "${CYAN_L}  │${W}  System & GUI Updater        ${Y}│${GREEN_L} For Existing Installations${CYAN_L}      │${D}"
-    echo -e "${CYAN_L}  │${PINK}  ZetaGo-Aurum                 ${Y}│${PURPLE} ALEOCROPHIC Brand${CYAN_L}              │${D}"
-    echo -e "${CYAN_L}  └───────────────────────────────────────────────────────────────────┘${D}"
+    echo "${D}"
+    echo "  ${CYAN_L}┌───────────────────────────────────────────────────────────────────┐${D}"
+    echo "  ${CYAN_L}│${W}  System & GUI Updater        ${Y}│${GREEN_L} For Existing Installations${CYAN_L}      │${D}"
+    echo "  ${CYAN_L}│${PINK}  ZetaGo-Aurum                 ${Y}│${PURPLE} ALEOCROPHIC Brand${CYAN_L}              │${D}"
+    echo "  ${CYAN_L}└───────────────────────────────────────────────────────────────────┘${D}"
     echo ""
 }
 
 status_msg() {
-    echo -e "\n  ${PURPLE}▸${CYAN_L} $1${D}"
+    echo ""
+    echo "  ${PURPLE}▸${CYAN_L} $1${D}"
 }
 
 success_msg() {
-    echo -e "  ${GREEN_L}✓${W} $1${D}"
+    echo "  ${GREEN_L}✓${W} $1${D}"
 }
 
 error_msg() {
-    echo -e "  ${R}✗${W} $1${D}"
+    echo "  ${R}✗${W} $1${D}"
 }
 
 warning_msg() {
-    echo -e "  ${ORANGE}⚠${W} $1${D}"
+    echo "  ${ORANGE}⚠${W} $1${D}"
 }
 
 info_msg() {
-    echo -e "  ${CYAN_L}ℹ${W} $1${D}"
+    echo "  ${CYAN_L}ℹ${W} $1${D}"
 }
 
 section_header() {
     local title=$1
     echo ""
-    echo -e "  ${BG_DGRAY}${W} $title ${D}"
-    echo -e "  ${DGRAY}$(printf '─%.0s' {1..60})${D}"
+    echo "  ${BG_DGRAY}${W} $title ${D}"
+    echo "  ${DGRAY}────────────────────────────────────────────────────────────${D}"
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -184,16 +191,14 @@ update_termux_packages() {
     echo ""
     for pkg in "${packages[@]}"; do
         current=$((current + 1))
-        progress_bar $current $total
-        echo -n "${GRAY}${pkg}${D}"
+        progress_bar $current $total "$pkg"
         
         if ! dpkg -s "$pkg" &> /dev/null; then
             yes | pkg install "$pkg" -y > /dev/null 2>&1
         fi
-        echo -e "\r$(printf ' %.0s' {1..70})\r"
+        sleep 0.1
     done
     
-    progress_bar $total $total
     echo ""
     echo ""
     success_msg "Termux packages updated"
@@ -217,19 +222,23 @@ update_scripts() {
         IFS=':' read -r src dest <<< "$item"
         current=$((current + 1))
         
-        progress_bar $current $total
         local basename=$(basename "$src")
-        echo -n "${GRAY}${basename}${D}"
+        progress_bar $current $total "$basename"
         
         if [[ -e "$CURR_DIR/$src" ]]; then
             cp -f "$CURR_DIR/$src" "$dest" 2>/dev/null || true
             chmod +x "$dest" 2>/dev/null || true
         fi
-        
-        echo -e "\r$(printf ' %.0s' {1..70})\r"
+        sleep 0.1
     done
     
-    progress_bar $total $total
+    # Also copy gui.sh to user's home if user exists
+    local username=$(grep -oP 'login --user \K[^ ]+' "$PREFIX/bin/ubuntu" 2>/dev/null | head -1)
+    if [[ -n "$username" ]] && [[ "$username" != "root" ]] && [[ -d "$UBUNTU_DIR/home/$username" ]]; then
+        cp -f "$CURR_DIR/distro/gui.sh" "$UBUNTU_DIR/home/$username/gui.sh" 2>/dev/null || true
+        chmod +x "$UBUNTU_DIR/home/$username/gui.sh" 2>/dev/null || true
+    fi
+    
     echo ""
     echo ""
     success_msg "System scripts updated"
@@ -262,18 +271,18 @@ AUDIO_EOF
 show_update_menu() {
     banner
     
-    echo -e "  ${CYAN_L}╔═══════════════════════════════════════════════════════════════════╗${D}"
-    echo -e "  ${CYAN_L}║${W}                     UPDATE OPTIONS                              ${CYAN_L}║${D}"
-    echo -e "  ${CYAN_L}╠═══════════════════════════════════════════════════════════════════╣${D}"
-    echo -e "  ${CYAN_L}║${D}                                                                   ${CYAN_L}║${D}"
-    echo -e "  ${CYAN_L}║${GREEN_L}  [1]${W} Quick Update  - Scripts and configs only                   ${CYAN_L}║${D}"
-    echo -e "  ${CYAN_L}║${GREEN_L}  [2]${W} Full Update   - Scripts + reinstall GUI packages           ${CYAN_L}║${D}"
-    echo -e "  ${CYAN_L}║${GREEN_L}  [3]${W} GUI Only      - Update GUI installer and run it            ${CYAN_L}║${D}"
-    echo -e "  ${CYAN_L}║${GREEN_L}  [4]${W} Settings Only - Install/update settings utility            ${CYAN_L}║${D}"
-    echo -e "  ${CYAN_L}║${D}                                                                   ${CYAN_L}║${D}"
-    echo -e "  ${CYAN_L}║${R}  [0]${W} Exit                                                        ${CYAN_L}║${D}"
-    echo -e "  ${CYAN_L}║${D}                                                                   ${CYAN_L}║${D}"
-    echo -e "  ${CYAN_L}╚═══════════════════════════════════════════════════════════════════╝${D}"
+    echo "  ${CYAN_L}╔═══════════════════════════════════════════════════════════════════╗${D}"
+    echo "  ${CYAN_L}║${W}                     UPDATE OPTIONS                              ${CYAN_L}║${D}"
+    echo "  ${CYAN_L}╠═══════════════════════════════════════════════════════════════════╣${D}"
+    echo "  ${CYAN_L}║${D}                                                                   ${CYAN_L}║${D}"
+    echo "  ${CYAN_L}║${GREEN_L}  [1]${W} Quick Update  - Scripts and configs only                   ${CYAN_L}║${D}"
+    echo "  ${CYAN_L}║${GREEN_L}  [2]${W} Full Update   - Scripts + auto run GUI installer           ${CYAN_L}║${D}"
+    echo "  ${CYAN_L}║${GREEN_L}  [3]${W} GUI Only      - Update GUI installer only                  ${CYAN_L}║${D}"
+    echo "  ${CYAN_L}║${GREEN_L}  [4]${W} Settings Only - Install/update settings utility            ${CYAN_L}║${D}"
+    echo "  ${CYAN_L}║${D}                                                                   ${CYAN_L}║${D}"
+    echo "  ${CYAN_L}║${R}  [0]${W} Exit                                                        ${CYAN_L}║${D}"
+    echo "  ${CYAN_L}║${D}                                                                   ${CYAN_L}║${D}"
+    echo "  ${CYAN_L}╚═══════════════════════════════════════════════════════════════════╝${D}"
     echo ""
     
     read -p "  $(echo -e ${Y}Select an option [0-4]: ${D})" choice
@@ -318,13 +327,23 @@ full_update() {
     
     section_header "📦 FULL GUI REINSTALLATION"
     
-    info_msg "To complete full update, run the following after exiting:"
-    echo ""
-    echo -e "    ${Y}ubuntu${D}"
-    echo -e "    ${Y}sudo bash gui.sh${D}"
+    info_msg "Starting automatic GUI installation inside Ubuntu..."
     echo ""
     
-    show_complete "Full Update Preparation"
+    # Get username from ubuntu launcher
+    local username=$(grep -oP 'login --user \K[^ ]+' "$PREFIX/bin/ubuntu" 2>/dev/null | head -1)
+    
+    if [[ -n "$username" ]] && [[ "$username" != "root" ]]; then
+        # Run as user
+        info_msg "Running as user: $username"
+        proot-distro login --user "$username" ubuntu -- bash -c "cd ~ && sudo bash gui.sh"
+    else
+        # Run as root
+        info_msg "Running as root"
+        proot-distro login ubuntu -- bash -c "cd /root && bash gui.sh"
+    fi
+    
+    show_complete "Full Update"
 }
 
 gui_update() {
@@ -334,9 +353,9 @@ gui_update() {
     section_header "🎨 GUI INSTALLER UPDATE"
     
     if [[ -e "$CURR_DIR/distro/gui.sh" ]]; then
-        local username=$(grep -oP 'login --user \K[^ ]+' "$PREFIX/bin/ubuntu" 2>/dev/null || echo "root")
+        local username=$(grep -oP 'login --user \K[^ ]+' "$PREFIX/bin/ubuntu" 2>/dev/null | head -1)
         
-        if [[ "$username" != "root" ]] && [[ -d "$UBUNTU_DIR/home/$username" ]]; then
+        if [[ -n "$username" ]] && [[ "$username" != "root" ]] && [[ -d "$UBUNTU_DIR/home/$username" ]]; then
             cp -f "$CURR_DIR/distro/gui.sh" "$UBUNTU_DIR/home/$username/gui.sh"
             chmod +x "$UBUNTU_DIR/home/$username/gui.sh"
             success_msg "GUI installer copied to /home/$username/gui.sh"
@@ -375,21 +394,21 @@ show_complete() {
     local update_type=$1
     
     echo ""
-    echo -e "  ${GREEN_L}╔═══════════════════════════════════════════════════════════════════╗${D}"
-    echo -e "  ${GREEN_L}║${W}              ✅ ${update_type} COMPLETE! ✅${D}$(printf '%*s' $((32-${#update_type})) '')${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}╠═══════════════════════════════════════════════════════════════════╣${D}"
-    echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}  Your Modded Ubuntu PRO has been updated to v${VERSION}!${D}          ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${CYAN_L}  New Features:${D}                                                   ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}    • 1000+ software packages support${D}                             ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}    • Comprehensive settings utility (mu-settings)${D}                ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}    • Enhanced VNC configuration${D}                                  ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}    • Microphone input support${D}                                    ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}╠═══════════════════════════════════════════════════════════════════╣${D}"
-    echo -e "  ${GREEN_L}║${PINK}  ZetaGo-Aurum    ${Y}│${PURPLE}    ALEOCROPHIC Brand${D}                         ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}╚═══════════════════════════════════════════════════════════════════╝${D}"
+    echo "  ${GREEN_L}╔═══════════════════════════════════════════════════════════════════╗${D}"
+    echo "  ${GREEN_L}║${W}              ✅ ${update_type} COMPLETE! ✅                         ${GREEN_L}║${D}"
+    echo "  ${GREEN_L}╠═══════════════════════════════════════════════════════════════════╣${D}"
+    echo "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
+    echo "  ${GREEN_L}║${W}  Your Modded Ubuntu PRO has been updated to v${VERSION}!          ${GREEN_L}║${D}"
+    echo "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
+    echo "  ${GREEN_L}║${CYAN_L}  New Features:${D}                                                   ${GREEN_L}║${D}"
+    echo "  ${GREEN_L}║${W}    • 1000+ software packages support${D}                             ${GREEN_L}║${D}"
+    echo "  ${GREEN_L}║${W}    • Comprehensive settings utility (mu-settings)${D}                ${GREEN_L}║${D}"
+    echo "  ${GREEN_L}║${W}    • Enhanced VNC configuration${D}                                  ${GREEN_L}║${D}"
+    echo "  ${GREEN_L}║${W}    • Microphone input support${D}                                    ${GREEN_L}║${D}"
+    echo "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
+    echo "  ${GREEN_L}╠═══════════════════════════════════════════════════════════════════╣${D}"
+    echo "  ${GREEN_L}║${PINK}  ZetaGo-Aurum    ${Y}│${PURPLE}    ALEOCROPHIC Brand${D}                         ${GREEN_L}║${D}"
+    echo "  ${GREEN_L}╚═══════════════════════════════════════════════════════════════════╝${D}"
     echo ""
 }
 
@@ -414,16 +433,16 @@ if [[ $# -gt 0 ]]; then
             ;;
         --help|-h)
             banner
-            echo -e "  ${CYAN_L}Usage:${D} bash update.sh [OPTION]"
+            echo "  ${CYAN_L}Usage:${D} bash update.sh [OPTION]"
             echo ""
-            echo -e "  ${W}Options:${D}"
-            echo -e "    ${GREEN_L}--quick, -q${D}     Quick update (scripts only)"
-            echo -e "    ${GREEN_L}--full, -f${D}      Full update (scripts + GUI info)"
-            echo -e "    ${GREEN_L}--gui, -g${D}       Update GUI installer"
-            echo -e "    ${GREEN_L}--settings, -s${D}  Update settings utility"
-            echo -e "    ${GREEN_L}--help, -h${D}      Show this help"
+            echo "  ${W}Options:${D}"
+            echo "    ${GREEN_L}--quick, -q${D}     Quick update (scripts only)"
+            echo "    ${GREEN_L}--full, -f${D}      Full update (scripts + auto GUI install)"
+            echo "    ${GREEN_L}--gui, -g${D}       Update GUI installer"
+            echo "    ${GREEN_L}--settings, -s${D}  Update settings utility"
+            echo "    ${GREEN_L}--help, -h${D}      Show this help"
             echo ""
-            echo -e "  ${GRAY}Run without options for interactive menu.${D}"
+            echo "  ${GRAY}Run without options for interactive menu.${D}"
             echo ""
             ;;
         *)

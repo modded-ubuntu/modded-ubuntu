@@ -16,37 +16,37 @@
 ##############################################################################
 
 # ═══════════════════════════════════════════════════════════════════════════
-# COLOR PALETTE - Modern Sleek Design
+# COLOR PALETTE - Using $'...' syntax for proper escape handling on Termux
 # ═══════════════════════════════════════════════════════════════════════════
-R="\033[1;31m"          # Red
-G="\033[1;32m"          # Green
-Y="\033[1;33m"          # Yellow
-B="\033[1;34m"          # Blue
-M="\033[1;35m"          # Magenta
-C="\033[1;36m"          # Cyan
-W="\033[1;37m"          # White
-D="\033[0m"             # Reset
+R=$'\033[1;31m'          # Red
+G=$'\033[1;32m'          # Green
+Y=$'\033[1;33m'          # Yellow
+B=$'\033[1;34m'          # Blue
+M=$'\033[1;35m'          # Magenta
+C=$'\033[1;36m'          # Cyan
+W=$'\033[1;37m'          # White
+D=$'\033[0m'             # Reset
 
 # Extended 256-color palette for gradients
-PURPLE="\033[38;5;141m"
-LPURPLE="\033[38;5;177m"
-PINK="\033[38;5;213m"
-CYAN_L="\033[38;5;81m"
-GREEN_L="\033[38;5;120m"
-ORANGE="\033[38;5;208m"
-GRAY="\033[38;5;245m"
-DGRAY="\033[38;5;238m"
+PURPLE=$'\033[38;5;141m'
+LPURPLE=$'\033[38;5;177m'
+PINK=$'\033[38;5;213m'
+CYAN_L=$'\033[38;5;81m'
+GREEN_L=$'\033[38;5;120m'
+ORANGE=$'\033[38;5;208m'
+GRAY=$'\033[38;5;245m'
+DGRAY=$'\033[38;5;238m'
 
 # Background colors
-BG_PURPLE="\033[48;5;54m"
-BG_DGRAY="\033[48;5;236m"
+BG_PURPLE=$'\033[48;5;54m'
+BG_DGRAY=$'\033[48;5;236m'
 
 # Formatting
-BOLD="\033[1m"
-DIM="\033[2m"
-ITALIC="\033[3m"
-UNDERLINE="\033[4m"
-BLINK="\033[5m"
+BOLD=$'\033[1m'
+DIM=$'\033[2m'
+ITALIC=$'\033[3m'
+UNDERLINE=$'\033[4m'
+BLINK=$'\033[5m'
 
 CURR_DIR=$(realpath "$(dirname "$BASH_SOURCE")")
 UBUNTU_DIR="$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu"
@@ -78,20 +78,20 @@ spinner() {
 progress_bar() {
     local current=$1
     local total=$2
-    local width=45
+    local pkg_name=$3
+    local width=30
     local percentage=$((current * 100 / total))
     local filled=$((width * current / total))
     local empty=$((width - filled))
     
-    # Build the bar
-    local bar=""
-    for ((i=0; i<filled; i++)); do bar+="━"; done
-    for ((i=0; i<empty; i++)); do bar+="░"; done
+    # Build the bar with character variables
+    local bar_filled=""
+    local bar_empty=""
+    for ((i=0; i<filled; i++)); do bar_filled+="▓"; done
+    for ((i=0; i<empty; i++)); do bar_empty+="░"; done
     
-    printf "\r  ${PURPLE}[${GREEN_L}%s${GRAY}%s${PURPLE}]${D} ${W}%3d%%${D} " \
-        "$(printf '%*s' $filled '' | tr ' ' '━')" \
-        "$(printf '%*s' $empty '' | tr ' ' '░')" \
-        $percentage
+    printf "\r  ${PURPLE}[${GREEN_L}%s${GRAY}%s${PURPLE}]${D} ${W}%3d%%${D} ${GRAY}%s${D}                    " \
+        "$bar_filled" "$bar_empty" $percentage "$pkg_name"
 }
 
 # Animated text typing effect

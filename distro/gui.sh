@@ -16,28 +16,28 @@
 ##############################################################################
 
 # ═══════════════════════════════════════════════════════════════════════════
-# COLOR PALETTE - Modern Sleek Design
+# COLOR PALETTE - Using $'...' syntax for proper escape handling on Termux
 # ═══════════════════════════════════════════════════════════════════════════
-R="\033[1;31m"
-G="\033[1;32m"
-Y="\033[1;33m"
-B="\033[1;34m"
-M="\033[1;35m"
-C="\033[1;36m"
-W="\033[1;37m"
-D="\033[0m"
+R=$'\033[1;31m'
+G=$'\033[1;32m'
+Y=$'\033[1;33m'
+B=$'\033[1;34m'
+M=$'\033[1;35m'
+C=$'\033[1;36m'
+W=$'\033[1;37m'
+D=$'\033[0m'
 
-PURPLE="\033[38;5;141m"
-LPURPLE="\033[38;5;177m"
-PINK="\033[38;5;213m"
-CYAN_L="\033[38;5;81m"
-GREEN_L="\033[38;5;120m"
-ORANGE="\033[38;5;208m"
-GRAY="\033[38;5;245m"
-DGRAY="\033[38;5;238m"
+PURPLE=$'\033[38;5;141m'
+LPURPLE=$'\033[38;5;177m'
+PINK=$'\033[38;5;213m'
+CYAN_L=$'\033[38;5;81m'
+GREEN_L=$'\033[38;5;120m'
+ORANGE=$'\033[38;5;208m'
+GRAY=$'\033[38;5;245m'
+DGRAY=$'\033[38;5;238m'
 
-BG_DGRAY="\033[48;5;236m"
-BG_PURPLE="\033[48;5;54m"
+BG_DGRAY=$'\033[48;5;236m'
+BG_PURPLE=$'\033[48;5;54m'
 
 # System info
 ARCH=$(uname -m)
@@ -74,24 +74,20 @@ pip_progress() {
     local current=$1
     local total=$2
     local pkg_name=$3
-    local width=35
+    local width=30
     local percentage=$((current * 100 / total))
     local filled=$((width * current / total))
     local empty=$((width - filled))
     
-    # Calculate ETA
-    local elapsed=$(($(date +%s) - START_TIME))
-    local rate=0
-    [[ $elapsed -gt 0 ]] && rate=$((current * 100 / elapsed))
+    # Build the bar with proper characters
+    local bar_filled=""
+    local bar_empty=""
+    for ((i=0; i<filled; i++)); do bar_filled+="▓"; done
+    for ((i=0; i<empty; i++)); do bar_empty+="░"; done
     
-    # Build progress bar
-    local bar=""
-    for ((i=0; i<filled; i++)); do bar+="━"; done
-    for ((i=0; i<empty; i++)); do bar+="░"; done
-    
-    # Clear line and print
-    printf "\r  ${PURPLE}Installing${D} ${bar} ${W}%3d%%${D} ${GRAY}(%d/%d)${D} ${CYAN_L}%s${D}%-20s" \
-        $percentage $current $total "$pkg_name" " "
+    # Print with proper color handling
+    printf "\r  ${PURPLE}Installing${D} ${PURPLE}[${GREEN_L}%s${GRAY}%s${PURPLE}]${D} ${W}%3d%%${D} ${GRAY}(%d/%d)${D} ${CYAN_L}%s${D}          " \
+        "$bar_filled" "$bar_empty" $percentage $current $total "$pkg_name"
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
