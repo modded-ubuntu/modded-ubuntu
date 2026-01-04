@@ -908,7 +908,7 @@ main() {
     echo "User: $USERNAME" >> "$LOG_FILE"
     echo "" >> "$LOG_FILE"
     
-    # Calculate total packages
+    # Calculate total packages (base + browsers, IDEs, themes = +10)
     TOTAL_PACKAGES=$((
         ${#BASE_PACKAGES[@]} +
         ${#XFCE_PACKAGES[@]} +
@@ -926,7 +926,7 @@ main() {
         ${#SECURITY_PACKAGES[@]} +
         ${#VIRTUALIZATION_PACKAGES[@]} +
         ${#LOCALE_PACKAGES[@]} +
-        10  # browsers, IDEs, themes, etc.
+        10
     ))
     
     # Add 64-bit packages if applicable
