@@ -793,18 +793,29 @@ install_themes() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
-# NEOFETCH FIX
+# NEOFETCH FIX - Proper installation and configuration
 # ═══════════════════════════════════════════════════════════════════════════
 
 fix_neofetch() {
     section_header "🖥️  NEOFETCH CONFIGURATION"
     
-    # Create neofetch config dir
+    # First ensure neofetch is installed
+    if ! command -v neofetch &> /dev/null; then
+        apt-get install -y neofetch >> "$LOG_FILE" 2>&1 || true
+    fi
+    
+    # Create config directories
     mkdir -p /etc/neofetch
+    mkdir -p "$HOME/.config/neofetch"
+    
+    # Also create for user if exists
+    if [[ -n "$USERNAME" ]] && [[ -d "/home/$USERNAME" ]]; then
+        mkdir -p "/home/$USERNAME/.config/neofetch"
+    fi
     
     # Create custom neofetch config
-    cat > /etc/neofetch/config.conf << 'EOF'
-# Modded Ubuntu PRO neofetch config
+    cat > /etc/neofetch/config.conf << 'NEOFETCH_EOF'
+# Modded Ubuntu PRO v3.1.0 neofetch config
 print_info() {
     info title
     info underline
@@ -825,12 +836,191 @@ print_info() {
     info cols
 }
 
-# Force Ubuntu detection
-distro="Ubuntu (Modded PRO)"
+# Force Ubuntu detection for proot environment
+distro="Ubuntu 22.04 LTS (Modded PRO)"
 ascii_distro="Ubuntu"
-EOF
+os_arch="aarch64"
+NEOFETCH_EOF
     
-    success_msg "Neofetch configured"
+    # Copy to user config if exists
+    if [[ -n "$USERNAME" ]] && [[ -d "/home/$USERNAME" ]]; then
+        cp /etc/neofetch/config.conf "/home/$USERNAME/.config/neofetch/config.conf"
+        chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.config/neofetch"
+    fi
+    
+    # Also copy to root
+    cp /etc/neofetch/config.conf "$HOME/.config/neofetch/config.conf" 2>/dev/null || true
+    
+    success_msg "Neofetch installed and configured"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# FIX APPS - BleachBit, codecs, and other app issues
+# ═══════════════════════════════════════════════════════════════════════════
+
+fix_apps() {
+    section_header "🔧 FIXING APP CONFIGURATIONS"
+    
+    # Fix BleachBit - create wrapper script that runs without root issues
+    if [[ -f /usr/bin/bleachbit ]]; then
+        cat > /usr/local/bin/bleachbit-fix << 'BLEACHBIT_EOF'
+#!/bin/bash
+# BleachBit wrapper for proot environment
+export DISPLAY="${DISPLAY:-:1}"
+/usr/bin/bleachbit --no-delete --preset "$@" 2>/dev/null || /usr/bin/bleachbit "$@"
+BLEACHBIT_EOF
+        chmod +x /usr/local/bin/bleachbit-fix
+        
+        # Fix desktop file
+        if [[ -f /usr/share/applications/org.bleachbit.BleachBit.desktop ]]; then
+            sed -i 's|Exec=bleachbit|Exec=bleachbit-fix|g' /usr/share/applications/org.bleachbit.BleachBit.desktop 2>/dev/null || true
+        fi
+        success_msg "BleachBit fixed"
+    fi
+    
+    # Install additional codecs
+    apt-get install -y --no-install-recommends \
+        libavcodec-extra \
+        gstreamer1.0-plugins-base \
+        gstreamer1.0-plugins-good \
+        gstreamer1.0-plugins-bad \
+        gstreamer1.0-plugins-ugly \
+        gstreamer1.0-libav \
+        gstreamer1.0-tools \
+        ffmpeg \
+        libdvdread8 \
+        libdvdnav4 >> "$LOG_FILE" 2>&1 || true
+    
+    success_msg "Codecs installed"
+    
+    # Create hard reset script
+    cat > /usr/local/bin/vncreset << 'VNCRESET_EOF'
+#!/bin/bash
+# Modded Ubuntu PRO v3.1.0 - Hard Reset Script
+# Performs a complete session reset like restarting a computer
+
+R=$'\033[1;31m'
+G=$'\033[1;32m'
+Y=$'\033[1;33m'
+C=$'\033[1;36m'
+W=$'\033[1;37m'
+D=$'\033[0m'
+
+echo ""
+echo "${C}╔═══════════════════════════════════════════════════════╗${D}"
+echo "${C}║${W}     🔄 MODDED UBUNTU PRO - HARD RESET 🔄             ${C}║${D}"
+echo "${C}╚═══════════════════════════════════════════════════════╝${D}"
+echo ""
+
+echo "${Y}▸${W} Stopping VNC server...${D}"
+vncserver -kill :* 2>/dev/null || true
+
+echo "${Y}▸${W} Killing all X11 applications...${D}"
+pkill -9 -f "xfce" 2>/dev/null || true
+pkill -9 -f "thunar" 2>/dev/null || true
+pkill -9 -f "firefox" 2>/dev/null || true
+pkill -9 -f "chromium" 2>/dev/null || true
+pkill -9 -f "code" 2>/dev/null || true
+pkill -9 -f "geany" 2>/dev/null || true
+pkill -9 -f "vlc" 2>/dev/null || true
+pkill -9 -f "audacity" 2>/dev/null || true
+pkill -9 xfwm4 2>/dev/null || true
+pkill -9 xfdesktop 2>/dev/null || true
+pkill -9 xfce4-panel 2>/dev/null || true
+
+echo "${Y}▸${W} Clearing cache and temp files...${D}"
+rm -rf ~/.cache/thumbnails/* 2>/dev/null || true
+rm -rf ~/.cache/mozilla/firefox/*/cache2/* 2>/dev/null || true
+rm -rf ~/.cache/chromium/*/Cache/* 2>/dev/null || true
+rm -rf ~/.cache/sessions/* 2>/dev/null || true
+rm -rf ~/.local/share/recently-used.xbel 2>/dev/null || true
+rm -rf /tmp/.X*-lock 2>/dev/null || true
+rm -rf /tmp/.X11-unix/X* 2>/dev/null || true
+rm -rf ~/.vnc/*.pid 2>/dev/null || true
+rm -rf ~/.vnc/*.log 2>/dev/null || true
+
+echo "${Y}▸${W} Clearing XFCE session cache...${D}"
+rm -rf ~/.cache/sessions/* 2>/dev/null || true
+rm -rf ~/.local/share/xfce4/sessions/* 2>/dev/null || true
+
+echo "${Y}▸${W} Clearing browser tabs (Firefox)...${D}"
+rm -rf ~/.mozilla/firefox/*/sessionstore* 2>/dev/null || true
+rm -rf ~/.mozilla/firefox/*/recovery* 2>/dev/null || true
+
+echo "${Y}▸${W} Clearing browser tabs (Chromium)...${D}"
+rm -rf ~/.config/chromium/*/Current* 2>/dev/null || true
+rm -rf ~/.config/chromium/*/Last* 2>/dev/null || true
+
+echo "${Y}▸${W} Resetting dconf (optional)...${D}"
+# dconf reset -f / 2>/dev/null || true  # Uncomment to fully reset settings
+
+echo ""
+echo "${G}✓${W} Hard reset complete!${D}"
+echo ""
+echo "${C}To start fresh session, run: ${Y}vncstart${D}"
+echo ""
+VNCRESET_EOF
+    chmod +x /usr/local/bin/vncreset
+    success_msg "Hard reset script (vncreset) installed"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# CONFIGURE LANGUAGE - Set in .bashrc for proper locale detection
+# ═══════════════════════════════════════════════════════════════════════════
+
+configure_language() {
+    section_header "🌐 CONFIGURING LANGUAGE SETTINGS"
+    
+    # Ensure locale packages are installed
+    apt-get install -y locales locales-all >> "$LOG_FILE" 2>&1 || true
+    
+    # Generate common locales
+    locale-gen en_US.UTF-8 >> "$LOG_FILE" 2>&1 || true
+    locale-gen id_ID.UTF-8 >> "$LOG_FILE" 2>&1 || true
+    
+    # Set default locale
+    update-locale LANG=en_US.UTF-8 >> "$LOG_FILE" 2>&1 || true
+    
+    # Add to /etc/profile for all users
+    cat >> /etc/profile << 'LOCALE_PROFILE_EOF'
+
+# Modded Ubuntu PRO - Locale settings
+export LANG="${LANG:-en_US.UTF-8}"
+export LC_ALL="${LC_ALL:-en_US.UTF-8}"
+export LANGUAGE="${LANGUAGE:-en_US:en}"
+LOCALE_PROFILE_EOF
+    
+    # Add to user's .bashrc if exists
+    if [[ -n "$USERNAME" ]] && [[ -d "/home/$USERNAME" ]]; then
+        cat >> "/home/$USERNAME/.bashrc" << 'LOCALE_BASHRC_EOF'
+
+# Modded Ubuntu PRO - Locale settings (set by installer)
+export LANG="${LANG:-en_US.UTF-8}"
+export LC_ALL="${LC_ALL:-en_US.UTF-8}"
+export LANGUAGE="${LANGUAGE:-en_US:en}"
+
+# Display settings
+export DISPLAY="${DISPLAY:-:1}"
+
+# PulseAudio settings
+export PULSE_SERVER="${PULSE_SERVER:-127.0.0.1}"
+LOCALE_BASHRC_EOF
+        chown "$USERNAME:$USERNAME" "/home/$USERNAME/.bashrc"
+    fi
+    
+    # Also add to root .bashrc
+    cat >> /root/.bashrc << 'LOCALE_ROOT_EOF'
+
+# Modded Ubuntu PRO - Locale settings
+export LANG="${LANG:-en_US.UTF-8}"
+export LC_ALL="${LC_ALL:-en_US.UTF-8}"
+export LANGUAGE="${LANGUAGE:-en_US:en}"
+export DISPLAY="${DISPLAY:-:1}"
+export PULSE_SERVER="${PULSE_SERVER:-127.0.0.1}"
+LOCALE_ROOT_EOF
+    
+    success_msg "Language settings configured in .bashrc"
+    info_msg "Use 'mu-settings' to change language after installation"
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -996,6 +1186,8 @@ main() {
     configure_audio
     install_themes
     fix_neofetch
+    fix_apps
+    configure_language
     final_cleanup
     
     # Show completion

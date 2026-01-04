@@ -11,27 +11,27 @@
 ##############################################################################
 
 # ═══════════════════════════════════════════════════════════════════════════
-# COLOR PALETTE
+# COLOR PALETTE - Using $'...' syntax for Termux compatibility
 # ═══════════════════════════════════════════════════════════════════════════
-R="\033[1;31m"
-G="\033[1;32m"
-Y="\033[1;33m"
-B="\033[1;34m"
-M="\033[1;35m"
-C="\033[1;36m"
-W="\033[1;37m"
-D="\033[0m"
+R=$'\033[1;31m'
+G=$'\033[1;32m'
+Y=$'\033[1;33m'
+B=$'\033[1;34m'
+M=$'\033[1;35m'
+C=$'\033[1;36m'
+W=$'\033[1;37m'
+D=$'\033[0m'
 
-PURPLE="\033[38;5;141m"
-LPURPLE="\033[38;5;177m"
-PINK="\033[38;5;213m"
-CYAN_L="\033[38;5;81m"
-GREEN_L="\033[38;5;120m"
-ORANGE="\033[38;5;208m"
-GRAY="\033[38;5;245m"
-DGRAY="\033[38;5;238m"
+PURPLE=$'\033[38;5;141m'
+LPURPLE=$'\033[38;5;177m'
+PINK=$'\033[38;5;213m'
+CYAN_L=$'\033[38;5;81m'
+GREEN_L=$'\033[38;5;120m'
+ORANGE=$'\033[38;5;208m'
+GRAY=$'\033[38;5;245m'
+DGRAY=$'\033[38;5;238m'
 
-BG_DGRAY="\033[48;5;236m"
+BG_DGRAY=$'\033[48;5;236m'
 
 VERSION="3.1.0 PRO"
 CONFIG_DIR="$HOME/.config/modded-ubuntu"
@@ -44,7 +44,7 @@ VNC_CONFIG="$HOME/.vnc/config"
 banner() {
     clear
     echo ""
-    echo -e "${CYAN_L}"
+    echo "${CYAN_L}"
     cat << 'EOF'
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
@@ -54,31 +54,31 @@ banner() {
     ║           Comprehensive System Configuration Tool                 ║
     ╚═══════════════════════════════════════════════════════════════════╝
 EOF
-    echo -e "${D}"
-    echo -e "${GRAY}  Version: ${W}${VERSION}${D}  │  ${GRAY}Brand: ${PINK}ALEOCROPHIC${D}"
-    echo -e "${DGRAY}  ─────────────────────────────────────────────────────────────────${D}"
+    echo "${D}"
+    echo "  ${GRAY}Version: ${W}${VERSION}${D}  │  ${GRAY}Brand: ${PINK}ALEOCROPHIC${D}"
+    echo "  ${DGRAY}─────────────────────────────────────────────────────────────────${D}"
     echo ""
 }
 
-status_msg() { echo -e "\n  ${PURPLE}▸${CYAN_L} $1${D}"; }
-success_msg() { echo -e "  ${GREEN_L}✓${W} $1${D}"; }
-error_msg() { echo -e "  ${R}✗${W} $1${D}"; }
-warning_msg() { echo -e "  ${ORANGE}⚠${W} $1${D}"; }
-info_msg() { echo -e "  ${CYAN_L}ℹ${W} $1${D}"; }
+status_msg() { echo ""; echo "  ${PURPLE}▸${CYAN_L} $1${D}"; }
+success_msg() { echo "  ${GREEN_L}✓${W} $1${D}"; }
+error_msg() { echo "  ${R}✗${W} $1${D}"; }
+warning_msg() { echo "  ${ORANGE}⚠${W} $1${D}"; }
+info_msg() { echo "  ${CYAN_L}ℹ${W} $1${D}"; }
 
 menu_item() {
     local num=$1
     local icon=$2
     local title=$3
     local desc=$4
-    echo -e "  ${GREEN_L}[$num]${D} $icon ${W}$title${D}"
-    [[ -n "$desc" ]] && echo -e "      ${GRAY}$desc${D}"
+    echo "  ${GREEN_L}[$num]${D} $icon ${W}$title${D}"
+    [[ -n "$desc" ]] && echo "      ${GRAY}$desc${D}"
 }
 
 section_header() {
     echo ""
-    echo -e "  ${BG_DGRAY}${W} $1 ${D}"
-    echo -e "  ${DGRAY}$(printf '─%.0s' {1..60})${D}"
+    echo "  ${BG_DGRAY}${W} $1 ${D}"
+    echo "  ${DGRAY}────────────────────────────────────────────────────────────${D}"
 }
 
 # Initialize config directory
@@ -88,7 +88,7 @@ init_config() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
-# LANGUAGE SETTINGS
+# LANGUAGE SETTINGS - Now properly sets in .bashrc
 # ═══════════════════════════════════════════════════════════════════════════
 
 configure_language() {
@@ -136,7 +136,7 @@ configure_language() {
     done
     
     echo ""
-    echo -e "  ${R}[0]${W}  Back to main menu${D}"
+    echo "  ${R}[0]${W}  Back to main menu${D}"
     echo ""
     
     read -p "  $(echo -e ${Y}Select language [0-${#languages[@]}]: ${D})" choice
@@ -150,10 +150,25 @@ configure_language() {
         # Generate locale
         locale-gen "$locale" > /dev/null 2>&1 || true
         
-        # Set default locale
+        # Set default locale in system
         echo "LANG=$locale" > /etc/default/locale
         echo "LANGUAGE=$locale" >> /etc/default/locale
         echo "LC_ALL=$locale" >> /etc/default/locale
+        
+        # IMPORTANT: Update .bashrc for proper locale detection
+        # Remove old locale settings first
+        sed -i '/^export LANG=/d' "$HOME/.bashrc" 2>/dev/null || true
+        sed -i '/^export LC_ALL=/d' "$HOME/.bashrc" 2>/dev/null || true
+        sed -i '/^export LANGUAGE=/d' "$HOME/.bashrc" 2>/dev/null || true
+        
+        # Add new locale settings to .bashrc
+        cat >> "$HOME/.bashrc" << BASHRC_LOCALE_EOF
+
+# Modded Ubuntu PRO - Language settings (set by mu-settings)
+export LANG="$locale"
+export LC_ALL="$locale"
+export LANGUAGE="$locale"
+BASHRC_LOCALE_EOF
         
         # Export for current session
         export LANG=$locale
@@ -161,8 +176,9 @@ configure_language() {
         export LC_ALL=$locale
         
         success_msg "Language set to: $name"
-        info_msg "Please restart your session for changes to take effect"
-        sleep 2
+        info_msg "Settings saved to .bashrc"
+        info_msg "Restart terminal or run: source ~/.bashrc"
+        sleep 3
     fi
 }
 
@@ -485,7 +501,7 @@ main_menu() {
     while true; do
         banner
         
-        echo -e "  ${W}Main Menu:${D}"
+        echo "  ${W}Main Menu:${D}"
         echo ""
         menu_item "1" "🌐" "Language" "Set system language"
         menu_item "2" "🕐" "Timezone" "Configure timezone"
@@ -493,11 +509,12 @@ main_menu() {
         menu_item "4" "🔊" "Audio" "Audio input/output settings"
         menu_item "5" "🎨" "Appearance" "Themes and scaling"
         menu_item "6" "📊" "System Info" "View system information"
+        menu_item "7" "🔄" "Hard Reset" "Clear cache, kill apps, restart VNC"
         echo ""
-        echo -e "  ${R}[0]${W}  Exit${D}"
+        echo "  ${R}[0]${W}  Exit${D}"
         echo ""
         
-        read -p "  $(echo -e ${Y}Select option [0-6]: ${D})" choice
+        read -p "  $(echo -e ${Y}Select option [0-7]: ${D})" choice
         
         case $choice in
             1) configure_language ;;
@@ -506,6 +523,17 @@ main_menu() {
             4) configure_audio ;;
             5) configure_appearance ;;
             6) show_system_info ;;
+            7) 
+                if command -v vncreset &> /dev/null; then
+                    vncreset
+                    echo ""
+                    read -p "  ${GRAY}Press Enter to continue...${D}"
+                else
+                    error_msg "vncreset command not found"
+                    info_msg "Run GUI installer to install: sudo bash gui.sh"
+                    sleep 2
+                fi
+                ;;
             0) 
                 echo ""
                 info_msg "Goodbye!"

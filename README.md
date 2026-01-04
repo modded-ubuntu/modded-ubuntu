@@ -267,11 +267,12 @@ mu-settings
 ```
 
 **Features:**
-- 🌐 **Language** - Set system language (23+ options incl. Indonesian)
+- 🌐 **Language** - Set system language (23+ options incl. Indonesian) - **Saves to .bashrc**
 - 🕐 **Timezone** - Configure timezone by region
 - 🖥️ **VNC Display** - Adjust resolution, color depth, scale
 - 🔊 **Audio** - Test speakers, microphone, restart PulseAudio
 - 🎨 **Appearance** - Switch themes, font scaling, DPI
+- 🔄 **Hard Reset** - Clear cache, kill all apps, restart fresh
 
 ---
 
@@ -297,15 +298,36 @@ Use `mu-settings` → VNC Display to change:
 
 ---
 
+## 🔄 Hard Reset (Like Restarting PC)
+
+The `vncreset` command performs a complete session reset:
+
+```bash
+vncreset
+```
+
+**What it does:**
+- Stops VNC server completely
+- Kills all X11 applications (Firefox, Chromium, VSCode, etc.)
+- Clears thumbnails and session cache
+- Clears browser tabs and session data
+- Removes VNC lock files and logs
+- Clears XFCE session data
+
+This is like restarting your computer - all windows close, cache is cleared, and you start fresh.
+
+---
+
 ## 🔊 Audio Configuration
 
 Audio is **automatically configured** during installation including:
 
 - PulseAudio with AAudio module
 - Automatic PULSE_SERVER configuration
-- **Microphone input support** for recording
 - Volume control integration (Pavucontrol fixed)
 - Firefox/Chromium audio support
+
+> **Note:** Microphone input has limited support in proot environment due to Android/Termux permissions. Audio output works fully.
 
 ---
 
