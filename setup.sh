@@ -368,10 +368,26 @@ permission() {
     echo "$(getprop persist.sys.timezone)" > "$UBUNTU_DIR/etc/timezone"
     success_msg "Timezone configured"
     
-    # Create Ubuntu launcher command
-    echo "proot-distro login ubuntu" > "$PREFIX/bin/ubuntu"
+    # Create Ubuntu launcher command WITH PERMANENT AUDIO ACTIVATION
+    cat > "$PREFIX/bin/ubuntu" << 'UBUNTU_LAUNCHER_EOF'
+#!/data/data/com.termux/files/usr/bin/bash
+# ACRO PRO Edition - Ubuntu Launcher with Audio
+
+# Start PulseAudio server if not running (PERMANENT AUDIO FIX)
+if ! pgrep -x pulseaudio > /dev/null 2>&1; then
+    pulseaudio --start --exit-idle-time=-1 \
+        --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" \
+        2>/dev/null
+fi
+
+# Export audio environment
+export PULSE_SERVER="tcp:127.0.0.1:4713"
+
+# Login to Ubuntu
+proot-distro login ubuntu
+UBUNTU_LAUNCHER_EOF
     chmod +x "$PREFIX/bin/ubuntu"
-    success_msg "Ubuntu command created"
+    success_msg "Ubuntu command created with audio"
     
     termux-reload-settings
     

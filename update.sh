@@ -273,12 +273,27 @@ AUDIO_ENV_EOF
     rm -f "$HOME/.sound" 2>/dev/null || true
     rm -f "$UBUNTU_DIR/root/.sound" 2>/dev/null || true
     
-    # Remove .sound from ubuntu launcher if exists
-    if [[ -f "$PREFIX/bin/ubuntu" ]]; then
-        sed -i '/\.sound/d' "$PREFIX/bin/ubuntu" 2>/dev/null || true
-    fi
+    # Recreate ubuntu launcher WITH PERMANENT AUDIO ACTIVATION
+    cat > "$PREFIX/bin/ubuntu" << 'UBUNTU_LAUNCHER_EOF'
+#!/data/data/com.termux/files/usr/bin/bash
+# ACRO PRO Edition - Ubuntu Launcher with Audio
+
+# Start PulseAudio server if not running (PERMANENT AUDIO FIX)
+if ! pgrep -x pulseaudio > /dev/null 2>&1; then
+    pulseaudio --start --exit-idle-time=-1 \
+        --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" \
+        2>/dev/null
+fi
+
+# Export audio environment
+export PULSE_SERVER="tcp:127.0.0.1:4713"
+
+# Login to Ubuntu
+proot-distro login ubuntu
+UBUNTU_LAUNCHER_EOF
+    chmod +x "$PREFIX/bin/ubuntu"
     
-    success_msg "Audio configuration fixed (no sink spam)"
+    success_msg "Audio permanently activated"
 }
 
 show_update_menu() {
