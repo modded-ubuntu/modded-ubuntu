@@ -2,13 +2,13 @@
 
 ##############################################################################
 #                                                                            #
-#   MODDED UBUNTU PRO v3.1.0 - UNINSTALLER                                   #
-#   Premium High-Performance Ubuntu GUI for Termux                           #
+#   ACRO PRO Edition v3.2.0 - UNINSTALLER                                    #
+#   Premium Linux Distribution for Termux (Ubuntu-based)                     #
 #                                                                            #
-#   Original Script: modded-ubuntu                                           #
+#   Original Base: modded-ubuntu                                             #
 #   Original Authors: Mustakim Ahmed, Tahmid Rayat, 0xBaryonyx               #
 #                                                                            #
-#   PRO Remake By: ZetaGo-Aurum                                              #
+#   ACRO Distro By: ZetaGo-Aurum                                             #
 #   Brand: ALEOCROPHIC                                                       #
 #                                                                            #
 ##############################################################################
@@ -36,7 +36,8 @@ RED_L=$'\033[38;5;196m'
 
 BG_DGRAY=$'\033[48;5;236m'
 
-VERSION="3.1.0 PRO"
+VERSION="3.2.0"
+DISTRO_NAME="ACRO PRO Edition"
 
 # ═══════════════════════════════════════════════════════════════════════════
 # ANIMATION FUNCTIONS

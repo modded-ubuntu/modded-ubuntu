@@ -2,10 +2,10 @@
 
 ##############################################################################
 #                                                                            #
-#   MODDED UBUNTU PRO v3.1.0 - SETTINGS UTILITY                              #
+#   ACRO PRO Edition v3.2.0 - SETTINGS UTILITY                               #
 #   Comprehensive GUI Configuration Tool                                     #
 #                                                                            #
-#   PRO Remake By: ZetaGo-Aurum                                              #
+#   ACRO Distro By: ZetaGo-Aurum                                             #
 #   Brand: ALEOCROPHIC                                                       #
 #                                                                            #
 ##############################################################################
@@ -33,8 +33,9 @@ DGRAY=$'\033[38;5;238m'
 
 BG_DGRAY=$'\033[48;5;236m'
 
-VERSION="3.1.0 PRO"
-CONFIG_DIR="$HOME/.config/modded-ubuntu"
+VERSION="3.2.0"
+DISTRO_NAME="ACRO PRO Edition"
+CONFIG_DIR="$HOME/.config/acro"
 VNC_CONFIG="$HOME/.vnc/config"
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -48,7 +49,7 @@ banner() {
     cat << 'EOF'
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║       ⚙️  MODDED UBUNTU PRO SETTINGS  ⚙️                          ║
+    ║       ⚙️  ACRO PRO SETTINGS  ⚙️                                    ║
     ║                                                                   ║
     ╠═══════════════════════════════════════════════════════════════════╣
     ║           Comprehensive System Configuration Tool                 ║

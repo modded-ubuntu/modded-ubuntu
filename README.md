@@ -2,9 +2,9 @@
 <img src="./distro/image.jpg">
 </p>
 <p align="center">
-<img src="https://img.shields.io/badge/PRO-EDITION-gold?style=for-the-badge">
-<img src="https://img.shields.io/badge/Version-3.1.0-blue?style=for-the-badge">
-<img src="https://img.shields.io/badge/REMAKE%20BY-ZetaGo--Aurum-purple?style=for-the-badge">
+<img src="https://img.shields.io/badge/ACRO-PRO%20EDITION-cyan?style=for-the-badge">
+<img src="https://img.shields.io/badge/Version-3.2.0-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/BY-ZetaGo--Aurum-purple?style=for-the-badge">
 </p>
 <p align="center">
 <img src="https://img.shields.io/badge/Brand-ALEOCROPHIC-blueviolet?style=flat-square">
@@ -13,24 +13,23 @@
 <img src="https://img.shields.io/badge/Automatic-Installation-success?style=flat-square">
 </p>
 
-<h1 align="center">🚀 Modded Ubuntu PRO</h1>
-<p align="center"><b>Premium High-Performance Ubuntu GUI for Termux with 1000+ Pre-Installed Software</b></p>
+<h1 align="center">🚀 ACRO PRO Edition</h1>
+<p align="center"><b>Premium Linux Distribution for Termux with 1000+ Pre-Installed Software</b></p>
+<p align="center"><i>Ubuntu-based | GPU Virtualization | Storage Sharing</i></p>
 
 ---
 
-## 🆕 What's New in v3.1.0
+## 🆕 What's New in v3.2.0
 
-- **1000+ Software Packages** - Massive expansion from 124 to 1000+
-- **Hardware Virtualization** - QEMU and virtualization tools included
-- **Update Script** - Update existing installations via `update.sh`
-- **Settings Utility** - Comprehensive GUI settings with `mu-settings`
-- **Language Support** - 23+ languages including Indonesian
-- **Timezone Config** - Easy timezone configuration
-- **VNC Settings** - Adjustable resolution, scale, and color depth
-- **Audio Input** - Microphone/input support for recording
-- **Neofetch Fix** - Proper distro detection in proot
-- **Pavucontrol Fix** - Volume control works correctly
-- **Modern CLI** - Stylish pip-style progress bars and animations
+- **Complete Rebranding** - Now called ACRO PRO Edition
+- **Custom ASCII Art** - New ACRO logo in neofetch and CLI
+- **Storage Sharing** - Access phone storage via ~/storage/
+- **PulseAudio Fix** - Improved audio module loading and volume control
+- **Custom Wallpaper** - Premium ACRO default wallpaper
+- **Termux Auto-Fix** - Automatic fixes for dpkg/cache issues (`termux-fix.sh`)
+- **GPU Virtualization** - Enhanced VirGL and Mesa configuration
+- **Settings Utility** - Use `acro-settings` for configuration
+- **Hard Reset** - Run `vncreset` for complete session reset
 
 ---
 

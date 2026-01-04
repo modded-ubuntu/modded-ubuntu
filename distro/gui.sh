@@ -2,16 +2,15 @@
 
 ##############################################################################
 #                                                                            #
-#   MODDED UBUNTU PRO v3.1.0 - GUI INSTALLER                                 #
-#   Premium High-Performance Ubuntu GUI for Termux                           #
+#   ACRO PRO Edition v3.2.0 - GUI INSTALLER                                  #
+#   Premium Linux Distribution for Termux (Ubuntu-based)                     #
 #                                                                            #
-#   Original Script: modded-ubuntu                                           #
+#   Original Base: modded-ubuntu                                             #
 #   Original Authors: Mustakim Ahmed, Tahmid Rayat, 0xBaryonyx               #
-#   Original Repo: https://github.com/modded-ubuntu/modded-ubuntu            #
 #                                                                            #
-#   PRO Remake By: ZetaGo-Aurum                                              #
+#   ACRO Distro By: ZetaGo-Aurum                                             #
 #   Brand: ALEOCROPHIC                                                       #
-#   Features: 1000+ Pre-installed Software, Automatic Setup, Audio Fix      #
+#   Features: 1000+ Software, GPU Virtualization, Storage Sharing            #
 #                                                                            #
 ##############################################################################
 
@@ -42,8 +41,9 @@ BG_PURPLE=$'\033[48;5;54m'
 # System info
 ARCH=$(uname -m)
 USERNAME=$(getent group sudo | awk -F ':' '{print $4}' | cut -d ',' -f1)
-VERSION="3.1.0 PRO"
-LOG_FILE="/tmp/modded-ubuntu-pro-install.log"
+VERSION="3.2.0"
+DISTRO_NAME="ACRO PRO Edition"
+LOG_FILE="/tmp/acro-install.log"
 TOTAL_PACKAGES=0
 CURRENT_PACKAGE=0
 START_TIME=$(date +%s)
@@ -97,33 +97,31 @@ pip_progress() {
 banner() {
     clear
     echo ""
-    echo -e "${PURPLE}"
+    echo "${CYAN_L}"
     cat << 'EOF'
-    ╔═══════════════════════════════════════════════════════════════════╗
-    ║                                                                   ║
-    ║   ███╗   ███╗ ██████╗ ██████╗ ██████╗ ███████╗██████╗             ║
-    ║   ████╗ ████║██╔═══██╗██╔══██╗██╔══██╗██╔════╝██╔══██╗            ║
-    ║   ██╔████╔██║██║   ██║██║  ██║██║  ██║█████╗  ██║  ██║            ║
-    ║   ██║╚██╔╝██║██║   ██║██║  ██║██║  ██║██╔══╝  ██║  ██║            ║
-    ║   ██║ ╚═╝ ██║╚██████╔╝██████╔╝██████╔╝███████╗██████╔╝            ║
-    ║   ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝╚═════╝             ║
-    ║                                                                   ║
-    ║   ██╗   ██╗██████╗ ██╗   ██╗███╗   ██╗████████╗██╗   ██╗          ║
-    ║   ██║   ██║██╔══██╗██║   ██║████╗  ██║╚══██╔══╝██║   ██║          ║
-    ║   ██║   ██║██████╔╝██║   ██║██╔██╗ ██║   ██║   ██║   ██║          ║
-    ║   ██║   ██║██╔══██╗██║   ██║██║╚██╗██║   ██║   ██║   ██║          ║
-    ║   ╚██████╔╝██████╔╝╚██████╔╝██║ ╚████║   ██║   ╚██████╔╝          ║
-    ║    ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝   ╚═╝    ╚═════╝           ║
-    ║                                                                   ║
-    ╠═══════════════════════════════════════════════════════════════════╣
-    ║          🎨 G U I   I N S T A L L E R   v3.1.0  🎨               ║
-    ╚═══════════════════════════════════════════════════════════════════╝
+    ╔═══════════════════════════════════════════════════════════════════════════╗
+    ║                                                                           ║
+    ║     _____                _____  ___________             ____              ║
+    ║   /      |_         _____\    \_\          \        ____\_  \__           ║
+    ║  /         \       /     /|     |\    /\    \      /     /     \          ║
+    ║ |     /\    \     /     / /____/| |   \_\    |    /     /\      |         ║
+    ║ |    |  |    \   |     | |____|/  |      ___/    |     |  |     |         ║
+    ║ |     \/      \  |     |  _____   |      \  ____ |     |  |     |         ║
+    ║ |\      /\     \ |\     \|\    \ /     /\ \/    \|     | /     /|         ║
+    ║ | \_____\ \_____\| \_____\|    |/_____/ |\______|\     \_____/ |          ║
+    ║ | |     | |     || |     /____/||     | | |     || \_____\   | /          ║
+    ║  \|_____|\|_____| \|_____|    |||_____|/ \|_____| \ |    |___|/           ║
+    ║                          |____|/                   \|____|               ║
+    ║                                                                           ║
+    ╠═══════════════════════════════════════════════════════════════════════════╣
+    ║            🎨 A C R O   G U I   I N S T A L L E R   v3.2.0 🎨            ║
+    ╚═══════════════════════════════════════════════════════════════════════════╝
 EOF
-    echo -e "${D}"
-    echo -e "${CYAN_L}  ┌───────────────────────────────────────────────────────────────────┐${D}"
-    echo -e "${CYAN_L}  │${W}  1000+ Software Packages     ${Y}│${GREEN_L} Fully Automatic Installation${CYAN_L}   │${D}"
-    echo -e "${CYAN_L}  │${PINK}  ZetaGo-Aurum                 ${Y}│${PURPLE} ALEOCROPHIC Brand${CYAN_L}              │${D}"
-    echo -e "${CYAN_L}  └───────────────────────────────────────────────────────────────────┘${D}"
+    echo "${D}"
+    echo "  ${CYAN_L}┌───────────────────────────────────────────────────────────────────┐${D}"
+    echo "  ${CYAN_L}│${W}  1000+ Software Packages     ${Y}│${GREEN_L} Fully Automatic Installation${CYAN_L}   │${D}"
+    echo "  ${CYAN_L}│${PINK}  ZetaGo-Aurum                 ${Y}│${PURPLE} ALEOCROPHIC Brand${CYAN_L}              │${D}"
+    echo "  ${CYAN_L}└───────────────────────────────────────────────────────────────────┘${D}"
     echo ""
 }
 
@@ -705,29 +703,75 @@ install_nodejs() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
-# AUDIO CONFIGURATION
+# AUDIO CONFIGURATION - Enhanced PulseAudio setup
 # ═══════════════════════════════════════════════════════════════════════════
 
 configure_audio() {
     section_header "🔊 AUDIO SYSTEM CONFIGURATION"
     
-    # Environment variables
-    echo 'export DISPLAY=":1"' >> /etc/profile
-    echo 'export PULSE_SERVER=127.0.0.1' >> /etc/profile
+    # Install additional audio packages for better support
+    apt-get install -y --no-install-recommends \
+        pulseaudio-utils \
+        alsa-utils \
+        alsa-base 2>/dev/null >> "$LOG_FILE" 2>&1 || true
+    
+    # Environment variables for profile
+    cat >> /etc/profile << 'AUDIO_PROFILE_EOF'
+
+# ACRO Audio Configuration
+export DISPLAY="${DISPLAY:-:1}"
+export PULSE_SERVER="${PULSE_SERVER:-127.0.0.1}"
+export PULSE_RUNTIME_PATH="/tmp/pulse"
+AUDIO_PROFILE_EOF
+    
+    # Create PulseAudio default configuration
+    mkdir -p /etc/pulse
+    cat > /etc/pulse/client.conf << 'PULSE_CLIENT_EOF'
+# ACRO PRO Edition - PulseAudio Client Config
+default-server = 127.0.0.1
+autospawn = no
+daemon-binary = /bin/true
+enable-shm = false
+PULSE_CLIENT_EOF
+    
+    # Create PulseAudio init script
+    cat > /usr/local/bin/acro-audio-init << 'AUDIO_INIT_EOF'
+#!/bin/bash
+# ACRO PRO Edition - Audio initialization script
+
+# Set environment
+export PULSE_SERVER="127.0.0.1"
+export PULSE_RUNTIME_PATH="/tmp/pulse"
+
+# Create runtime dir
+mkdir -p /tmp/pulse
+
+# Wait for Termux PulseAudio
+sleep 1
+
+# Test audio connection
+if pactl info >/dev/null 2>&1; then
+    echo "Audio connected to Termux PulseAudio"
+else
+    echo "Warning: PulseAudio not connected. Make sure Termux audio is running."
+    echo "Run in Termux: pulseaudio --start --load='module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1'"
+fi
+AUDIO_INIT_EOF
+    chmod +x /usr/local/bin/acro-audio-init
     
     # Fix pavucontrol desktop file
     if [[ -f /usr/share/applications/pavucontrol.desktop ]]; then
-        sed -i 's/Exec=pavucontrol/Exec=env PULSE_SERVER=127.0.0.1 pavucontrol/g' \
+        sed -i 's|Exec=pavucontrol|Exec=env PULSE_SERVER=127.0.0.1 pavucontrol|g' \
             /usr/share/applications/pavucontrol.desktop 2>/dev/null || true
     fi
     
     # Add audio to ubuntu launcher
-    echo "$(echo 'bash ~/.sound' | cat - /data/data/com.termux/files/usr/bin/ubuntu)" > /data/data/com.termux/files/usr/bin/ubuntu 2>/dev/null || true
+    echo "$(echo 'bash ~/.sound 2>/dev/null || true' | cat - /data/data/com.termux/files/usr/bin/ubuntu)" > /data/data/com.termux/files/usr/bin/ubuntu 2>/dev/null || true
     
     source /etc/profile 2>/dev/null || true
     
-    success_msg "Audio system configured"
-    success_msg "Pavucontrol fixed for proot environment"
+    success_msg "PulseAudio configured for Termux integration"
+    info_msg "Volume control: use pavucontrol or Termux volume"
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -788,12 +832,47 @@ install_themes() {
     info_msg "Rebuilding font cache..."
     fc-cache -fv >> "$LOG_FILE" 2>&1 || true
     
+    # Install ACRO custom wallpaper
+    info_msg "Setting ACRO wallpaper..."
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    if [[ -f "$script_dir/acro-wallpaper.jpg" ]]; then
+        cp "$script_dir/acro-wallpaper.jpg" /usr/share/backgrounds/acro-wallpaper.jpg 2>/dev/null || true
+        
+        # Set as default XFCE wallpaper for user
+        if [[ -n "$USERNAME" ]] && [[ -d "/home/$USERNAME" ]]; then
+            mkdir -p "/home/$USERNAME/.config/xfce4/xfconf/xfce-perchannel-xml"
+            cat > "/home/$USERNAME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" << 'XFCE_WALLPAPER_EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xfce4-desktop" version="1.0">
+  <property name="backdrop" type="empty">
+    <property name="screen0" type="empty">
+      <property name="monitor0" type="empty">
+        <property name="workspace0" type="empty">
+          <property name="last-image" type="string" value="/usr/share/backgrounds/acro-wallpaper.jpg"/>
+          <property name="image-style" type="int" value="5"/>
+        </property>
+      </property>
+      <property name="monitorVNC-0" type="empty">
+        <property name="workspace0" type="empty">
+          <property name="last-image" type="string" value="/usr/share/backgrounds/acro-wallpaper.jpg"/>
+          <property name="image-style" type="int" value="5"/>
+        </property>
+      </property>
+    </property>
+  </property>
+</channel>
+XFCE_WALLPAPER_EOF
+            chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.config/xfce4" 2>/dev/null || true
+        fi
+        success_msg "ACRO wallpaper installed"
+    fi
+    
     echo ""
     success_msg "Premium theme package installed"
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
-# NEOFETCH FIX - Proper installation and configuration
+# NEOFETCH FIX - ACRO Custom ASCII and configuration
 # ═══════════════════════════════════════════════════════════════════════════
 
 fix_neofetch() {
@@ -813,11 +892,30 @@ fix_neofetch() {
         mkdir -p "/home/$USERNAME/.config/neofetch"
     fi
     
-    # Create custom neofetch config
+    # Create ACRO custom ASCII art file
+    cat > /etc/neofetch/acro_ascii << 'ACRO_ASCII_EOF'
+${c1}    _____                _____  ___________             ____     
+${c1}  /      |_         _____\    \_\          \        ____\_  \__  
+${c1} /         \       /     /|     |\    /\    \      /     /     \ 
+${c2}|     /\    \     /     / /____/| |   \_\    |    /     /\      |
+${c2}|    |  |    \   |     | |____|/  |      ___/    |     |  |     |
+${c2}|     \/      \  |     |  _____   |      \  ____ |     |  |     |
+${c3}|\      /\     \ |\     \|\    \ /     /\ \/    \|     | /     /|
+${c3}| \_____\ \_____\| \_____\|    |/_____/ |\______|\     \_____/ |
+${c3}| |     | |     || |     /____/||     | | |     || \_____\   | / 
+${c4} \|_____|\|_____| \|_____|    |||_____|/ \|_____| \ |    |___|/  
+${c4}                         |____|/                   \|____|       
+ACRO_ASCII_EOF
+    
+    # Create custom neofetch config with ACRO branding
     cat > /etc/neofetch/config.conf << 'NEOFETCH_EOF'
-# Modded Ubuntu PRO v3.1.0 neofetch config
+# ACRO PRO Edition v3.2.0 neofetch config
+# Custom Linux Distribution for Termux
+
 print_info() {
-    info title
+    prin "$(color 6)╔══════════════════════════════════════════════════╗"
+    prin "$(color 6)║$(color 15)  A C R O   P R O   E D I T I O N   v3.2.0      $(color 6)║"
+    prin "$(color 6)╚══════════════════════════════════════════════════╝"
     info underline
     info "OS" distro
     info "Host" model
@@ -827,31 +925,47 @@ print_info() {
     info "Shell" shell
     info "DE" de
     info "WM" wm
-    info "WM Theme" wm_theme
     info "Theme" theme
     info "Icons" icons
     info "Terminal" term
     info "CPU" cpu
+    info "GPU" gpu
     info "Memory" memory
+    info "Disk" disk
     info cols
+    prin ""
+    prin "$(color 6)Brand: $(color 13)ALEOCROPHIC$(color 6) | By: $(color 14)ZetaGo-Aurum"
 }
 
-# Force Ubuntu detection for proot environment
-distro="Ubuntu 22.04 LTS (Modded PRO)"
-ascii_distro="Ubuntu"
-os_arch="aarch64"
+# ACRO Distribution settings
+distro="ACRO PRO Edition v3.2.0"
+ascii_distro="auto"
+image_source="/etc/neofetch/acro_ascii"
+image_backend="ascii"
+
+# Colors
+colors=(6 6 7 4 4 7)
+bold="on"
+underline_enabled="on"
+underline_char="─"
+separator=" ➜ "
+
+# OS Arch
+os_arch="on"
 NEOFETCH_EOF
     
     # Copy to user config if exists
     if [[ -n "$USERNAME" ]] && [[ -d "/home/$USERNAME" ]]; then
         cp /etc/neofetch/config.conf "/home/$USERNAME/.config/neofetch/config.conf"
+        cp /etc/neofetch/acro_ascii "/home/$USERNAME/.config/neofetch/acro_ascii"
         chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.config/neofetch"
     fi
     
     # Also copy to root
     cp /etc/neofetch/config.conf "$HOME/.config/neofetch/config.conf" 2>/dev/null || true
+    cp /etc/neofetch/acro_ascii "$HOME/.config/neofetch/acro_ascii" 2>/dev/null || true
     
-    success_msg "Neofetch installed and configured"
+    success_msg "Neofetch configured with ACRO branding"
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -896,7 +1010,7 @@ BLEACHBIT_EOF
     # Create hard reset script
     cat > /usr/local/bin/vncreset << 'VNCRESET_EOF'
 #!/bin/bash
-# Modded Ubuntu PRO v3.1.0 - Hard Reset Script
+# ACRO PRO Edition v3.2.0 - Hard Reset Script
 # Performs a complete session reset like restarting a computer
 
 R=$'\033[1;31m'
@@ -908,7 +1022,7 @@ D=$'\033[0m'
 
 echo ""
 echo "${C}╔═══════════════════════════════════════════════════════╗${D}"
-echo "${C}║${W}     🔄 MODDED UBUNTU PRO - HARD RESET 🔄             ${C}║${D}"
+echo "${C}║${W}        🔄 ACRO PRO - HARD RESET 🔄                   ${C}║${D}"
 echo "${C}╚═══════════════════════════════════════════════════════╝${D}"
 echo ""
 
@@ -984,7 +1098,7 @@ configure_language() {
     # Add to /etc/profile for all users
     cat >> /etc/profile << 'LOCALE_PROFILE_EOF'
 
-# Modded Ubuntu PRO - Locale settings
+# ACRO PRO Edition - Locale settings
 export LANG="${LANG:-en_US.UTF-8}"
 export LC_ALL="${LC_ALL:-en_US.UTF-8}"
 export LANGUAGE="${LANGUAGE:-en_US:en}"
@@ -1011,7 +1125,7 @@ LOCALE_BASHRC_EOF
     # Also add to root .bashrc
     cat >> /root/.bashrc << 'LOCALE_ROOT_EOF'
 
-# Modded Ubuntu PRO - Locale settings
+# ACRO PRO Edition - Locale settings
 export LANG="${LANG:-en_US.UTF-8}"
 export LC_ALL="${LC_ALL:-en_US.UTF-8}"
 export LANGUAGE="${LANGUAGE:-en_US:en}"
@@ -1020,7 +1134,55 @@ export PULSE_SERVER="${PULSE_SERVER:-127.0.0.1}"
 LOCALE_ROOT_EOF
     
     success_msg "Language settings configured in .bashrc"
-    info_msg "Use 'mu-settings' to change language after installation"
+    info_msg "Use 'acro-settings' to change language after installation"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# STORAGE SHARING - Mount Termux storage inside ACRO
+# ═══════════════════════════════════════════════════════════════════════════
+
+configure_storage_sharing() {
+    section_header "📁 CONFIGURING STORAGE SHARING"
+    
+    # Create storage symlinks for easy access
+    local termux_storage="/data/data/com.termux/files/home/storage"
+    
+    if [[ -d "$termux_storage" ]]; then
+        # Create storage directory in root home
+        mkdir -p /root/storage
+        
+        # Create symlinks in root
+        ln -sf "$termux_storage/shared" /root/storage/shared 2>/dev/null || true
+        ln -sf "$termux_storage/downloads" /root/storage/downloads 2>/dev/null || true
+        ln -sf "$termux_storage/dcim" /root/storage/dcim 2>/dev/null || true
+        ln -sf "$termux_storage/music" /root/storage/music 2>/dev/null || true
+        ln -sf "$termux_storage/movies" /root/storage/movies 2>/dev/null || true
+        ln -sf "$termux_storage/pictures" /root/storage/pictures 2>/dev/null || true
+        ln -sf "/sdcard" /root/storage/sdcard 2>/dev/null || true
+        
+        success_msg "Root storage links created"
+        
+        # Create for user if exists
+        if [[ -n "$USERNAME" ]] && [[ -d "/home/$USERNAME" ]]; then
+            mkdir -p "/home/$USERNAME/storage"
+            
+            ln -sf "$termux_storage/shared" "/home/$USERNAME/storage/shared" 2>/dev/null || true
+            ln -sf "$termux_storage/downloads" "/home/$USERNAME/storage/downloads" 2>/dev/null || true
+            ln -sf "$termux_storage/dcim" "/home/$USERNAME/storage/dcim" 2>/dev/null || true
+            ln -sf "$termux_storage/music" "/home/$USERNAME/storage/music" 2>/dev/null || true
+            ln -sf "$termux_storage/movies" "/home/$USERNAME/storage/movies" 2>/dev/null || true
+            ln -sf "$termux_storage/pictures" "/home/$USERNAME/storage/pictures" 2>/dev/null || true
+            ln -sf "/sdcard" "/home/$USERNAME/storage/sdcard" 2>/dev/null || true
+            
+            chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/storage" 2>/dev/null || true
+            success_msg "User storage links created"
+        fi
+        
+        info_msg "Access phone storage via ~/storage/"
+    else
+        warning_msg "Termux storage not found"
+        info_msg "Run 'termux-setup-storage' in Termux first"
+    fi
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -1188,6 +1350,7 @@ main() {
     fix_neofetch
     fix_apps
     configure_language
+    configure_storage_sharing
     final_cleanup
     
     # Show completion
