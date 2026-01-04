@@ -211,7 +211,7 @@ update_scripts() {
         "distro/vncstop:$UBUNTU_DIR/usr/local/bin/vncstop"
         "distro/user.sh:$UBUNTU_DIR/root/user.sh"
         "distro/gui.sh:$UBUNTU_DIR/root/gui.sh"
-        "distro/settings.sh:$UBUNTU_DIR/usr/local/bin/mu-settings"
+        "distro/settings.sh:$UBUNTU_DIR/usr/local/bin/acro-settings"
     )
     
     local total=${#items[@]}
@@ -246,25 +246,39 @@ update_scripts() {
 update_audio_config() {
     section_header "🔊 UPDATING AUDIO CONFIGURATION"
     
-    status_msg "Updating PulseAudio configuration..."
+    status_msg "Configuring PulseAudio (no sink spam fix)..."
     
-    cat > "$HOME/.sound" << 'AUDIO_EOF'
-#!/bin/bash
-# Modded Ubuntu PRO v3.1.0 - Audio Configuration
-# Comprehensive PulseAudio setup for proot environment
+    # Create proper client config - THIS FIXES THE SINK SPAM
+    mkdir -p "$UBUNTU_DIR/etc/pulse"
+    cat > "$UBUNTU_DIR/etc/pulse/client.conf" << 'PULSE_EOF'
+# ACRO PRO Edition - PulseAudio Client Config
+# Connects to Termux PulseAudio - NO LOCAL DAEMON
 
-pulseaudio --kill 2>/dev/null
-pulseaudio --start --exit-idle-time=-1 --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1"
-pacmd load-module module-aaudio-sink 2>/dev/null || true
-pacmd load-module module-aaudio-source 2>/dev/null || true
-pacmd set-default-sink 0 2>/dev/null || true
-pacmd set-default-source 0 2>/dev/null || true
-echo "Audio system initialized with input/output support"
-AUDIO_EOF
+default-server = tcp:127.0.0.1:4713
+autospawn = no
+daemon-binary = /bin/true
+enable-shm = false
+enable-memfd = no
+PULSE_EOF
     
-    chmod +x "$HOME/.sound"
-    success_msg "Audio configuration updated"
-    success_msg "Microphone input support enabled"
+    # Create profile.d script for environment
+    mkdir -p "$UBUNTU_DIR/etc/profile.d"
+    cat > "$UBUNTU_DIR/etc/profile.d/acro-audio.sh" << 'AUDIO_ENV_EOF'
+# ACRO Audio Environment
+export PULSE_SERVER="tcp:127.0.0.1:4713"
+AUDIO_ENV_EOF
+    chmod +x "$UBUNTU_DIR/etc/profile.d/acro-audio.sh"
+    
+    # REMOVE OLD .sound files that cause sink spam
+    rm -f "$HOME/.sound" 2>/dev/null || true
+    rm -f "$UBUNTU_DIR/root/.sound" 2>/dev/null || true
+    
+    # Remove .sound from ubuntu launcher if exists
+    if [[ -f "$PREFIX/bin/ubuntu" ]]; then
+        sed -i '/\.sound/d' "$PREFIX/bin/ubuntu" 2>/dev/null || true
+    fi
+    
+    success_msg "Audio configuration fixed (no sink spam)"
 }
 
 show_update_menu() {

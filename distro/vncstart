@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 ##############################################################################
-#   MODDED UBUNTU PRO v3.1.0 - VNC START                                     #
-#   PRO Remake By: ZetaGo-Aurum | Brand: ALEOCROPHIC                         #
+#   ACRO PRO Edition v3.2.1 - VNC START                                      #
+#   By: ZetaGo-Aurum | Brand: ALEOCROPHIC                                    #
 ##############################################################################
 
 # Colors
-GREEN="\033[38;5;120m"
-CYAN="\033[38;5;81m"
-YELLOW="\033[38;5;220m"
-PURPLE="\033[38;5;141m"
-GRAY="\033[38;5;245m"
-WHITE="\033[1;37m"
-D="\033[0m"
+GREEN=$'\033[38;5;120m'
+CYAN=$'\033[38;5;81m'
+YELLOW=$'\033[38;5;220m'
+PURPLE=$'\033[38;5;141m'
+GRAY=$'\033[38;5;245m'
+WHITE=$'\033[1;37m'
+D=$'\033[0m'
 
 # Configuration file
 VNC_CONFIG="$HOME/.vnc/config"
@@ -38,13 +38,13 @@ ZLEVEL="$DEFAULT_ZLEVEL"
 USERNAME=$(whoami)
 
 echo ""
-echo -e "${PURPLE}  ┌───────────────────────────────────────────────────────┐${D}"
-echo -e "${PURPLE}  │${WHITE}   🚀 Modded Ubuntu PRO VNC Server v3.1.0${PURPLE}              │${D}"
-echo -e "${PURPLE}  └───────────────────────────────────────────────────────┘${D}"
+echo "${CYAN}  ┌───────────────────────────────────────────────────────┐${D}"
+echo "${CYAN}  │${WHITE}   🚀 ACRO PRO VNC Server v3.2.1${CYAN}                       │${D}"
+echo "${CYAN}  └───────────────────────────────────────────────────────┘${D}"
 echo ""
 
 # Kill any existing sessions
-echo -e "  ${CYAN}▸${D} Stopping existing VNC sessions..."
+echo "  ${CYAN}▸${D} Stopping existing VNC sessions..."
 vncserver -kill :* 2>/dev/null
 
 # Clean up old lock files
@@ -53,33 +53,37 @@ rm -rf /tmp/.X11-unix/X* 2>/dev/null
 rm -rf "/home/${USERNAME}/.vnc/"*.pid 2>/dev/null
 rm -rf "/root/.vnc/"*.pid 2>/dev/null
 
-echo -e "  ${GREEN}✓${WHITE} Cleanup complete${D}"
+echo "  ${GREEN}✓${WHITE} Cleanup complete${D}"
 echo ""
 
+# Set environment (NO audio init here - prevents sink spam)
+export DISPLAY=":1"
+export PULSE_SERVER="tcp:127.0.0.1:4713"
+
 # Start VNC with settings
-echo -e "  ${CYAN}▸${D} Starting VNC server..."
+echo "  ${CYAN}▸${D} Starting VNC server..."
 dbus-launch vncserver \
     -geometry "$RESOLUTION" \
     -depth "$DEPTH" \
     -zliblevel "$ZLEVEL" \
-    -name "modded-ubuntu-pro" \
+    -name "acro-pro" \
     -xstartup /usr/bin/xfce4-session \
     -localhost no \
-    -SecurityTypes VncAuth
+    -SecurityTypes VncAuth 2>/dev/null
 
 echo ""
-echo -e "  ${GREEN}✓${WHITE} VNC Server started on display :1${D}"
+echo "  ${GREEN}✓${WHITE} VNC Server started on display :1${D}"
 echo ""
-echo -e "${GREEN}  ┌───────────────────────────────────────────────────────┐${D}"
-echo -e "${GREEN}  │${WHITE}  📺 Connection Info${GREEN}                                   │${D}"
-echo -e "${GREEN}  ├───────────────────────────────────────────────────────┤${D}"
-echo -e "${GREEN}  │${D}                                                       ${GREEN}│${D}"
-echo -e "${GREEN}  │${WHITE}  Address:    ${YELLOW}localhost:1${D}                            ${GREEN}│${D}"
-echo -e "${GREEN}  │${WHITE}  Resolution: ${CYAN}${RESOLUTION}${D}                           ${GREEN}│${D}"
-echo -e "${GREEN}  │${WHITE}  Depth:      ${CYAN}${DEPTH}-bit${D}                                  ${GREEN}│${D}"
-echo -e "${GREEN}  │${D}                                                       ${GREEN}│${D}"
-echo -e "${GREEN}  │${GRAY}  Tip: Set VNC Viewer Picture Quality to HIGH${D}        ${GREEN}│${D}"
-echo -e "${GREEN}  │${GRAY}  Tip: Use 'mu-settings' to change resolution${D}        ${GREEN}│${D}"
-echo -e "${GREEN}  │${D}                                                       ${GREEN}│${D}"
-echo -e "${GREEN}  └───────────────────────────────────────────────────────┘${D}"
+echo "${GREEN}  ┌───────────────────────────────────────────────────────┐${D}"
+echo "${GREEN}  │${WHITE}  📺 Connection Info${GREEN}                                   │${D}"
+echo "${GREEN}  ├───────────────────────────────────────────────────────┤${D}"
+echo "${GREEN}  │${D}                                                       ${GREEN}│${D}"
+echo "${GREEN}  │${WHITE}  Address:    ${YELLOW}localhost:1${D}                            ${GREEN}│${D}"
+echo "${GREEN}  │${WHITE}  Resolution: ${CYAN}${RESOLUTION}${D}                           ${GREEN}│${D}"
+echo "${GREEN}  │${WHITE}  Depth:      ${CYAN}${DEPTH}-bit${D}                                  ${GREEN}│${D}"
+echo "${GREEN}  │${D}                                                       ${GREEN}│${D}"
+echo "${GREEN}  │${GRAY}  Tip: Set VNC Viewer Picture Quality to HIGH${D}        ${GREEN}│${D}"
+echo "${GREEN}  │${GRAY}  Tip: Use 'acro-settings' to change resolution${D}      ${GREEN}│${D}"
+echo "${GREEN}  │${D}                                                       ${GREEN}│${D}"
+echo "${GREEN}  └───────────────────────────────────────────────────────┘${D}"
 echo ""

@@ -150,8 +150,47 @@ check_root() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
+# DPKG AUTO-FIX - Recover from corruption and conflicts
+# ═══════════════════════════════════════════════════════════════════════════
+
+fix_dpkg() {
+    section_header "🔧 CHECKING PACKAGE MANAGER"
+    
+    # Remove dpkg lock files if they exist
+    rm -f /var/lib/dpkg/lock-frontend 2>/dev/null || true
+    rm -f /var/lib/dpkg/lock 2>/dev/null || true
+    rm -f /var/lib/apt/lists/lock 2>/dev/null || true
+    rm -f /var/cache/apt/archives/lock 2>/dev/null || true
+    
+    # Kill any stuck apt processes
+    pkill -9 apt 2>/dev/null || true
+    pkill -9 dpkg 2>/dev/null || true
+    
+    # Configure unconfigured packages
+    info_msg "Configuring packages..."
+    dpkg --configure -a >> "$LOG_FILE" 2>&1 || true
+    
+    # Fix broken dependencies
+    info_msg "Fixing broken dependencies..."
+    apt-get -f install -y >> "$LOG_FILE" 2>&1 || true
+    
+    # Clean package cache
+    apt-get clean >> "$LOG_FILE" 2>&1 || true
+    
+    # Update package lists
+    info_msg "Updating package lists..."
+    apt-get update -y >> "$LOG_FILE" 2>&1 || true
+    
+    # Hold problematic packages that can cause conflicts
+    apt-mark hold udisks2 >> "$LOG_FILE" 2>&1 || true
+    
+    success_msg "Package manager ready"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
 # PACKAGE INSTALLATION FUNCTIONS
 # ═══════════════════════════════════════════════════════════════════════════
+
 
 # Install package silently with fallback alternatives
 install_pkg() {
@@ -703,75 +742,79 @@ install_nodejs() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
-# AUDIO CONFIGURATION - Enhanced PulseAudio setup
+# AUDIO CONFIGURATION - Fixed PulseAudio (No sink spam)
 # ═══════════════════════════════════════════════════════════════════════════
 
 configure_audio() {
     section_header "🔊 AUDIO SYSTEM CONFIGURATION"
     
-    # Install additional audio packages for better support
+    # Install audio packages
     apt-get install -y --no-install-recommends \
         pulseaudio-utils \
-        alsa-utils \
-        alsa-base 2>/dev/null >> "$LOG_FILE" 2>&1 || true
+        alsa-utils 2>/dev/null >> "$LOG_FILE" 2>&1 || true
     
-    # Environment variables for profile
-    cat >> /etc/profile << 'AUDIO_PROFILE_EOF'
-
-# ACRO Audio Configuration
-export DISPLAY="${DISPLAY:-:1}"
-export PULSE_SERVER="${PULSE_SERVER:-127.0.0.1}"
-export PULSE_RUNTIME_PATH="/tmp/pulse"
-AUDIO_PROFILE_EOF
-    
-    # Create PulseAudio default configuration
+    # Create clean PulseAudio client config - THIS IS THE KEY FIX
+    # Prevents proot from trying to spawn its own PulseAudio
     mkdir -p /etc/pulse
-    cat > /etc/pulse/client.conf << 'PULSE_CLIENT_EOF'
-# ACRO PRO Edition - PulseAudio Client Config
-default-server = 127.0.0.1
+    cat > /etc/pulse/client.conf << 'PULSE_EOF'
+# ACRO PRO Edition - PulseAudio Client Configuration
+# Connects to Termux PulseAudio server - NO LOCAL DAEMON
+
+# Connect to Termux PulseAudio TCP socket
+default-server = tcp:127.0.0.1:4713
+
+# CRITICAL: Disable autospawn to prevent sink spam
 autospawn = no
+
+# Don't try to start local daemon
 daemon-binary = /bin/true
+
+# Disable shared memory (not supported in proot)
 enable-shm = false
-PULSE_CLIENT_EOF
+
+# Disable memfd (not supported)
+enable-memfd = no
+PULSE_EOF
     
-    # Create PulseAudio init script
-    cat > /usr/local/bin/acro-audio-init << 'AUDIO_INIT_EOF'
-#!/bin/bash
-# ACRO PRO Edition - Audio initialization script
-
-# Set environment
-export PULSE_SERVER="127.0.0.1"
-export PULSE_RUNTIME_PATH="/tmp/pulse"
-
-# Create runtime dir
-mkdir -p /tmp/pulse
-
-# Wait for Termux PulseAudio
-sleep 1
-
-# Test audio connection
-if pactl info >/dev/null 2>&1; then
-    echo "Audio connected to Termux PulseAudio"
-else
-    echo "Warning: PulseAudio not connected. Make sure Termux audio is running."
-    echo "Run in Termux: pulseaudio --start --load='module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1'"
-fi
-AUDIO_INIT_EOF
-    chmod +x /usr/local/bin/acro-audio-init
+    # Create environment file (will be sourced once, not on every command)
+    cat > /etc/profile.d/acro-audio.sh << 'AUDIO_ENV_EOF'
+# ACRO Audio Environment (loaded once at login)
+export PULSE_SERVER="tcp:127.0.0.1:4713"
+AUDIO_ENV_EOF
+    chmod +x /etc/profile.d/acro-audio.sh
+    
+    # Add to bashrc for user (only if not already there)
+    if [[ -n "$USERNAME" ]] && [[ -d "/home/$USERNAME" ]]; then
+        if ! grep -q "PULSE_SERVER" "/home/$USERNAME/.bashrc" 2>/dev/null; then
+            echo 'export PULSE_SERVER="tcp:127.0.0.1:4713"' >> "/home/$USERNAME/.bashrc"
+        fi
+    fi
+    
+    # Add to root bashrc (only if not already there)
+    if ! grep -q "PULSE_SERVER" /root/.bashrc 2>/dev/null; then
+        echo 'export PULSE_SERVER="tcp:127.0.0.1:4713"' >> /root/.bashrc
+    fi
     
     # Fix pavucontrol desktop file
     if [[ -f /usr/share/applications/pavucontrol.desktop ]]; then
-        sed -i 's|Exec=pavucontrol|Exec=env PULSE_SERVER=127.0.0.1 pavucontrol|g' \
+        sed -i 's|Exec=pavucontrol|Exec=env PULSE_SERVER=tcp:127.0.0.1:4713 pavucontrol|g' \
             /usr/share/applications/pavucontrol.desktop 2>/dev/null || true
     fi
     
-    # Add audio to ubuntu launcher
-    echo "$(echo 'bash ~/.sound 2>/dev/null || true' | cat - /data/data/com.termux/files/usr/bin/ubuntu)" > /data/data/com.termux/files/usr/bin/ubuntu 2>/dev/null || true
+    # REMOVE old .sound script from ubuntu launcher if it exists
+    # This was causing the sink spam!
+    if [[ -f /data/data/com.termux/files/usr/bin/ubuntu ]]; then
+        sed -i '/\.sound/d' /data/data/com.termux/files/usr/bin/ubuntu 2>/dev/null || true
+    fi
     
-    source /etc/profile 2>/dev/null || true
+    # Remove old .sound file if exists
+    rm -f /root/.sound 2>/dev/null || true
+    if [[ -n "$USERNAME" ]]; then
+        rm -f "/home/$USERNAME/.sound" 2>/dev/null || true
+    fi
     
-    success_msg "PulseAudio configured for Termux integration"
-    info_msg "Volume control: use pavucontrol or Termux volume"
+    success_msg "PulseAudio configured (no sink spam)"
+    info_msg "Audio connects to Termux PulseAudio automatically"
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -841,21 +884,34 @@ install_themes() {
         # Set as default XFCE wallpaper for user
         if [[ -n "$USERNAME" ]] && [[ -d "/home/$USERNAME" ]]; then
             mkdir -p "/home/$USERNAME/.config/xfce4/xfconf/xfce-perchannel-xml"
+            
+            # Create XML config file with broader monitor support
             cat > "/home/$USERNAME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" << 'XFCE_WALLPAPER_EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xfce4-desktop" version="1.0">
   <property name="backdrop" type="empty">
+    <property name="single-workspace-mode" type="bool" value="true"/>
+    <property name="single-workspace-number" type="int" value="0"/>
     <property name="screen0" type="empty">
       <property name="monitor0" type="empty">
         <property name="workspace0" type="empty">
           <property name="last-image" type="string" value="/usr/share/backgrounds/acro-wallpaper.jpg"/>
           <property name="image-style" type="int" value="5"/>
+          <property name="color-style" type="int" value="0"/>
         </property>
       </property>
       <property name="monitorVNC-0" type="empty">
         <property name="workspace0" type="empty">
           <property name="last-image" type="string" value="/usr/share/backgrounds/acro-wallpaper.jpg"/>
           <property name="image-style" type="int" value="5"/>
+          <property name="color-style" type="int" value="0"/>
+        </property>
+      </property>
+      <property name="monitorscreen" type="empty">
+        <property name="workspace0" type="empty">
+          <property name="last-image" type="string" value="/usr/share/backgrounds/acro-wallpaper.jpg"/>
+          <property name="image-style" type="int" value="5"/>
+          <property name="color-style" type="int" value="0"/>
         </property>
       </property>
     </property>
@@ -863,6 +919,19 @@ install_themes() {
 </channel>
 XFCE_WALLPAPER_EOF
             chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.config/xfce4" 2>/dev/null || true
+            
+            # Create an autostart script to set wallpaper on first XFCE login
+            mkdir -p "/home/$USERNAME/.config/autostart"
+            cat > "/home/$USERNAME/.config/autostart/acro-wallpaper.desktop" << 'AUTOSTART_EOF'
+[Desktop Entry]
+Type=Application
+Name=ACRO Wallpaper Setup
+Exec=sh -c 'sleep 3 && xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s /usr/share/backgrounds/acro-wallpaper.jpg 2>/dev/null; xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorVNC-0/workspace0/last-image -s /usr/share/backgrounds/acro-wallpaper.jpg 2>/dev/null; xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorscreen/workspace0/last-image -s /usr/share/backgrounds/acro-wallpaper.jpg 2>/dev/null'
+Hidden=false
+NoDisplay=true
+X-GNOME-Autostart-enabled=true
+AUTOSTART_EOF
+            chown "$USERNAME:$USERNAME" "/home/$USERNAME/.config/autostart/acro-wallpaper.desktop"
         fi
         success_msg "ACRO wallpaper installed"
     fi
