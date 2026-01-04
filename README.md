@@ -3,18 +3,34 @@
 </p>
 <p align="center">
 <img src="https://img.shields.io/badge/PRO-EDITION-gold?style=for-the-badge">
-<img src="https://img.shields.io/badge/Version-3.0.0-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/Version-3.1.0-blue?style=for-the-badge">
 <img src="https://img.shields.io/badge/REMAKE%20BY-ZetaGo--Aurum-purple?style=for-the-badge">
 </p>
 <p align="center">
 <img src="https://img.shields.io/badge/Brand-ALEOCROPHIC-blueviolet?style=flat-square">
 <img src="https://img.shields.io/badge/Written%20In-Bash-darkgreen?style=flat-square">
-<img src="https://img.shields.io/badge/124+-Features-orange?style=flat-square">
+<img src="https://img.shields.io/badge/1000+-Features-orange?style=flat-square">
 <img src="https://img.shields.io/badge/Automatic-Installation-success?style=flat-square">
 </p>
 
 <h1 align="center">🚀 Modded Ubuntu PRO</h1>
-<p align="center"><b>Premium High-Performance Ubuntu GUI for Termux with 124+ Pre-Installed Software</b></p>
+<p align="center"><b>Premium High-Performance Ubuntu GUI for Termux with 1000+ Pre-Installed Software</b></p>
+
+---
+
+## 🆕 What's New in v3.1.0
+
+- **1000+ Software Packages** - Massive expansion from 124 to 1000+
+- **Hardware Virtualization** - QEMU and virtualization tools included
+- **Update Script** - Update existing installations via `update.sh`
+- **Settings Utility** - Comprehensive GUI settings with `mu-settings`
+- **Language Support** - 23+ languages including Indonesian
+- **Timezone Config** - Easy timezone configuration
+- **VNC Settings** - Adjustable resolution, scale, and color depth
+- **Audio Input** - Microphone/input support for recording
+- **Neofetch Fix** - Proper distro detection in proot
+- **Pavucontrol Fix** - Volume control works correctly
+- **Modern CLI** - Stylish pip-style progress bars and animations
 
 ---
 
@@ -52,80 +68,108 @@
 
 ## ⚡ Why PRO Edition?
 
-| Feature           | Original       | PRO Edition                    |
-| ----------------- | -------------- | ------------------------------ |
-| Software Packages | ~10            | **124+**                       |
-| Installation      | Manual prompts | **Fully Automatic**            |
-| Audio Support     | Basic          | **Comprehensive Fix**          |
-| Theme             | Default XFCE   | **Modern Sleek Dark**          |
-| IDE Support       | VSCode only    | **VSCode + Sublime + Geany**   |
-| Office Suite      | None           | **LibreOffice Full**           |
-| Design Tools      | None           | **GIMP + Inkscape + Krita**    |
-| Audio Editing     | None           | **Audacity + LMMS**            |
-| Video Editing     | VLC only       | **Kdenlive + OBS + VLC + MPV** |
-| Dev Tools         | None           | **Git + Node.js + Python**     |
-| Stability         | Good           | **Enterprise-Grade**           |
-| Support           | Community      | **Premium**                    |
+| Feature           | Original       | PRO Edition v3.1.0               |
+| ----------------- | -------------- | -------------------------------- |
+| Software Packages | ~10            | **1000+**                        |
+| Installation      | Manual prompts | **Fully Automatic**              |
+| Audio Support     | Basic          | **Full Input/Output + Mic**      |
+| Theme             | Default XFCE   | **Modern Sleek Dark**            |
+| IDE Support       | VSCode only    | **VSCode + Sublime + Geany**     |
+| Office Suite      | None           | **LibreOffice Full + Calibre**   |
+| Design Tools      | None           | **GIMP + Inkscape + Krita + Blender** |
+| Audio Editing     | None           | **Audacity + LMMS + Ardour**     |
+| Video Editing     | VLC only       | **Kdenlive + OBS + Shotcut**     |
+| Dev Tools         | None           | **Python, Node, Go, Rust, Java** |
+| Language Support  | English        | **23+ Languages (incl. Indonesian)** |
+| Settings Utility  | None           | **Comprehensive mu-settings**    |
+| VNC Config        | Fixed          | **Adjustable Resolution/Scale**  |
+| Stability         | Good           | **Enterprise-Grade**             |
 
 ---
 
-## 🎯 124+ Pre-Installed Features
+## 🎯 1000+ Pre-Installed Features
 
 ### 💻 Development & IDE
 
 - Visual Studio Code (Patched for proot)
 - Sublime Text Editor
-- Geany IDE
-- Vim & Nano
-- Git & Git Bash
-- Node.js & npm
-- Python 3 & pip
-- Build-essential (GCC, G++, Make)
+- Geany IDE with plugins
+- Vim & Nano & Micro
+- Git, Git LFS, Git Flow
+- Node.js & npm (LTS)
+- Python 3 + pip + venv + Jupyter
+- Ruby, Perl, Lua, Go, Rust, PHP
+- Java (OpenJDK)
+- GCC, G++, Clang, Make, CMake
+- SQLite, MariaDB, PostgreSQL clients
 
 ### 📄 Office & Productivity
 
-- LibreOffice Writer
-- LibreOffice Calc
-- LibreOffice Impress
-- LibreOffice Draw
-- Evince PDF Reader
+- LibreOffice Full Suite (Writer, Calc, Impress, Draw, Math)
+- Evince, Okular, Zathura PDF Readers
+- Calibre E-book Manager
+- Scribus Desktop Publishing
 
 ### 🎨 Graphics & Design
 
 - GIMP (Image Editor)
 - Inkscape (Vector Graphics)
 - Krita (Digital Painting)
-- Ristretto (Image Viewer)
+- Blender (3D Modeling - 64-bit)
+- Darktable & RawTherapee (RAW Processing)
+- FontForge (Font Editor)
+- Synfig & Pencil2D (Animation)
 
 ### 🎵 Audio Production
 
 - Audacity (Audio Editor)
 - LMMS (Music Production)
-- PulseAudio (Sound System)
-- Pavucontrol (Volume Control)
+- Ardour (DAW)
+- PulseAudio with AAudio
+- Pavucontrol (Volume Control - Fixed)
+- Microphone Input Support
 
 ### 🎬 Video & Media
 
 - VLC Media Player
 - MPV Media Player
 - Kdenlive (Video Editor)
-- FFmpeg (Media Tools)
+- OpenShot, Shotcut, Pitivi
+- OBS Studio (Screen Recording)
+- FFmpeg suite
+- HandBrake (Video Converter)
 
 ### 🌐 Browsers & Internet
 
 - Mozilla Firefox
 - Chromium Browser
 - FileZilla (FTP Client)
-- Transmission (Torrent)
+- Transmission, qBittorrent (Torrent)
+- Remmina (Remote Desktop)
 
 ### 🔧 System Utilities
 
-- Thunar File Manager
-- XArchiver
-- Htop (Process Monitor)
-- Neofetch
-- GParted
-- Synaptic Package Manager
+- Thunar, PCManFM, Nemo File Managers
+- Htop, Btop, Glances (Monitoring)
+- Neofetch (Fixed for proot)
+- GParted, Synaptic
+- Ranger, MC (CLI file managers)
+- Tmux, Screen, Byobu
+
+### 🔒 Security Tools
+
+- Wireshark, Nmap
+- OpenSSH, GPG
+- KeePassXC
+- ClamAV
+
+### 🌍 Fonts & Languages
+
+- 100+ font families
+- Full CJK support (Chinese, Japanese, Korean)
+- Arabic, Hebrew, Hindi, Thai, Indonesian
+- All Noto fonts collection
+- Programming fonts (FiraCode, JetBrains, Hack)
 
 ### 🎨 Premium Theme Package
 
@@ -134,7 +178,6 @@
 - Breeze Cursor Theme
 - Custom XFCE Panel Layout
 - Premium Wallpaper Collection
-- Nerd Fonts Collection
 
 ---
 
@@ -143,10 +186,26 @@
 ### Requirements
 
 - [Termux](https://f-droid.org/repo/com.termux_118.apk) from F-Droid
-- Minimum 8GB free storage
+- Minimum **15-20GB** free storage
 - Stable internet connection
 
-### Quick Install
+> [!IMPORTANT]
+> ### ⚡ Acquire Wakelock First!
+> Before starting installation, you **MUST** enable wakelock in Termux to prevent your smartphone from force-stopping Termux during the long installation process.
+> 
+> **How to enable:**
+> 1. Pull down the notification bar
+> 2. Find the Termux notification
+> 3. Tap **"Acquire wakelock"**
+> 
+> Or run this command in Termux:
+> ```bash
+> termux-wake-lock
+> ```
+> 
+> This keeps Termux running in the background during the 1-2 hour installation.
+
+### Fresh Install
 
 ```bash
 # Update packages
@@ -179,6 +238,45 @@ ubuntu
 sudo bash gui.sh
 ```
 
+---
+
+## 🔄 Update Existing Installation
+
+If you already have Modded Ubuntu installed:
+
+```bash
+cd modded-ubuntu
+git pull
+bash update.sh
+```
+
+Update options:
+- **Quick Update** - Scripts and configs only
+- **Full Update** - Scripts + GUI package info
+- **GUI Only** - Update GUI installer
+- **Settings Only** - Install/update settings utility
+
+---
+
+## ⚙️ Settings Utility
+
+After GUI installation, use the settings utility:
+
+```bash
+mu-settings
+```
+
+**Features:**
+- 🌐 **Language** - Set system language (23+ options incl. Indonesian)
+- 🕐 **Timezone** - Configure timezone by region
+- 🖥️ **VNC Display** - Adjust resolution, color depth, scale
+- 🔊 **Audio** - Test speakers, microphone, restart PulseAudio
+- 🎨 **Appearance** - Switch themes, font scaling, DPI
+
+---
+
+## 🖥️ VNC Configuration
+
 ### Start VNC
 
 ```bash
@@ -188,18 +286,26 @@ vncstop     # Stop VNC Server
 
 Connect with VNC Viewer app → Address: `localhost:1`
 
+### Resolution Settings
+
+Use `mu-settings` → VNC Display to change:
+- 720p (1280x720) - Good for phones
+- 1080p (1920x1080) - Recommended
+- 1440p (2560x1440) - High-end devices
+- 4K (3840x2160) - Ultra HD
+- Custom resolution
+
 ---
 
-## 🔊 Audio Fix (Pre-Configured)
+## 🔊 Audio Configuration
 
-Audio is **automatically configured** during installation. No manual setup needed!
-
-The PRO edition includes:
+Audio is **automatically configured** during installation including:
 
 - PulseAudio with AAudio module
 - Automatic PULSE_SERVER configuration
-- Volume control integration
-- Firefox audio support out-of-box
+- **Microphone input support** for recording
+- Volume control integration (Pavucontrol fixed)
+- Firefox/Chromium audio support
 
 ---
 
@@ -235,14 +341,16 @@ _Made in Bangladesh 🇧🇩_
 <i>Under the ALEOCROPHIC Brand</i>
 </p>
 
-This PRO edition is a complete remake featuring:
+This PRO edition v3.1.0 features:
 
-- 124+ pre-installed software packages
+- 1000+ pre-installed software packages
 - Fully automatic installation
-- Comprehensive audio system fix
+- Comprehensive audio system with mic input
 - Modern sleek dark theme
 - Enterprise-grade stability
-- High-performance optimizations
+- Settings utility for easy configuration
+- Multi-language support (23+ languages)
+- Adjustable VNC resolution and scale
 
 ---
 

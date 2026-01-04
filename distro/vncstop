@@ -1,26 +1,44 @@
 #!/usr/bin/env bash
 ##############################################################################
-#   MODDED UBUNTU PRO v3.0.0 - VNC STOP                                      #
+#   MODDED UBUNTU PRO v3.1.0 - VNC STOP                                      #
 #   PRO Remake By: ZetaGo-Aurum | Brand: ALEOCROPHIC                         #
 ##############################################################################
+
+# Colors
+RED="\033[38;5;196m"
+GREEN="\033[38;5;120m"
+CYAN="\033[38;5;81m"
+PURPLE="\033[38;5;141m"
+WHITE="\033[1;37m"
+D="\033[0m"
 
 # Get current username
 USERNAME=$(whoami)
 
 echo ""
-echo "🛑 Stopping Modded Ubuntu PRO VNC Server..."
+echo -e "${PURPLE}  ┌───────────────────────────────────────────────────────┐${D}"
+echo -e "${PURPLE}  │${WHITE}   🛑 Stopping VNC Server${PURPLE}                              │${D}"
+echo -e "${PURPLE}  └───────────────────────────────────────────────────────┘${D}"
 echo ""
 
 # Kill all VNC sessions
+echo -e "  ${CYAN}▸${D} Terminating VNC sessions..."
 vncserver -kill :* 2>/dev/null
 
 # Clean up PID files
+echo -e "  ${CYAN}▸${D} Cleaning up PID files..."
 rm -rf "/home/${USERNAME}/.vnc/"*.pid 2>/dev/null
 rm -rf "/root/.vnc/"*.pid 2>/dev/null
 
 # Clean up lock files
+echo -e "  ${CYAN}▸${D} Removing lock files..."
 rm -rf /tmp/.X*-lock 2>/dev/null
 rm -rf /tmp/.X11-unix/X* 2>/dev/null
 
-echo "✓ VNC Server stopped and cleaned up"
+echo ""
+echo -e "  ${GREEN}✓${WHITE} VNC Server stopped and cleaned up${D}"
+echo ""
+echo -e "${GREEN}  ┌───────────────────────────────────────────────────────┐${D}"
+echo -e "${GREEN}  │${WHITE}  To restart, type: ${CYAN}vncstart${D}                          ${GREEN}│${D}"
+echo -e "${GREEN}  └───────────────────────────────────────────────────────┘${D}"
 echo ""

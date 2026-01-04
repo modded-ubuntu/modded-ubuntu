@@ -1,22 +1,50 @@
 #!/usr/bin/env bash
 ##############################################################################
-#   MODDED UBUNTU PRO v3.0.0 - VNC START                                     #
+#   MODDED UBUNTU PRO v3.1.0 - VNC START                                     #
 #   PRO Remake By: ZetaGo-Aurum | Brand: ALEOCROPHIC                         #
 ##############################################################################
 
-# High-performance VNC settings
-RESOLUTION="1920x1080"
-DEPTH="24"
-ZLEVEL="5"
+# Colors
+GREEN="\033[38;5;120m"
+CYAN="\033[38;5;81m"
+YELLOW="\033[38;5;220m"
+PURPLE="\033[38;5;141m"
+GRAY="\033[38;5;245m"
+WHITE="\033[1;37m"
+D="\033[0m"
+
+# Configuration file
+VNC_CONFIG="$HOME/.vnc/config"
+
+# Default settings
+DEFAULT_RESOLUTION="1920x1080"
+DEFAULT_DEPTH="24"
+DEFAULT_ZLEVEL="5"
+
+# Read settings from config or use defaults
+if [[ -f "$VNC_CONFIG" ]]; then
+    RESOLUTION=$(grep "geometry=" "$VNC_CONFIG" | cut -d= -f2 || echo "$DEFAULT_RESOLUTION")
+    DEPTH=$(grep "depth=" "$VNC_CONFIG" | cut -d= -f2 || echo "$DEFAULT_DEPTH")
+    [[ -z "$RESOLUTION" ]] && RESOLUTION="$DEFAULT_RESOLUTION"
+    [[ -z "$DEPTH" ]] && DEPTH="$DEFAULT_DEPTH"
+else
+    RESOLUTION="$DEFAULT_RESOLUTION"
+    DEPTH="$DEFAULT_DEPTH"
+fi
+
+ZLEVEL="$DEFAULT_ZLEVEL"
 
 # Get current username
 USERNAME=$(whoami)
 
 echo ""
-echo "🚀 Starting Modded Ubuntu PRO VNC Server..."
+echo -e "${PURPLE}  ┌───────────────────────────────────────────────────────┐${D}"
+echo -e "${PURPLE}  │${WHITE}   🚀 Modded Ubuntu PRO VNC Server v3.1.0${PURPLE}              │${D}"
+echo -e "${PURPLE}  └───────────────────────────────────────────────────────┘${D}"
 echo ""
 
 # Kill any existing sessions
+echo -e "  ${CYAN}▸${D} Stopping existing VNC sessions..."
 vncserver -kill :* 2>/dev/null
 
 # Clean up old lock files
@@ -25,7 +53,11 @@ rm -rf /tmp/.X11-unix/X* 2>/dev/null
 rm -rf "/home/${USERNAME}/.vnc/"*.pid 2>/dev/null
 rm -rf "/root/.vnc/"*.pid 2>/dev/null
 
-# Start VNC with optimized settings
+echo -e "  ${GREEN}✓${WHITE} Cleanup complete${D}"
+echo ""
+
+# Start VNC with settings
+echo -e "  ${CYAN}▸${D} Starting VNC server..."
 dbus-launch vncserver \
     -geometry "$RESOLUTION" \
     -depth "$DEPTH" \
@@ -36,13 +68,18 @@ dbus-launch vncserver \
     -SecurityTypes VncAuth
 
 echo ""
-echo "✓ VNC Server started on display :1"
+echo -e "  ${GREEN}✓${WHITE} VNC Server started on display :1${D}"
 echo ""
-echo "┌─────────────────────────────────────────────────┐"
-echo "│  Connect using VNC Viewer:                      │"
-echo "│  Address: localhost:1                           │"
-echo "│  Resolution: ${RESOLUTION}                         │"
-echo "│                                                 │"
-echo "│  Tip: Set Picture Quality to HIGH              │"
-echo "└─────────────────────────────────────────────────┘"
+echo -e "${GREEN}  ┌───────────────────────────────────────────────────────┐${D}"
+echo -e "${GREEN}  │${WHITE}  📺 Connection Info${GREEN}                                   │${D}"
+echo -e "${GREEN}  ├───────────────────────────────────────────────────────┤${D}"
+echo -e "${GREEN}  │${D}                                                       ${GREEN}│${D}"
+echo -e "${GREEN}  │${WHITE}  Address:    ${YELLOW}localhost:1${D}                            ${GREEN}│${D}"
+echo -e "${GREEN}  │${WHITE}  Resolution: ${CYAN}${RESOLUTION}${D}                           ${GREEN}│${D}"
+echo -e "${GREEN}  │${WHITE}  Depth:      ${CYAN}${DEPTH}-bit${D}                                  ${GREEN}│${D}"
+echo -e "${GREEN}  │${D}                                                       ${GREEN}│${D}"
+echo -e "${GREEN}  │${GRAY}  Tip: Set VNC Viewer Picture Quality to HIGH${D}        ${GREEN}│${D}"
+echo -e "${GREEN}  │${GRAY}  Tip: Use 'mu-settings' to change resolution${D}        ${GREEN}│${D}"
+echo -e "${GREEN}  │${D}                                                       ${GREEN}│${D}"
+echo -e "${GREEN}  └───────────────────────────────────────────────────────┘${D}"
 echo ""

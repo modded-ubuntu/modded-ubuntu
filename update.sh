@@ -2,32 +2,29 @@
 
 ##############################################################################
 #                                                                            #
-#   MODDED UBUNTU PRO v3.1.0                                                 #
-#   Premium High-Performance Ubuntu GUI for Termux                           #
+#   MODDED UBUNTU PRO v3.1.0 - UPDATE SCRIPT                                 #
+#   System & GUI Updater for Existing Installations                          #
 #                                                                            #
 #   Original Script: modded-ubuntu                                           #
 #   Original Authors: Mustakim Ahmed, Tahmid Rayat, 0xBaryonyx               #
-#   Original Repo: https://github.com/modded-ubuntu/modded-ubuntu            #
 #                                                                            #
 #   PRO Remake By: ZetaGo-Aurum                                              #
 #   Brand: ALEOCROPHIC                                                       #
-#   Features: 1000+ Pre-installed Software, Automatic Setup, Audio Fix      #
 #                                                                            #
 ##############################################################################
 
 # ═══════════════════════════════════════════════════════════════════════════
-# COLOR PALETTE - Modern Sleek Design
+# COLOR PALETTE
 # ═══════════════════════════════════════════════════════════════════════════
-R="\033[1;31m"          # Red
-G="\033[1;32m"          # Green
-Y="\033[1;33m"          # Yellow
-B="\033[1;34m"          # Blue
-M="\033[1;35m"          # Magenta
-C="\033[1;36m"          # Cyan
-W="\033[1;37m"          # White
-D="\033[0m"             # Reset
+R="\033[1;31m"
+G="\033[1;32m"
+Y="\033[1;33m"
+B="\033[1;34m"
+M="\033[1;35m"
+C="\033[1;36m"
+W="\033[1;37m"
+D="\033[0m"
 
-# Extended 256-color palette for gradients
 PURPLE="\033[38;5;141m"
 LPURPLE="\033[38;5;177m"
 PINK="\033[38;5;213m"
@@ -37,16 +34,8 @@ ORANGE="\033[38;5;208m"
 GRAY="\033[38;5;245m"
 DGRAY="\033[38;5;238m"
 
-# Background colors
-BG_PURPLE="\033[48;5;54m"
 BG_DGRAY="\033[48;5;236m"
-
-# Formatting
 BOLD="\033[1m"
-DIM="\033[2m"
-ITALIC="\033[3m"
-UNDERLINE="\033[4m"
-BLINK="\033[5m"
 
 CURR_DIR=$(realpath "$(dirname "$BASH_SOURCE")")
 UBUNTU_DIR="$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu"
@@ -56,25 +45,23 @@ VERSION="3.1.0 PRO"
 # ANIMATION FUNCTIONS
 # ═══════════════════════════════════════════════════════════════════════════
 
-# Spinner animation
 spinner() {
     local pid=$1
     local msg=$2
     local spinstr='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
     local delay=0.1
     
-    tput civis  # Hide cursor
+    tput civis 2>/dev/null
     while kill -0 $pid 2>/dev/null; do
         for (( i=0; i<${#spinstr}; i++ )); do
             printf "\r  ${CYAN_L}${spinstr:$i:1}${D} ${msg}"
             sleep $delay
         done
     done
-    tput cnorm  # Show cursor
+    tput cnorm 2>/dev/null
     printf "\r"
 }
 
-# Modern pip-style progress bar
 progress_bar() {
     local current=$1
     local total=$2
@@ -83,45 +70,20 @@ progress_bar() {
     local filled=$((width * current / total))
     local empty=$((width - filled))
     
-    # Build the bar
-    local bar=""
-    for ((i=0; i<filled; i++)); do bar+="━"; done
-    for ((i=0; i<empty; i++)); do bar+="░"; done
-    
     printf "\r  ${PURPLE}[${GREEN_L}%s${GRAY}%s${PURPLE}]${D} ${W}%3d%%${D} " \
         "$(printf '%*s' $filled '' | tr ' ' '━')" \
         "$(printf '%*s' $empty '' | tr ' ' '░')" \
         $percentage
 }
 
-# Animated text typing effect
-type_text() {
-    local text=$1
-    local delay=${2:-0.02}
-    for (( i=0; i<${#text}; i++ )); do
-        printf "%s" "${text:$i:1}"
-        sleep $delay
-    done
-    echo ""
-}
-
-# Fade in effect for banners
-fade_line() {
-    local text=$1
-    local color=$2
-    printf "${DIM}${color}%s${D}\n" "$text"
-    sleep 0.02
-}
-
 # ═══════════════════════════════════════════════════════════════════════════
 # UI COMPONENTS
 # ═══════════════════════════════════════════════════════════════════════════
 
-# Premium ASCII Banner with animation
 banner() {
     clear
     echo ""
-    echo -e "${PURPLE}"
+    echo -e "${ORANGE}"
     cat << 'EOF'
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
@@ -140,18 +102,17 @@ banner() {
     ║    ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝   ╚═╝    ╚═════╝           ║
     ║                                                                   ║
     ╠═══════════════════════════════════════════════════════════════════╣
-    ║              🚀 P R O   E D I T I O N   v3.1.0 🚀                 ║
+    ║              🔄 U P D A T E R   v3.1.0 🔄                         ║
     ╚═══════════════════════════════════════════════════════════════════╝
 EOF
     echo -e "${D}"
     echo -e "${CYAN_L}  ┌───────────────────────────────────────────────────────────────────┐${D}"
-    echo -e "${CYAN_L}  │${W}  Premium Ubuntu GUI for Termux    ${Y}│${GREEN_L} 1000+ Features${CYAN_L}              │${D}"
-    echo -e "${CYAN_L}  │${PINK}  Remake by: ZetaGo-Aurum          ${Y}│${PURPLE} Brand: ALEOCROPHIC${CYAN_L}         │${D}"
+    echo -e "${CYAN_L}  │${W}  System & GUI Updater        ${Y}│${GREEN_L} For Existing Installations${CYAN_L}      │${D}"
+    echo -e "${CYAN_L}  │${PINK}  ZetaGo-Aurum                 ${Y}│${PURPLE} ALEOCROPHIC Brand${CYAN_L}              │${D}"
     echo -e "${CYAN_L}  └───────────────────────────────────────────────────────────────────┘${D}"
     echo ""
 }
 
-# Status messages with icons
 status_msg() {
     echo -e "\n  ${PURPLE}▸${CYAN_L} $1${D}"
 }
@@ -172,7 +133,6 @@ info_msg() {
     echo -e "  ${CYAN_L}ℹ${W} $1${D}"
 }
 
-# Section header
 section_header() {
     local title=$1
     echo ""
@@ -181,31 +141,39 @@ section_header() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
-# INSTALLATION FUNCTIONS
+# UPDATE FUNCTIONS
 # ═══════════════════════════════════════════════════════════════════════════
 
-# Check and install packages
-package() {
-    banner
-    section_header "📦 INITIALIZING PRO INSTALLATION"
+check_installation() {
+    section_header "🔍 CHECKING EXISTING INSTALLATION"
     
-    # Setup storage
-    if [ ! -d '/data/data/com.termux/files/home/storage' ]; then
-        status_msg "Setting up Storage Access..."
-        termux-setup-storage
-        sleep 2
+    if [[ ! -d "$UBUNTU_DIR" ]]; then
+        error_msg "Modded Ubuntu is not installed!"
+        echo ""
+        info_msg "Please run 'bash setup.sh' first to install."
+        echo ""
+        exit 1
     fi
-    success_msg "Storage configured"
     
-    # Required packages
-    local required_packages=(pulseaudio proot-distro wget curl git)
-    local total=${#required_packages[@]}
+    success_msg "Modded Ubuntu installation found"
+    
+    # Check for existing user
+    if [[ -e "$PREFIX/bin/ubuntu" ]]; then
+        success_msg "Ubuntu launcher detected"
+    else
+        warning_msg "Ubuntu launcher missing - will recreate"
+        echo "proot-distro login ubuntu" > "$PREFIX/bin/ubuntu"
+        chmod +x "$PREFIX/bin/ubuntu"
+    fi
+}
+
+update_termux_packages() {
+    section_header "📦 UPDATING TERMUX PACKAGES"
+    
+    local packages=(pulseaudio proot-distro wget curl git)
+    local total=${#packages[@]}
     local current=0
     
-    status_msg "Installing Termux dependencies..."
-    echo ""
-    
-    # Update with animation
     {
         yes | pkg update -y > /dev/null 2>&1
         yes | pkg upgrade -y > /dev/null 2>&1
@@ -214,13 +182,13 @@ package() {
     success_msg "Package database updated"
     
     echo ""
-    for pkg_name in "${required_packages[@]}"; do
+    for pkg in "${packages[@]}"; do
         current=$((current + 1))
         progress_bar $current $total
-        echo -n "${GRAY}${pkg_name}${D}"
+        echo -n "${GRAY}${pkg}${D}"
         
-        if ! command -v "$pkg_name" &> /dev/null; then
-            yes | pkg install "$pkg_name" -y > /dev/null 2>&1
+        if ! dpkg -s "$pkg" &> /dev/null; then
+            yes | pkg install "$pkg" -y > /dev/null 2>&1
         fi
         echo -e "\r$(printf ' %.0s' {1..70})\r"
     done
@@ -228,211 +196,242 @@ package() {
     progress_bar $total $total
     echo ""
     echo ""
-    success_msg "All Termux dependencies installed"
+    success_msg "Termux packages updated"
 }
 
-# Install distribution
-distro() {
-    section_header "🐧 UBUNTU DISTRIBUTION SETUP"
+update_scripts() {
+    section_header "📝 UPDATING SYSTEM SCRIPTS"
     
-    status_msg "Checking for Ubuntu distribution..."
-    termux-reload-settings
+    local items=(
+        "distro/vncstart:$UBUNTU_DIR/usr/local/bin/vncstart"
+        "distro/vncstop:$UBUNTU_DIR/usr/local/bin/vncstop"
+        "distro/user.sh:$UBUNTU_DIR/root/user.sh"
+        "distro/gui.sh:$UBUNTU_DIR/root/gui.sh"
+        "distro/settings.sh:$UBUNTU_DIR/usr/local/bin/mu-settings"
+    )
     
-    if [[ -d "$UBUNTU_DIR" ]]; then
-        success_msg "Ubuntu distribution already installed"
-        info_msg "Run 'proot-distro reset ubuntu' to reinstall"
-        return 0
-    fi
+    local total=${#items[@]}
+    local current=0
     
-    status_msg "Installing Ubuntu 22.04 LTS..."
-    warning_msg "This may take 5-15 minutes depending on your connection"
+    for item in "${items[@]}"; do
+        IFS=':' read -r src dest <<< "$item"
+        current=$((current + 1))
+        
+        progress_bar $current $total
+        local basename=$(basename "$src")
+        echo -n "${GRAY}${basename}${D}"
+        
+        if [[ -e "$CURR_DIR/$src" ]]; then
+            cp -f "$CURR_DIR/$src" "$dest" 2>/dev/null || true
+            chmod +x "$dest" 2>/dev/null || true
+        fi
+        
+        echo -e "\r$(printf ' %.0s' {1..70})\r"
+    done
+    
+    progress_bar $total $total
     echo ""
-    
-    proot-distro install ubuntu
-    termux-reload-settings
-    
-    if [[ -d "$UBUNTU_DIR" ]]; then
-        success_msg "Ubuntu 22.04 LTS installed successfully!"
-    else
-        error_msg "Failed to install Ubuntu distribution"
-        warning_msg "Please check your internet connection and try again"
-        exit 1
-    fi
+    echo ""
+    success_msg "System scripts updated"
 }
 
-# Comprehensive audio fix
-sound() {
-    section_header "🔊 AUDIO SYSTEM CONFIGURATION"
+update_audio_config() {
+    section_header "🔊 UPDATING AUDIO CONFIGURATION"
     
-    status_msg "Configuring PulseAudio..."
+    status_msg "Updating PulseAudio configuration..."
     
-    # Create comprehensive audio configuration
     cat > "$HOME/.sound" << 'AUDIO_EOF'
 #!/bin/bash
 # Modded Ubuntu PRO v3.1.0 - Audio Configuration
 # Comprehensive PulseAudio setup for proot environment
 
-# Kill any existing PulseAudio processes
 pulseaudio --kill 2>/dev/null
-
-# Start PulseAudio with proper configuration
 pulseaudio --start --exit-idle-time=-1 --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1"
-
-# Load AAudio module for Android audio
 pacmd load-module module-aaudio-sink 2>/dev/null || true
-
-# Configure audio input (microphone support)
 pacmd load-module module-aaudio-source 2>/dev/null || true
-
-# Set default sink and source
 pacmd set-default-sink 0 2>/dev/null || true
 pacmd set-default-source 0 2>/dev/null || true
-
 echo "Audio system initialized with input/output support"
 AUDIO_EOF
     
     chmod +x "$HOME/.sound"
-    success_msg "Audio output configuration created"
+    success_msg "Audio configuration updated"
     success_msg "Microphone input support enabled"
 }
 
-# Download helper
-downloader() {
-    local path="$1"
-    local url="$2"
+show_update_menu() {
+    banner
     
-    [[ -e "$path" ]] && rm -rf "$path"
+    echo -e "  ${CYAN_L}╔═══════════════════════════════════════════════════════════════════╗${D}"
+    echo -e "  ${CYAN_L}║${W}                     UPDATE OPTIONS                              ${CYAN_L}║${D}"
+    echo -e "  ${CYAN_L}╠═══════════════════════════════════════════════════════════════════╣${D}"
+    echo -e "  ${CYAN_L}║${D}                                                                   ${CYAN_L}║${D}"
+    echo -e "  ${CYAN_L}║${GREEN_L}  [1]${W} Quick Update  - Scripts and configs only                   ${CYAN_L}║${D}"
+    echo -e "  ${CYAN_L}║${GREEN_L}  [2]${W} Full Update   - Scripts + reinstall GUI packages           ${CYAN_L}║${D}"
+    echo -e "  ${CYAN_L}║${GREEN_L}  [3]${W} GUI Only      - Update GUI installer and run it            ${CYAN_L}║${D}"
+    echo -e "  ${CYAN_L}║${GREEN_L}  [4]${W} Settings Only - Install/update settings utility            ${CYAN_L}║${D}"
+    echo -e "  ${CYAN_L}║${D}                                                                   ${CYAN_L}║${D}"
+    echo -e "  ${CYAN_L}║${R}  [0]${W} Exit                                                        ${CYAN_L}║${D}"
+    echo -e "  ${CYAN_L}║${D}                                                                   ${CYAN_L}║${D}"
+    echo -e "  ${CYAN_L}╚═══════════════════════════════════════════════════════════════════╝${D}"
+    echo ""
     
-    curl --progress-bar --insecure --fail \
-         --retry-connrefused --retry 3 --retry-delay 2 \
-         --location --output "$path" "$url"
+    read -p "  $(echo -e ${Y}Select an option [0-4]: ${D})" choice
+    
+    case $choice in
+        1)
+            quick_update
+            ;;
+        2)
+            full_update
+            ;;
+        3)
+            gui_update
+            ;;
+        4)
+            settings_update
+            ;;
+        0|*)
+            echo ""
+            info_msg "Update cancelled"
+            echo ""
+            exit 0
+            ;;
+    esac
 }
 
-# Setup VNC scripts
-setup_vnc() {
-    status_msg "Installing VNC scripts..."
-    
-    # vncstart
-    if [[ -d "$CURR_DIR/distro" ]] && [[ -e "$CURR_DIR/distro/vncstart" ]]; then
-        cp -f "$CURR_DIR/distro/vncstart" "$UBUNTU_DIR/usr/local/bin/vncstart"
-    else
-        downloader "$CURR_DIR/vncstart" "https://raw.githubusercontent.com/ZetaGo-Aurum/modded-ubuntu/master/distro/vncstart"
-        mv -f "$CURR_DIR/vncstart" "$UBUNTU_DIR/usr/local/bin/vncstart"
-    fi
-    
-    # vncstop
-    if [[ -d "$CURR_DIR/distro" ]] && [[ -e "$CURR_DIR/distro/vncstop" ]]; then
-        cp -f "$CURR_DIR/distro/vncstop" "$UBUNTU_DIR/usr/local/bin/vncstop"
-    else
-        downloader "$CURR_DIR/vncstop" "https://raw.githubusercontent.com/ZetaGo-Aurum/modded-ubuntu/master/distro/vncstop"
-        mv -f "$CURR_DIR/vncstop" "$UBUNTU_DIR/usr/local/bin/vncstop"
-    fi
-    
-    chmod +x "$UBUNTU_DIR/usr/local/bin/vncstart"
-    chmod +x "$UBUNTU_DIR/usr/local/bin/vncstop"
-    
-    success_msg "VNC scripts installed"
+quick_update() {
+    banner
+    check_installation
+    update_termux_packages
+    update_scripts
+    update_audio_config
+    show_complete "Quick Update"
 }
 
-# Setup settings script
-setup_settings() {
-    status_msg "Installing Settings utility..."
+full_update() {
+    banner
+    check_installation
+    update_termux_packages
+    update_scripts
+    update_audio_config
     
-    if [[ -d "$CURR_DIR/distro" ]] && [[ -e "$CURR_DIR/distro/settings.sh" ]]; then
+    section_header "📦 FULL GUI REINSTALLATION"
+    
+    info_msg "To complete full update, run the following after exiting:"
+    echo ""
+    echo -e "    ${Y}ubuntu${D}"
+    echo -e "    ${Y}sudo bash gui.sh${D}"
+    echo ""
+    
+    show_complete "Full Update Preparation"
+}
+
+gui_update() {
+    banner
+    check_installation
+    
+    section_header "🎨 GUI INSTALLER UPDATE"
+    
+    if [[ -e "$CURR_DIR/distro/gui.sh" ]]; then
+        local username=$(grep -oP 'login --user \K[^ ]+' "$PREFIX/bin/ubuntu" 2>/dev/null || echo "root")
+        
+        if [[ "$username" != "root" ]] && [[ -d "$UBUNTU_DIR/home/$username" ]]; then
+            cp -f "$CURR_DIR/distro/gui.sh" "$UBUNTU_DIR/home/$username/gui.sh"
+            chmod +x "$UBUNTU_DIR/home/$username/gui.sh"
+            success_msg "GUI installer copied to /home/$username/gui.sh"
+        fi
+        
+        cp -f "$CURR_DIR/distro/gui.sh" "$UBUNTU_DIR/root/gui.sh"
+        chmod +x "$UBUNTU_DIR/root/gui.sh"
+        success_msg "GUI installer copied to /root/gui.sh"
+    fi
+    
+    info_msg "Run 'sudo bash gui.sh' inside Ubuntu to install GUI"
+    
+    show_complete "GUI Update"
+}
+
+settings_update() {
+    banner
+    check_installation
+    
+    section_header "⚙️  SETTINGS UTILITY UPDATE"
+    
+    if [[ -e "$CURR_DIR/distro/settings.sh" ]]; then
         cp -f "$CURR_DIR/distro/settings.sh" "$UBUNTU_DIR/usr/local/bin/mu-settings"
         chmod +x "$UBUNTU_DIR/usr/local/bin/mu-settings"
-        success_msg "Settings utility installed (run 'mu-settings' in Ubuntu)"
+        success_msg "Settings utility installed"
+        info_msg "Run 'mu-settings' inside Ubuntu to configure"
+    else
+        error_msg "Settings script not found in repository"
+        info_msg "Try 'git pull' to update the repository first"
     fi
+    
+    show_complete "Settings Update"
 }
 
-# Setup environment and permissions
-permission() {
-    banner
-    section_header "⚙️  ENVIRONMENT CONFIGURATION"
-    
-    # Copy user setup script
-    if [[ -d "$CURR_DIR/distro" ]] && [[ -e "$CURR_DIR/distro/user.sh" ]]; then
-        cp -f "$CURR_DIR/distro/user.sh" "$UBUNTU_DIR/root/user.sh"
-    else
-        downloader "$CURR_DIR/user.sh" "https://raw.githubusercontent.com/ZetaGo-Aurum/modded-ubuntu/master/distro/user.sh"
-        mv -f "$CURR_DIR/user.sh" "$UBUNTU_DIR/root/user.sh"
-    fi
-    chmod +x "$UBUNTU_DIR/root/user.sh"
-    success_msg "User setup script configured"
-    
-    # Setup VNC
-    setup_vnc
-    
-    # Setup settings
-    setup_settings
-    
-    # Timezone configuration
-    echo "$(getprop persist.sys.timezone)" > "$UBUNTU_DIR/etc/timezone"
-    success_msg "Timezone configured"
-    
-    # Create Ubuntu launcher command
-    echo "proot-distro login ubuntu" > "$PREFIX/bin/ubuntu"
-    chmod +x "$PREFIX/bin/ubuntu"
-    success_msg "Ubuntu command created"
-    
-    termux-reload-settings
-    
-    # Final success message
-    if [[ -e "$PREFIX/bin/ubuntu" ]]; then
-        show_complete
-    else
-        error_msg "Installation failed!"
-        warning_msg "Please try running the script again"
-        exit 1
-    fi
-}
-
-# Show completion message
 show_complete() {
-    banner
+    local update_type=$1
+    
     echo ""
     echo -e "  ${GREEN_L}╔═══════════════════════════════════════════════════════════════════╗${D}"
-    echo -e "  ${GREEN_L}║${W}            🎉 INSTALLATION COMPLETED SUCCESSFULLY! 🎉            ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${W}              ✅ ${update_type} COMPLETE! ✅${D}$(printf '%*s' $((32-${#update_type})) '')${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}╠═══════════════════════════════════════════════════════════════════╣${D}"
     echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${CYAN_L}  NEXT STEPS:${D}                                                      ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${W}  Your Modded Ubuntu PRO has been updated to v${VERSION}!${D}          ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}  1. Restart Termux completely${D}                                     ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}  2. Type ${Y}ubuntu${W} to enter Ubuntu CLI${D}                              ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}  3. Run ${Y}bash user.sh${W} to create your user${D}                         ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}  4. Restart Termux, type ${Y}ubuntu${D}                                     ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}  5. Run ${Y}sudo bash gui.sh${W} for GUI + 1000+ apps${D}                     ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${CYAN_L}  New Features:${D}                                                   ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${W}    • 1000+ software packages support${D}                             ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${W}    • Comprehensive settings utility (mu-settings)${D}                ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${W}    • Enhanced VNC configuration${D}                                  ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${W}    • Microphone input support${D}                                    ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}╠═══════════════════════════════════════════════════════════════════╣${D}"
-    echo -e "  ${GREEN_L}║${PINK}  PRO Edition by ZetaGo-Aurum    ${Y}│${PURPLE}    ALEOCROPHIC Brand${D}           ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${PINK}  ZetaGo-Aurum    ${Y}│${PURPLE}    ALEOCROPHIC Brand${D}                         ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}╚═══════════════════════════════════════════════════════════════════╝${D}"
     echo ""
-    sleep 2
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
 # MAIN EXECUTION
 # ═══════════════════════════════════════════════════════════════════════════
 
-banner
-
-echo -e "  ${Y}╔═══════════════════════════════════════════════════════════════════╗${D}"
-echo -e "  ${Y}║${W}            🚀 MODDED UBUNTU PRO v${VERSION} 🚀                 ${Y}║${D}"
-echo -e "  ${Y}╠═══════════════════════════════════════════════════════════════════╣${D}"
-echo -e "  ${Y}║${D}                                                                   ${Y}║${D}"
-echo -e "  ${Y}║${CYAN_L}  This will install the base Ubuntu system for Termux.${D}            ${Y}║${D}"
-echo -e "  ${Y}║${CYAN_L}  After setup, you'll install 1000+ software packages.${D}            ${Y}║${D}"
-echo -e "  ${Y}║${D}                                                                   ${Y}║${D}"
-echo -e "  ${Y}║${GREEN_L}  ✓ Full hardware virtualization support${D}                          ${Y}║${D}"
-echo -e "  ${Y}║${GREEN_L}  ✓ Comprehensive audio system with mic input${D}                     ${Y}║${D}"
-echo -e "  ${Y}║${GREEN_L}  ✓ Modern GUI settings utility${D}                                   ${Y}║${D}"
-echo -e "  ${Y}║${D}                                                                   ${Y}║${D}"
-echo -e "  ${Y}╚═══════════════════════════════════════════════════════════════════╝${D}"
-echo ""
-
-sleep 2
-
-package
-distro
-sound
-permission
+# Check for command line arguments
+if [[ $# -gt 0 ]]; then
+    case $1 in
+        --quick|-q)
+            quick_update
+            ;;
+        --full|-f)
+            full_update
+            ;;
+        --gui|-g)
+            gui_update
+            ;;
+        --settings|-s)
+            settings_update
+            ;;
+        --help|-h)
+            banner
+            echo -e "  ${CYAN_L}Usage:${D} bash update.sh [OPTION]"
+            echo ""
+            echo -e "  ${W}Options:${D}"
+            echo -e "    ${GREEN_L}--quick, -q${D}     Quick update (scripts only)"
+            echo -e "    ${GREEN_L}--full, -f${D}      Full update (scripts + GUI info)"
+            echo -e "    ${GREEN_L}--gui, -g${D}       Update GUI installer"
+            echo -e "    ${GREEN_L}--settings, -s${D}  Update settings utility"
+            echo -e "    ${GREEN_L}--help, -h${D}      Show this help"
+            echo ""
+            echo -e "  ${GRAY}Run without options for interactive menu.${D}"
+            echo ""
+            ;;
+        *)
+            error_msg "Unknown option: $1"
+            info_msg "Use --help for available options"
+            exit 1
+            ;;
+    esac
+else
+    show_update_menu
+fi
