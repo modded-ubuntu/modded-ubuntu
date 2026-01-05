@@ -398,6 +398,20 @@ full_update() {
     
     section_header "📦 FULL GUI REINSTALLATION"
     
+    info_msg "Preparing Ubuntu for update..."
+    
+    # Fix apt and update package lists inside Ubuntu first
+    proot-distro login ubuntu -- bash -c "
+        rm -f /var/lib/dpkg/lock* /var/lib/apt/lists/lock /var/cache/apt/archives/lock 2>/dev/null
+        dpkg --configure -a 2>/dev/null || true
+        apt-get -f install -y 2>/dev/null || true
+        apt-get update -y 2>/dev/null || true
+        apt-get install -y neofetch htop 2>/dev/null || true
+    " >> "$LOG_FILE" 2>&1 || true
+    
+    success_msg "Ubuntu prepared"
+    echo ""
+    
     info_msg "Starting automatic GUI installation inside Ubuntu..."
     echo ""
     

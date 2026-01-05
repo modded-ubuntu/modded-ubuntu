@@ -177,8 +177,17 @@ fix_dpkg() {
     # Clean package cache
     apt-get clean >> "$LOG_FILE" 2>&1 || true
     
-    # Update package lists
+    # Update package lists with retry
     info_msg "Updating package lists..."
+    apt-get update -y >> "$LOG_FILE" 2>&1 || {
+        # If failed, try again with different options
+        rm -rf /var/lib/apt/lists/*
+        apt-get update -y >> "$LOG_FILE" 2>&1 || true
+    }
+    
+    # Make sure universe and multiverse are enabled
+    add-apt-repository -y universe >> "$LOG_FILE" 2>&1 || true
+    add-apt-repository -y multiverse >> "$LOG_FILE" 2>&1 || true
     apt-get update -y >> "$LOG_FILE" 2>&1 || true
     
     # Hold problematic packages that can cause conflicts
@@ -252,6 +261,9 @@ BASE_PACKAGES=(
     sudo gnupg2 curl wget nano vim git xz-utils unzip p7zip-full zip tar gzip bzip2
     apt-utils software-properties-common apt-transport-https ca-certificates
     lsb-release gnupg dirmngr
+    
+    # Essential utilities - MUST BE INSTALLED
+    neofetch htop btop screen tmux tree ncdu
     
     # proot/system fixes
     at-spi2-core dbus-x11 libcanberra-gtk3-module packagekit-gtk3-module
