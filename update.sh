@@ -246,14 +246,12 @@ update_scripts() {
 update_audio_config() {
     section_header "🔊 UPDATING AUDIO CONFIGURATION"
     
-    status_msg "Configuring PulseAudio (no sink spam fix)..."
+    status_msg "Setting up PulseAudio for permanent audio..."
     
-    # Create proper client config - THIS FIXES THE SINK SPAM
+    # Create proper client config
     mkdir -p "$UBUNTU_DIR/etc/pulse"
     cat > "$UBUNTU_DIR/etc/pulse/client.conf" << 'PULSE_EOF'
 # ACRO PRO Edition - PulseAudio Client Config
-# Connects to Termux PulseAudio - NO LOCAL DAEMON
-
 default-server = tcp:127.0.0.1:4713
 autospawn = no
 daemon-binary = /bin/true
@@ -264,25 +262,69 @@ PULSE_EOF
     # Create profile.d script for environment
     mkdir -p "$UBUNTU_DIR/etc/profile.d"
     cat > "$UBUNTU_DIR/etc/profile.d/acro-audio.sh" << 'AUDIO_ENV_EOF'
+#!/bin/bash
 # ACRO Audio Environment
 export PULSE_SERVER="tcp:127.0.0.1:4713"
+export DISPLAY="${DISPLAY:-:1}"
 AUDIO_ENV_EOF
     chmod +x "$UBUNTU_DIR/etc/profile.d/acro-audio.sh"
     
-    # REMOVE OLD .sound files that cause sink spam
+    # Create audio helper script
+    mkdir -p "$UBUNTU_DIR/usr/local/bin"
+    cat > "$UBUNTU_DIR/usr/local/bin/acro-audio" << 'AUDIO_HELPER_EOF'
+#!/bin/bash
+# ACRO Audio Helper
+export PULSE_SERVER="tcp:127.0.0.1:4713"
+
+case "$1" in
+    status)
+        if pactl info >/dev/null 2>&1; then
+            echo "✓ Audio is working!"
+            pactl info | grep -E "Server Name|Default Sink"
+        else
+            echo "✗ Audio not connected"
+            echo "Run in Termux: pulseaudio --start"
+        fi
+        ;;
+    test)
+        speaker-test -t sine -f 440 -l 1 2>/dev/null || echo "Test failed"
+        ;;
+    *)
+        echo "Usage: acro-audio [status|test]"
+        ;;
+esac
+AUDIO_HELPER_EOF
+    chmod +x "$UBUNTU_DIR/usr/local/bin/acro-audio"
+    
+    # Install acro-settings if not exists
+    if [[ -f "$CURR_DIR/distro/settings.sh" ]]; then
+        cp -f "$CURR_DIR/distro/settings.sh" "$UBUNTU_DIR/usr/local/bin/acro-settings"
+        chmod +x "$UBUNTU_DIR/usr/local/bin/acro-settings"
+        success_msg "acro-settings installed"
+    fi
+    
+    # Copy wallpaper if exists
+    if [[ -f "$CURR_DIR/distro/acro-wallpaper.jpg" ]]; then
+        cp -f "$CURR_DIR/distro/acro-wallpaper.jpg" "$UBUNTU_DIR/usr/share/backgrounds/acro-wallpaper.jpg" 2>/dev/null || true
+        cp -f "$CURR_DIR/distro/acro-wallpaper.jpg" "$UBUNTU_DIR/root/acro-wallpaper.jpg" 2>/dev/null || true
+        success_msg "ACRO wallpaper copied"
+    fi
+    
+    # REMOVE OLD .sound files
     rm -f "$HOME/.sound" 2>/dev/null || true
     rm -f "$UBUNTU_DIR/root/.sound" 2>/dev/null || true
     
-    # Recreate ubuntu launcher WITH PERMANENT AUDIO ACTIVATION
+    # Recreate ubuntu launcher WITH PERMANENT AUDIO
     cat > "$PREFIX/bin/ubuntu" << 'UBUNTU_LAUNCHER_EOF'
 #!/data/data/com.termux/files/usr/bin/bash
-# ACRO PRO Edition - Ubuntu Launcher with Audio
+# ACRO PRO Edition - Ubuntu Launcher with Permanent Audio
 
-# Start PulseAudio server if not running (PERMANENT AUDIO FIX)
+# Start PulseAudio server with TCP module (CRITICAL FOR AUDIO)
 if ! pgrep -x pulseaudio > /dev/null 2>&1; then
     pulseaudio --start --exit-idle-time=-1 \
         --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" \
         2>/dev/null
+    sleep 0.5
 fi
 
 # Export audio environment
@@ -294,6 +336,7 @@ UBUNTU_LAUNCHER_EOF
     chmod +x "$PREFIX/bin/ubuntu"
     
     success_msg "Audio permanently activated"
+    info_msg "PulseAudio will start automatically on 'ubuntu' command"
 }
 
 show_update_menu() {

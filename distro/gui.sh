@@ -742,57 +742,123 @@ install_nodejs() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
-# AUDIO CONFIGURATION - Fixed PulseAudio (No sink spam)
+# AUDIO CONFIGURATION - Complete PulseAudio Setup with Real-Time Management
 # ═══════════════════════════════════════════════════════════════════════════
 
 configure_audio() {
     section_header "🔊 AUDIO SYSTEM CONFIGURATION"
     
-    # Install audio packages
+    # Install all necessary audio packages
+    info_msg "Installing audio packages..."
     apt-get install -y --no-install-recommends \
+        pulseaudio \
         pulseaudio-utils \
-        alsa-utils 2>/dev/null >> "$LOG_FILE" 2>&1 || true
+        pavucontrol \
+        alsa-utils \
+        alsa-base \
+        libpulse0 \
+        libpulse-mainloop-glib0 >> "$LOG_FILE" 2>&1 || true
     
-    # Create clean PulseAudio client config - THIS IS THE KEY FIX
-    # Prevents proot from trying to spawn its own PulseAudio
+    success_msg "Audio packages installed"
+    
+    # Create PulseAudio client configuration
+    info_msg "Configuring PulseAudio client..."
     mkdir -p /etc/pulse
-    cat > /etc/pulse/client.conf << 'PULSE_EOF'
+    cat > /etc/pulse/client.conf << 'PULSE_CLIENT_EOF'
 # ACRO PRO Edition - PulseAudio Client Configuration
-# Connects to Termux PulseAudio server - NO LOCAL DAEMON
+# Designed for proot environment connecting to Termux PulseAudio
 
-# Connect to Termux PulseAudio TCP socket
+# Connect to Termux PulseAudio server
 default-server = tcp:127.0.0.1:4713
 
-# CRITICAL: Disable autospawn to prevent sink spam
+# Disable local daemon spawning
 autospawn = no
-
-# Don't try to start local daemon
 daemon-binary = /bin/true
 
-# Disable shared memory (not supported in proot)
+# Disable features not supported in proot
 enable-shm = false
-
-# Disable memfd (not supported)
 enable-memfd = no
-PULSE_EOF
+PULSE_CLIENT_EOF
     
-    # Create environment file (will be sourced once, not on every command)
-    cat > /etc/profile.d/acro-audio.sh << 'AUDIO_ENV_EOF'
-# ACRO Audio Environment (loaded once at login)
+    # Create audio environment script
+    cat > /etc/profile.d/acro-audio.sh << 'AUDIO_PROFILE_EOF'
+#!/bin/bash
+# ACRO PRO Edition - Audio Environment
+# Loaded automatically on every login
+
 export PULSE_SERVER="tcp:127.0.0.1:4713"
-AUDIO_ENV_EOF
+export DISPLAY="${DISPLAY:-:1}"
+
+# Function to check audio status
+acro-audio-status() {
+    if pactl info >/dev/null 2>&1; then
+        echo "✓ Audio: Connected to PulseAudio"
+        pactl info | grep -E "Server Name|Default Sink"
+    else
+        echo "✗ Audio: Not connected"
+        echo "  Run in Termux: pulseaudio --start"
+    fi
+}
+AUDIO_PROFILE_EOF
     chmod +x /etc/profile.d/acro-audio.sh
     
-    # Add to bashrc for user (only if not already there)
+    # Create audio startup helper script
+    cat > /usr/local/bin/acro-audio << 'AUDIO_HELPER_EOF'
+#!/bin/bash
+# ACRO PRO Edition - Audio Helper
+# Use this to check/fix audio connection
+
+export PULSE_SERVER="tcp:127.0.0.1:4713"
+
+case "$1" in
+    status)
+        echo "Checking audio connection..."
+        if pactl info >/dev/null 2>&1; then
+            echo "✓ Audio is working!"
+            pactl info | grep -E "Server Name|Default Sink|Default Source"
+            echo ""
+            echo "Available sinks:"
+            pactl list short sinks 2>/dev/null || echo "No sinks found"
+        else
+            echo "✗ Audio not connected"
+            echo ""
+            echo "To fix, run in Termux (not Ubuntu):"
+            echo "  pulseaudio --start --load='module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1'"
+        fi
+        ;;
+    test)
+        echo "Playing test sound..."
+        speaker-test -t sine -f 440 -l 1 2>/dev/null || paplay /usr/share/sounds/freedesktop/stereo/complete.oga 2>/dev/null || echo "No test sound available"
+        ;;
+    *)
+        echo "ACRO Audio Helper"
+        echo "Usage: acro-audio [status|test]"
+        echo ""
+        echo "  status  - Check audio connection"
+        echo "  test    - Play test sound"
+        ;;
+esac
+AUDIO_HELPER_EOF
+    chmod +x /usr/local/bin/acro-audio
+    
+    # Add to user bashrc
     if [[ -n "$USERNAME" ]] && [[ -d "/home/$USERNAME" ]]; then
         if ! grep -q "PULSE_SERVER" "/home/$USERNAME/.bashrc" 2>/dev/null; then
-            echo 'export PULSE_SERVER="tcp:127.0.0.1:4713"' >> "/home/$USERNAME/.bashrc"
+            cat >> "/home/$USERNAME/.bashrc" << 'USER_AUDIO_EOF'
+
+# ACRO Audio Configuration
+export PULSE_SERVER="tcp:127.0.0.1:4713"
+USER_AUDIO_EOF
         fi
     fi
     
-    # Add to root bashrc (only if not already there)
+    # Add to root bashrc
     if ! grep -q "PULSE_SERVER" /root/.bashrc 2>/dev/null; then
-        echo 'export PULSE_SERVER="tcp:127.0.0.1:4713"' >> /root/.bashrc
+        cat >> /root/.bashrc << 'ROOT_AUDIO_EOF'
+
+# ACRO Audio Configuration
+export PULSE_SERVER="tcp:127.0.0.1:4713"
+ROOT_AUDIO_EOF
     fi
     
     # Fix pavucontrol desktop file
@@ -801,20 +867,18 @@ AUDIO_ENV_EOF
             /usr/share/applications/pavucontrol.desktop 2>/dev/null || true
     fi
     
-    # REMOVE old .sound script from ubuntu launcher if it exists
-    # This was causing the sink spam!
+    # Clean up old audio scripts that cause problems
+    rm -f /root/.sound 2>/dev/null || true
+    [[ -n "$USERNAME" ]] && rm -f "/home/$USERNAME/.sound" 2>/dev/null || true
+    
+    # Remove old .sound from ubuntu launcher if exists
     if [[ -f /data/data/com.termux/files/usr/bin/ubuntu ]]; then
         sed -i '/\.sound/d' /data/data/com.termux/files/usr/bin/ubuntu 2>/dev/null || true
     fi
     
-    # Remove old .sound file if exists
-    rm -f /root/.sound 2>/dev/null || true
-    if [[ -n "$USERNAME" ]]; then
-        rm -f "/home/$USERNAME/.sound" 2>/dev/null || true
-    fi
-    
-    success_msg "PulseAudio configured (no sink spam)"
-    info_msg "Audio connects to Termux PulseAudio automatically"
+    success_msg "Audio system configured"
+    success_msg "pavucontrol installed and fixed"
+    info_msg "Run 'acro-audio status' to check audio"
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -877,9 +941,21 @@ install_themes() {
     
     # Install ACRO custom wallpaper
     info_msg "Setting ACRO wallpaper..."
-    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    if [[ -f "$script_dir/acro-wallpaper.jpg" ]]; then
-        cp "$script_dir/acro-wallpaper.jpg" /usr/share/backgrounds/acro-wallpaper.jpg 2>/dev/null || true
+    
+    # Find wallpaper using multiple methods (fix for proot environment)
+    local wallpaper_src=""
+    if [[ -f "/root/acro-wallpaper.jpg" ]]; then
+        wallpaper_src="/root/acro-wallpaper.jpg"
+    elif [[ -f "$(dirname "$0")/acro-wallpaper.jpg" ]]; then
+        wallpaper_src="$(dirname "$0")/acro-wallpaper.jpg"
+    elif [[ -f "./acro-wallpaper.jpg" ]]; then
+        wallpaper_src="./acro-wallpaper.jpg"
+    elif [[ -f "/tmp/acro-wallpaper.jpg" ]]; then
+        wallpaper_src="/tmp/acro-wallpaper.jpg"
+    fi
+    
+    if [[ -n "$wallpaper_src" ]] && [[ -f "$wallpaper_src" ]]; then
+        cp "$wallpaper_src" /usr/share/backgrounds/acro-wallpaper.jpg 2>/dev/null || true
         
         # Set as default XFCE wallpaper for user
         if [[ -n "$USERNAME" ]] && [[ -d "/home/$USERNAME" ]]; then

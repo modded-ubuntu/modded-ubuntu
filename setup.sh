@@ -337,9 +337,15 @@ setup_settings() {
     status_msg "Installing Settings utility..."
     
     if [[ -d "$CURR_DIR/distro" ]] && [[ -e "$CURR_DIR/distro/settings.sh" ]]; then
-        cp -f "$CURR_DIR/distro/settings.sh" "$UBUNTU_DIR/usr/local/bin/mu-settings"
-        chmod +x "$UBUNTU_DIR/usr/local/bin/mu-settings"
-        success_msg "Settings utility installed (run 'mu-settings' in Ubuntu)"
+        cp -f "$CURR_DIR/distro/settings.sh" "$UBUNTU_DIR/usr/local/bin/acro-settings"
+        chmod +x "$UBUNTU_DIR/usr/local/bin/acro-settings"
+        success_msg "Settings utility installed (run 'acro-settings' in Ubuntu)"
+    fi
+    
+    # Copy wallpaper to Ubuntu for installation
+    if [[ -e "$CURR_DIR/distro/acro-wallpaper.jpg" ]]; then
+        cp -f "$CURR_DIR/distro/acro-wallpaper.jpg" "$UBUNTU_DIR/root/acro-wallpaper.jpg" 2>/dev/null || true
+        cp -f "$CURR_DIR/distro/acro-wallpaper.jpg" "$UBUNTU_DIR/usr/share/backgrounds/acro-wallpaper.jpg" 2>/dev/null || true
     fi
 }
 
