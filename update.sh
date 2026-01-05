@@ -176,7 +176,7 @@ check_installation() {
 update_termux_packages() {
     section_header "📦 UPDATING TERMUX PACKAGES"
     
-    local packages=(pulseaudio proot-distro wget curl git)
+    local packages=(pulseaudio proot-distro wget curl git termux-api)
     local total=${#packages[@]}
     local current=0
     
@@ -201,6 +201,35 @@ update_termux_packages() {
     echo ""
     echo ""
     success_msg "Termux packages updated"
+    
+    # Create/update phantom process prevention scripts
+    status_msg "Setting up keep-alive scripts..."
+    
+    cat > "$PREFIX/bin/acro-keepalive" << 'KEEPALIVE_EOF'
+#!/data/data/com.termux/files/usr/bin/bash
+# ACRO PRO Edition - Keep Termux Alive
+termux-wake-lock 2>/dev/null
+termux-notification --id acro-alive \
+    --title "ACRO PRO Edition" \
+    --content "Ubuntu is running in background" \
+    --ongoing --priority high \
+    --button1 "Stop" \
+    --button1-action "termux-notification-remove acro-alive && termux-wake-unlock" \
+    2>/dev/null || true
+echo "✓ ACRO keep-alive enabled"
+KEEPALIVE_EOF
+    chmod +x "$PREFIX/bin/acro-keepalive"
+    
+    cat > "$PREFIX/bin/acro-stop" << 'STOP_EOF'
+#!/data/data/com.termux/files/usr/bin/bash
+termux-notification-remove acro-alive 2>/dev/null
+termux-wake-unlock 2>/dev/null
+echo "✓ ACRO keep-alive disabled"
+STOP_EOF
+    chmod +x "$PREFIX/bin/acro-stop"
+    
+    success_msg "Keep-alive scripts installed"
+    info_msg "Run 'acro-keepalive' for 24/7 operation"
 }
 
 update_scripts() {

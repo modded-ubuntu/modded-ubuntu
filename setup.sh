@@ -195,8 +195,51 @@ package() {
     fi
     success_msg "Storage configured"
     
-    # Required packages
-    local required_packages=(pulseaudio proot-distro wget curl git)
+    # Enable wake-lock for 24/7 operation
+    status_msg "Enabling Termux wake-lock..."
+    termux-wake-lock 2>/dev/null || true
+    success_msg "Wake-lock enabled (Termux will stay active)"
+    
+    # Create phantom process prevention script
+    status_msg "Setting up phantom process prevention..."
+    cat > "$PREFIX/bin/acro-keepalive" << 'KEEPALIVE_EOF'
+#!/data/data/com.termux/files/usr/bin/bash
+# ACRO PRO Edition - Keep Termux Alive
+# Prevents Android from killing phantom processes
+
+# Acquire wake-lock
+termux-wake-lock 2>/dev/null
+
+# Start notification to prevent killing
+termux-notification --id acro-alive \
+    --title "ACRO PRO Edition" \
+    --content "Ubuntu is running in background" \
+    --ongoing \
+    --priority high \
+    --button1 "Stop" \
+    --button1-action "termux-notification-remove acro-alive && termux-wake-unlock" \
+    2>/dev/null || true
+
+echo "✓ ACRO keep-alive enabled"
+echo "  Termux will stay active until you stop it."
+KEEPALIVE_EOF
+    chmod +x "$PREFIX/bin/acro-keepalive"
+    
+    # Create stop script
+    cat > "$PREFIX/bin/acro-stop" << 'STOP_EOF'
+#!/data/data/com.termux/files/usr/bin/bash
+# ACRO PRO Edition - Stop Keep-Alive
+termux-notification-remove acro-alive 2>/dev/null
+termux-wake-unlock 2>/dev/null
+echo "✓ ACRO keep-alive disabled"
+STOP_EOF
+    chmod +x "$PREFIX/bin/acro-stop"
+    
+    success_msg "Phantom process prevention configured"
+    info_msg "Run 'acro-keepalive' to keep Termux active 24/7"
+    
+    # Required packages (add termux-api for notifications)
+    local required_packages=(pulseaudio proot-distro wget curl git termux-api)
     local total=${#required_packages[@]}
     local current=0
     
