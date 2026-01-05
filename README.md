@@ -3,7 +3,7 @@
 </p>
 <p align="center">
 <img src="https://img.shields.io/badge/ACRO-PRO%20EDITION-cyan?style=for-the-badge">
-<img src="https://img.shields.io/badge/Version-3.2.0-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/Version-3.2.2-blue?style=for-the-badge">
 <img src="https://img.shields.io/badge/BY-ZetaGo--Aurum-purple?style=for-the-badge">
 </p>
 <p align="center">
@@ -15,21 +15,19 @@
 
 <h1 align="center">🚀 ACRO PRO Edition</h1>
 <p align="center"><b>Premium Linux Distribution for Termux with 1000+ Pre-Installed Software</b></p>
-<p align="center"><i>Ubuntu-based | GPU Virtualization | Storage Sharing</i></p>
+<p align="center"><i>Ubuntu 22.04 LTS | Permanent Audio | Storage Sharing | GPU Virtualization</i></p>
 
 ---
 
-## 🆕 What's New in v3.2.0
+## 🆕 What's New in v3.2.2
 
-- **Complete Rebranding** - Now called ACRO PRO Edition
-- **Custom ASCII Art** - New ACRO logo in neofetch and CLI
+- **Permanent Audio** - PulseAudio starts automatically on every `ubuntu` login
+- **No Sink Spam** - Fixed "Sink 0 does not exist" error completely
+- **Auto dpkg Fix** - Automatic recovery from dpkg corruption
+- **Wallpaper Autostart** - ACRO wallpaper applies reliably via autostart
 - **Storage Sharing** - Access phone storage via ~/storage/
-- **PulseAudio Fix** - Improved audio module loading and volume control
-- **Custom Wallpaper** - Premium ACRO default wallpaper
-- **Termux Auto-Fix** - Automatic fixes for dpkg/cache issues (`termux-fix.sh`)
-- **GPU Virtualization** - Enhanced VirGL and Mesa configuration
-- **Settings Utility** - Use `acro-settings` for configuration
-- **Hard Reset** - Run `vncreset` for complete session reset
+- **ACRO Branding** - Custom ASCII art, neofetch, and settings (`acro-settings`)
+- **VNC Updated** - vncstart/vncstop with ACRO branding
 
 ---
 
@@ -37,18 +35,18 @@
 
 <p align="center">
 <img src="./distro/screenshot_krita_splash.jpg" alt="Krita - Digital Painting" width="100%">
-<br><i>Krita - Professional Digital Painting Software</i>
+<br><i>Krita 5.2.13 - 25 Years Anniversary Edition</i>
 </p>
 
 <table>
 <tr>
 <td width="50%">
-<img src="./distro/screenshot_vscode.jpg" alt="VS Code" width="100%">
-<p align="center"><i>Visual Studio Code - Code Editor</i></p>
+<img src="./distro/screenshot_blender.jpg" alt="Blender" width="100%">
+<p align="center"><i>Blender 4.3.2 - 3D Modeling & Animation</i></p>
 </td>
 <td width="50%">
 <img src="./distro/screenshot_krita.jpg" alt="Krita Editor" width="100%">
-<p align="center"><i>Krita - Image Editor Interface</i></p>
+<p align="center"><i>Krita - Digital Drawing Interface</i></p>
 </td>
 </tr>
 <tr>
@@ -65,14 +63,14 @@
 
 ---
 
-## ⚡ Why PRO Edition?
+## ⚡ Why ACRO PRO Edition?
 
-| Feature           | Original       | PRO Edition v3.1.0               |
+| Feature           | Original       | ACRO PRO v3.2.2                  |
 | ----------------- | -------------- | -------------------------------- |
 | Software Packages | ~10            | **1000+**                        |
 | Installation      | Manual prompts | **Fully Automatic**              |
-| Audio Support     | Basic          | **Full Input/Output + Mic**      |
-| Theme             | Default XFCE   | **Modern Sleek Dark**            |
+| Audio Support     | Broken/Manual  | **Permanent Auto-Start**         |
+| Theme             | Default XFCE   | **Modern Dark + Custom Wallpaper** |
 | IDE Support       | VSCode only    | **VSCode + Sublime + Geany**     |
 | Office Suite      | None           | **LibreOffice Full + Calibre**   |
 | Design Tools      | None           | **GIMP + Inkscape + Krita + Blender** |
