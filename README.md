@@ -15,7 +15,7 @@
 
 <h1 align="center">🚀 ACRO PRO Edition</h1>
 <p align="center"><b>Premium Linux Distribution for Termux with 1000+ Pre-Installed Software</b></p>
-<p align="center"><i>Ubuntu 24.04 LTS | 24/7 Keep-Alive | GPU Optimization | Flatpak Support</i></p>
+<p align="center"><i>Ubuntu 25.10 | 24/7 Keep-Alive | GPU Optimization | Flatpak Support</i></p>
 
 ---
 
