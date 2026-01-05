@@ -263,7 +263,7 @@ BASE_PACKAGES=(
     lsb-release gnupg dirmngr
     
     # Essential utilities - MUST BE INSTALLED
-    neofetch htop btop screen tmux tree ncdu
+    htop btop screen tmux tree ncdu
     
     # proot/system fixes
     at-spi2-core dbus-x11 libcanberra-gtk3-module packagekit-gtk3-module
@@ -1035,9 +1035,15 @@ AUTOSTART_EOF
 fix_neofetch() {
     section_header "🖥️  NEOFETCH CONFIGURATION"
     
-    # First ensure neofetch is installed
+    # Install neofetch via wget (more reliable than apt)
     if ! command -v neofetch &> /dev/null; then
-        apt-get install -y neofetch >> "$LOG_FILE" 2>&1 || true
+        info_msg "Installing neofetch via wget..."
+        wget -q https://raw.githubusercontent.com/dylanaraps/neofetch/master/neofetch -O /tmp/neofetch
+        chmod +x /tmp/neofetch
+        mv /tmp/neofetch /usr/bin/neofetch
+        success_msg "Neofetch installed"
+    else
+        info_msg "Neofetch already installed"
     fi
     
     # Create config directories
@@ -1049,59 +1055,50 @@ fix_neofetch() {
         mkdir -p "/home/$USERNAME/.config/neofetch"
     fi
     
-    # Create ACRO custom ASCII art file
+    # Create ACRO custom ASCII art file - FLEXIBLE for small screens
     cat > /etc/neofetch/acro_ascii << 'ACRO_ASCII_EOF'
-${c1}    _____                _____  ___________             ____     
-${c1}  /      |_         _____\    \_\          \        ____\_  \__  
-${c1} /         \       /     /|     |\    /\    \      /     /     \ 
-${c2}|     /\    \     /     / /____/| |   \_\    |    /     /\      |
-${c2}|    |  |    \   |     | |____|/  |      ___/    |     |  |     |
-${c2}|     \/      \  |     |  _____   |      \  ____ |     |  |     |
-${c3}|\      /\     \ |\     \|\    \ /     /\ \/    \|     | /     /|
-${c3}| \_____\ \_____\| \_____\|    |/_____/ |\______|\     \_____/ |
-${c3}| |     | |     || |     /____/||     | | |     || \_____\   | / 
-${c4} \|_____|\|_____| \|_____|    |||_____|/ \|_____| \ |    |___|/  
-${c4}                         |____|/                   \|____|       
+${c1}   █████╗  ██████╗██████╗  ██████╗ 
+${c1}  ██╔══██╗██╔════╝██╔══██╗██╔═══██╗
+${c2}  ███████║██║     ██████╔╝██║   ██║
+${c2}  ██╔══██║██║     ██╔══██╗██║   ██║
+${c3}  ██║  ██║╚██████╗██║  ██║╚██████╔╝
+${c3}  ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝ ╚═════╝ 
+${c4}     ━━━ PRO EDITION v3.2 ━━━
 ACRO_ASCII_EOF
     
     # Create custom neofetch config with ACRO branding
     cat > /etc/neofetch/config.conf << 'NEOFETCH_EOF'
-# ACRO PRO Edition v3.2.0 neofetch config
-# Custom Linux Distribution for Termux
+# ACRO PRO Edition neofetch config
+# Flexible for small screens
 
 print_info() {
-    prin "$(color 6)╔══════════════════════════════════════════════════╗"
-    prin "$(color 6)║$(color 15)  A C R O   P R O   E D I T I O N   v3.2.0      $(color 6)║"
-    prin "$(color 6)╚══════════════════════════════════════════════════╝"
+    prin "$(color 6)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    prin "$(color 15) ACRO PRO Edition $(color 4)v3.2"
+    prin "$(color 6)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     info underline
     info "OS" distro
-    info "Host" model
     info "Kernel" kernel
     info "Uptime" uptime
     info "Packages" packages
     info "Shell" shell
     info "DE" de
-    info "WM" wm
-    info "Theme" theme
-    info "Icons" icons
     info "Terminal" term
     info "CPU" cpu
-    info "GPU" gpu
     info "Memory" memory
     info "Disk" disk
     info cols
     prin ""
-    prin "$(color 6)Brand: $(color 13)ALEOCROPHIC$(color 6) | By: $(color 14)ZetaGo-Aurum"
+    prin "$(color 5)ALEOCROPHIC$(color 7) | $(color 6)ZetaGo-Aurum"
 }
 
 # ACRO Distribution settings
-distro="ACRO PRO Edition v3.2.0"
+distro="ACRO PRO Edition v3.2"
 ascii_distro="auto"
 image_source="/etc/neofetch/acro_ascii"
 image_backend="ascii"
 
 # Colors
-colors=(6 6 7 4 4 7)
+colors=(6 4 5 3 2 1)
 bold="on"
 underline_enabled="on"
 underline_char="─"
@@ -1109,6 +1106,9 @@ separator=" ➜ "
 
 # OS Arch
 os_arch="on"
+
+# Smaller output for terminals
+gap=2
 NEOFETCH_EOF
     
     # Copy to user config if exists

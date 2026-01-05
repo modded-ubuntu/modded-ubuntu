@@ -314,8 +314,37 @@ AUDIO_HELPER_EOF
     rm -f "$HOME/.sound" 2>/dev/null || true
     rm -f "$UBUNTU_DIR/root/.sound" 2>/dev/null || true
     
-    # Recreate ubuntu launcher WITH PERMANENT AUDIO
-    cat > "$PREFIX/bin/ubuntu" << 'UBUNTU_LAUNCHER_EOF'
+    # Get existing user from current launcher if exists
+    local existing_user=""
+    if [[ -f "$PREFIX/bin/ubuntu" ]]; then
+        existing_user=$(grep -oP 'login --user \K[^ ]+' "$PREFIX/bin/ubuntu" 2>/dev/null | head -1)
+    fi
+    
+    # Recreate ubuntu launcher WITH PERMANENT AUDIO (preserve existing user!)
+    if [[ -n "$existing_user" ]] && [[ "$existing_user" != "root" ]]; then
+        # User exists - preserve it
+        cat > "$PREFIX/bin/ubuntu" << UBUNTU_LAUNCHER_EOF
+#!/data/data/com.termux/files/usr/bin/bash
+# ACRO PRO Edition - Ubuntu Launcher with Permanent Audio
+
+# Start PulseAudio server with TCP module (CRITICAL FOR AUDIO)
+if ! pgrep -x pulseaudio > /dev/null 2>&1; then
+    pulseaudio --start --exit-idle-time=-1 \\
+        --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" \\
+        2>/dev/null
+    sleep 0.5
+fi
+
+# Export audio environment
+export PULSE_SERVER="tcp:127.0.0.1:4713"
+
+# Login to Ubuntu as user: $existing_user
+proot-distro login --user $existing_user ubuntu
+UBUNTU_LAUNCHER_EOF
+        info_msg "Preserved user: $existing_user"
+    else
+        # No user - use default root login
+        cat > "$PREFIX/bin/ubuntu" << 'UBUNTU_LAUNCHER_EOF'
 #!/data/data/com.termux/files/usr/bin/bash
 # ACRO PRO Edition - Ubuntu Launcher with Permanent Audio
 
@@ -333,6 +362,7 @@ export PULSE_SERVER="tcp:127.0.0.1:4713"
 # Login to Ubuntu
 proot-distro login ubuntu
 UBUNTU_LAUNCHER_EOF
+    fi
     chmod +x "$PREFIX/bin/ubuntu"
     
     success_msg "Audio permanently activated"
@@ -406,7 +436,12 @@ full_update() {
         dpkg --configure -a 2>/dev/null || true
         apt-get -f install -y 2>/dev/null || true
         apt-get update -y 2>/dev/null || true
-        apt-get install -y neofetch htop 2>/dev/null || true
+        apt-get install -y htop wget 2>/dev/null || true
+        # Install neofetch via wget
+        if ! command -v neofetch &>/dev/null; then
+            wget -q https://raw.githubusercontent.com/dylanaraps/neofetch/master/neofetch -O /usr/bin/neofetch
+            chmod +x /usr/bin/neofetch
+        fi
     " >> "$LOG_FILE" 2>&1 || true
     
     success_msg "Ubuntu prepared"
