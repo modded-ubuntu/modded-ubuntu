@@ -1283,29 +1283,35 @@ configure_gpu() {
     cat > /etc/profile.d/acro-gpu.sh << 'GPU_ENV_EOF'
 #!/bin/bash
 # ACRO PRO Edition - GPU Configuration
-# Optimized for VirGL/Mesa in proot environment
+# Optimized for software rendering in proot environment
 
-# Mesa/OpenGL settings
-export MESA_GL_VERSION_OVERRIDE=4.5
-export MESA_GLSL_VERSION_OVERRIDE=450
-export MESA_EXTENSION_MAX_YEAR=2030
-export MESA_NO_ERROR=1
-
-# VirGL optimization
-export LIBGL_ALWAYS_SOFTWARE=0
+# Mesa/OpenGL settings - Enable software rendering for compatibility
+export LIBGL_ALWAYS_SOFTWARE=1
 export GALLIUM_DRIVER=llvmpipe
 export LP_NUM_THREADS=$(nproc)
-export LP_PERF=no_mipmap,no_linear,no_mip_linear,no_tex,no_blend,no_depth,no_alphatest
 
-# OpenGL performance
-export __GL_FSAA_MODE=0
+# Mesa version override (for app compatibility)
+export MESA_GL_VERSION_OVERRIDE=3.3
+export MESA_GLSL_VERSION_OVERRIDE=330
+
+# Disable problematic features in proot
+export MESA_NO_ERROR=0
 export __GL_SYNC_TO_VBLANK=0
+
+# Shader cache for performance
 export __GL_SHADER_DISK_CACHE=1
 export __GL_SHADER_DISK_CACHE_PATH="$HOME/.cache/mesa_shader_cache"
 
-# Blender/3D specific
+# Blender specific - force software rendering
+export BLENDER_SYSTEM_SCRIPTS=/usr/share/blender/scripts
 export CYCLES_OPENCL_TEST=none
-export BLENDER_USE_SOFTWARE_GL=1
+
+# Krita specific
+export KRITA_USE_SWRAST=1
+export QT_XCB_FORCE_SOFTWARE_OPENGL=1
+
+# General Qt/GTK software rendering fallback
+export LIBGL_DRI3_DISABLE=1
 GPU_ENV_EOF
     chmod +x /etc/profile.d/acro-gpu.sh
     
