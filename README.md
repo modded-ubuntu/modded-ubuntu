@@ -3,7 +3,7 @@
 </p>
 <p align="center">
 <img src="https://img.shields.io/badge/ACRO-PRO%20EDITION-cyan?style=for-the-badge">
-<img src="https://img.shields.io/badge/Version-3.2.2-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/Version-3.3.3-blue?style=for-the-badge">
 <img src="https://img.shields.io/badge/BY-ZetaGo--Aurum-purple?style=for-the-badge">
 </p>
 <p align="center">
@@ -15,19 +15,20 @@
 
 <h1 align="center">🚀 ACRO PRO Edition</h1>
 <p align="center"><b>Premium Linux Distribution for Termux with 1000+ Pre-Installed Software</b></p>
-<p align="center"><i>Ubuntu 22.04 LTS | Permanent Audio | Storage Sharing | GPU Virtualization</i></p>
+<p align="center"><i>Ubuntu 22.04 LTS | 24/7 Keep-Alive | GPU Optimization | Flatpak Support</i></p>
 
 ---
 
-## 🆕 What's New in v3.2.2
+## 🆕 What's New in v3.3.3
 
-- **Permanent Audio** - PulseAudio starts automatically on every `ubuntu` login
-- **No Sink Spam** - Fixed "Sink 0 does not exist" error completely
-- **Auto dpkg Fix** - Automatic recovery from dpkg corruption
-- **Wallpaper Autostart** - ACRO wallpaper applies reliably via autostart
-- **Storage Sharing** - Access phone storage via ~/storage/
-- **ACRO Branding** - Custom ASCII art, neofetch, and settings (`acro-settings`)
-- **VNC Updated** - vncstart/vncstop with ACRO branding
+- **24/7 Keep-Alive** - `acro-keepalive` prevents Android from killing Termux
+- **GPU Optimization** - OpenGL 4.5, Mesa llvmpipe, optimized for Blender/Krita
+- **Flatpak Support** - Install apps from Flathub with `flatpak`
+- **Software Center** - gnome-software for easy app management
+- **Synaptic Fixed** - Package manager now works properly
+- **Pavucontrol Fixed** - Audio mixer without window glitches
+- **Permanent Audio** - PulseAudio auto-starts on `ubuntu` login
+- **User Preserved** - Updates don't delete your user account
 
 ---
 
@@ -65,7 +66,7 @@
 
 ## ⚡ Why ACRO PRO Edition?
 
-| Feature           | Original       | ACRO PRO v3.2.2                  |
+| Feature           | Original       | ACRO PRO v3.3.3                  |
 | ----------------- | -------------- | -------------------------------- |
 | Software Packages | ~10            | **1000+**                        |
 | Installation      | Manual prompts | **Fully Automatic**              |
