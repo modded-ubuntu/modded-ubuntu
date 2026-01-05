@@ -285,7 +285,7 @@ distro() {
         return 0
     fi
     
-    status_msg "Installing Ubuntu 22.04 LTS..."
+    status_msg "Installing Ubuntu 24.04 LTS..."
     warning_msg "This may take 5-15 minutes depending on your connection"
     echo ""
     
@@ -293,7 +293,7 @@ distro() {
     termux-reload-settings
     
     if [[ -d "$UBUNTU_DIR" ]]; then
-        success_msg "Ubuntu 22.04 LTS installed successfully!"
+        success_msg "Ubuntu 24.04 LTS installed successfully!"
     else
         error_msg "Failed to install Ubuntu distribution"
         warning_msg "Please check your internet connection and try again"
