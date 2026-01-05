@@ -400,6 +400,41 @@ DATABASE_PACKAGES=(
     redis-tools
 )
 
+# GPU & 3D Optimization (VirGL/Mesa for proot)
+GPU_PACKAGES=(
+    # Mesa drivers and libraries
+    mesa-utils mesa-utils-extra
+    libgl1-mesa-glx libgl1-mesa-dri libegl1-mesa
+    libglu1-mesa libglx-mesa0 libglapi-mesa
+    
+    # OpenGL tools
+    glmark2 glmark2-es2 glmark2-wayland
+    
+    # GPU monitoring
+    radeontop intel-gpu-tools
+    
+    # 3D rendering optimization
+    libosmesa6 libglew2.2 libglew-dev
+    libglfw3 libglfw3-dev
+    
+    # Vulkan (for compatible devices)
+    libvulkan1 vulkan-tools mesa-vulkan-drivers
+)
+
+# Software Center (XFCE compatible)
+SOFTWARE_PACKAGES=(
+    # Package management GUI
+    gnome-software gnome-software-plugin-flatpak
+    gnome-packagekit packagekit
+    
+    # Flatpak support
+    flatpak
+    
+    # Alternative software managers
+    mintinstall snap-store snapd
+)
+
+
 # Office suite
 OFFICE_PACKAGES=(
     libreoffice-writer libreoffice-calc libreoffice-impress libreoffice-draw
@@ -1236,6 +1271,237 @@ VNCRESET_EOF
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
+# GPU OPTIMIZATION - VirGL, Mesa, and 3D rendering optimization
+# ═══════════════════════════════════════════════════════════════════════════
+
+configure_gpu() {
+    section_header "🎮 GPU & 3D OPTIMIZATION"
+    
+    info_msg "Configuring GPU environment for proot..."
+    
+    # Create GPU environment configuration
+    cat > /etc/profile.d/acro-gpu.sh << 'GPU_ENV_EOF'
+#!/bin/bash
+# ACRO PRO Edition - GPU Configuration
+# Optimized for VirGL/Mesa in proot environment
+
+# Mesa/OpenGL settings
+export MESA_GL_VERSION_OVERRIDE=4.5
+export MESA_GLSL_VERSION_OVERRIDE=450
+export MESA_EXTENSION_MAX_YEAR=2030
+export MESA_NO_ERROR=1
+
+# VirGL optimization
+export LIBGL_ALWAYS_SOFTWARE=0
+export GALLIUM_DRIVER=llvmpipe
+export LP_NUM_THREADS=$(nproc)
+export LP_PERF=no_mipmap,no_linear,no_mip_linear,no_tex,no_blend,no_depth,no_alphatest
+
+# OpenGL performance
+export __GL_FSAA_MODE=0
+export __GL_SYNC_TO_VBLANK=0
+export __GL_SHADER_DISK_CACHE=1
+export __GL_SHADER_DISK_CACHE_PATH="$HOME/.cache/mesa_shader_cache"
+
+# Blender/3D specific
+export CYCLES_OPENCL_TEST=none
+export BLENDER_USE_SOFTWARE_GL=1
+GPU_ENV_EOF
+    chmod +x /etc/profile.d/acro-gpu.sh
+    
+    success_msg "GPU environment configured"
+    
+    # Create GPU info script
+    info_msg "Creating GPU tools..."
+    cat > /usr/local/bin/acro-gpu << 'GPU_TOOL_EOF'
+#!/bin/bash
+# ACRO PRO Edition - GPU Information Tool
+
+R=$'\033[1;31m'
+G=$'\033[1;32m'
+Y=$'\033[1;33m'
+C=$'\033[1;36m'
+W=$'\033[1;37m'
+D=$'\033[0m'
+
+show_gpu_info() {
+    echo ""
+    echo "${C}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${D}"
+    echo "${W} ACRO GPU Information                           ${D}"
+    echo "${C}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${D}"
+    echo ""
+    
+    echo "${Y}▸ OpenGL Renderer:${D}"
+    glxinfo 2>/dev/null | grep -E "OpenGL renderer|OpenGL version" | head -2 || echo "  glxinfo not available"
+    echo ""
+    
+    echo "${Y}▸ Mesa Driver:${D}"
+    glxinfo 2>/dev/null | grep -i "mesa" | head -1 || echo "  Mesa info not available"
+    echo ""
+    
+    echo "${Y}▸ GPU Environment:${D}"
+    echo "  GALLIUM_DRIVER: ${GALLIUM_DRIVER:-not set}"
+    echo "  MESA_GL_VERSION: ${MESA_GL_VERSION_OVERRIDE:-not set}"
+    echo "  LP_NUM_THREADS: ${LP_NUM_THREADS:-not set}"
+    echo ""
+    
+    echo "${Y}▸ GLX Extensions:${D}"
+    glxinfo 2>/dev/null | grep "GLX version" | head -1 || echo "  Not available"
+    echo ""
+}
+
+run_benchmark() {
+    echo ""
+    echo "${C}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${D}"
+    echo "${W} GPU Benchmark (glmark2)                        ${D}"
+    echo "${C}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${D}"
+    echo ""
+    if command -v glmark2 &>/dev/null; then
+        glmark2 --run-forever --size 640x480
+    else
+        echo "${R}glmark2 not installed${D}"
+    fi
+}
+
+case "$1" in
+    info|status)
+        show_gpu_info
+        ;;
+    bench|benchmark)
+        run_benchmark
+        ;;
+    *)
+        echo "ACRO GPU Tool"
+        echo "Usage: acro-gpu [info|bench]"
+        echo ""
+        echo "  info   - Show GPU information"
+        echo "  bench  - Run GPU benchmark"
+        ;;
+esac
+GPU_TOOL_EOF
+    chmod +x /usr/local/bin/acro-gpu
+    
+    success_msg "GPU tools installed (run 'acro-gpu info')"
+    
+    # Create shader cache directory
+    mkdir -p "$HOME/.cache/mesa_shader_cache"
+    [[ -n "$USERNAME" ]] && mkdir -p "/home/$USERNAME/.cache/mesa_shader_cache" && chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.cache"
+    
+    success_msg "GPU optimization complete"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# FLATPAK CONFIGURATION - Enable Flatpak support
+# ═══════════════════════════════════════════════════════════════════════════
+
+configure_flatpak() {
+    section_header "📦 FLATPAK CONFIGURATION"
+    
+    info_msg "Configuring Flatpak..."
+    
+    # Add Flathub repository
+    if command -v flatpak &>/dev/null; then
+        flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo >> "$LOG_FILE" 2>&1 || true
+        success_msg "Flathub repository added"
+    else
+        warning_msg "Flatpak not installed - skipping configuration"
+    fi
+    
+    # Configure Flatpak for user if exists
+    if [[ -n "$USERNAME" ]] && [[ -d "/home/$USERNAME" ]]; then
+        su - "$USERNAME" -c "flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo" >> "$LOG_FILE" 2>&1 || true
+    fi
+    
+    success_msg "Flatpak configured"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# FIX WINDOW GLITCHES - Synaptic, pavucontrol, and app responsiveness
+# ═══════════════════════════════════════════════════════════════════════════
+
+fix_window_glitches() {
+    section_header "🪟 FIXING WINDOW & APP ISSUES"
+    
+    info_msg "Fixing Synaptic Package Manager..."
+    
+    # Fix Synaptic - create wrapper
+    cat > /usr/local/bin/synaptic-fix << 'SYNAPTIC_EOF'
+#!/bin/bash
+# Synaptic wrapper for proot
+export DISPLAY="${DISPLAY:-:1}"
+export GDK_SYNCHRONIZE=1
+export GDK_RENDERING=image
+pkexec env DISPLAY="$DISPLAY" /usr/sbin/synaptic "$@" 2>/dev/null || \
+    /usr/sbin/synaptic "$@" 2>/dev/null || \
+    gksudo synaptic "$@" 2>/dev/null || \
+    sudo /usr/sbin/synaptic "$@"
+SYNAPTIC_EOF
+    chmod +x /usr/local/bin/synaptic-fix
+    
+    # Fix Synaptic desktop file
+    if [[ -f /usr/share/applications/synaptic.desktop ]]; then
+        sed -i 's|Exec=.*|Exec=synaptic-fix|g' /usr/share/applications/synaptic.desktop 2>/dev/null || true
+        sed -i '/^Exec=/a StartupNotify=false' /usr/share/applications/synaptic.desktop 2>/dev/null || true
+    fi
+    
+    success_msg "Synaptic fixed"
+    
+    info_msg "Fixing pavucontrol mixer..."
+    
+    # Fix pavucontrol - create wrapper to fix glitches
+    cat > /usr/local/bin/pavucontrol-fix << 'PAVU_EOF'
+#!/bin/bash
+# PavuControl wrapper for proot - fixes window glitches
+export DISPLAY="${DISPLAY:-:1}"
+export PULSE_SERVER="${PULSE_SERVER:-tcp:127.0.0.1:4713}"
+export GDK_SYNCHRONIZE=1
+export GDK_RENDERING=image
+export GTK_OVERLAY_SCROLLING=0
+/usr/bin/pavucontrol "$@" 2>/dev/null
+PAVU_EOF
+    chmod +x /usr/local/bin/pavucontrol-fix
+    
+    # Fix pavucontrol desktop file
+    if [[ -f /usr/share/applications/pavucontrol.desktop ]]; then
+        sed -i 's|Exec=.*|Exec=pavucontrol-fix|g' /usr/share/applications/pavucontrol.desktop 2>/dev/null || true
+    fi
+    
+    success_msg "pavucontrol fixed"
+    
+    info_msg "Fixing general window issues..."
+    
+    # Create GTK settings for better compatibility
+    mkdir -p /etc/gtk-3.0
+    cat > /etc/gtk-3.0/settings.ini << 'GTK_SETTINGS_EOF'
+[Settings]
+gtk-overlay-scrolling = false
+gtk-enable-animations = false
+gtk-primary-button-warps-slider = false
+GTK_SETTINGS_EOF
+    
+    # Fix XFCE compositor settings
+    if [[ -n "$USERNAME" ]] && [[ -d "/home/$USERNAME" ]]; then
+        mkdir -p "/home/$USERNAME/.config/xfce4/xfconf/xfce-perchannel-xml"
+        cat > "/home/$USERNAME/.config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml" << 'XFWM4_EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xfwm4" version="1.0">
+  <property name="general" type="empty">
+    <property name="use_compositing" type="bool" value="false"/>
+    <property name="sync_to_vblank" type="bool" value="false"/>
+    <property name="unredirect_overlays" type="bool" value="true"/>
+    <property name="show_frame_shadow" type="bool" value="false"/>
+    <property name="box_move" type="bool" value="true"/>
+    <property name="box_resize" type="bool" value="true"/>
+  </property>
+</channel>
+XFWM4_EOF
+        chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.config/xfce4"
+    fi
+    
+    success_msg "Window glitches fixed"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
 # CONFIGURE LANGUAGE - Set in .bashrc for proper locale detection
 # ═══════════════════════════════════════════════════════════════════════════
 
@@ -1426,6 +1692,8 @@ main() {
         ${#THEME_PACKAGES[@]} +
         ${#DEV_PACKAGES[@]} +
         ${#DATABASE_PACKAGES[@]} +
+        ${#GPU_PACKAGES[@]} +
+        ${#SOFTWARE_PACKAGES[@]} +
         ${#OFFICE_PACKAGES[@]} +
         ${#GRAPHICS_PACKAGES[@]} +
         ${#AUDIO_PACKAGES[@]} +
@@ -1479,6 +1747,8 @@ main() {
     install_category "THEMES & APPEARANCE" "${THEME_PACKAGES[@]}"
     install_category "DEVELOPMENT TOOLS" "${DEV_PACKAGES[@]}"
     install_category "DATABASES" "${DATABASE_PACKAGES[@]}"
+    install_category "GPU & 3D GRAPHICS" "${GPU_PACKAGES[@]}"
+    install_category "SOFTWARE CENTER" "${SOFTWARE_PACKAGES[@]}"
     install_category "OFFICE SUITE" "${OFFICE_PACKAGES[@]}"
     install_category "GRAPHICS & DESIGN" "${GRAPHICS_PACKAGES[@]}"
     install_category "AUDIO PRODUCTION" "${AUDIO_PACKAGES[@]}"
@@ -1503,9 +1773,12 @@ main() {
     
     # Configure system
     configure_audio
+    configure_gpu
+    configure_flatpak
     install_themes
     fix_neofetch
     fix_apps
+    fix_window_glitches
     configure_language
     configure_storage_sharing
     final_cleanup

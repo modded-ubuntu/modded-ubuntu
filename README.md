@@ -183,6 +183,7 @@
 ### Requirements
 
 - [Termux](https://f-droid.org/repo/com.termux_118.apk) from F-Droid
+- **VNC Viewer**: [AVNC](https://play.google.com/store/apps/details?id=com.gaurav.avnc) (Recommended)
 - Minimum **15-20GB** free storage
 - Stable internet connection
 
