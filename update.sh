@@ -310,19 +310,20 @@ AUDIO_HELPER_EOF
         success_msg "ACRO wallpaper copied"
     fi
     
-    # Fix GPU configuration (v3.3.1 - fixes black screen in Blender/Krita)
+    # Fix GPU configuration (v3.3.2 - OpenGL 4.5 for Blender/modern apps)
     mkdir -p "$UBUNTU_DIR/etc/profile.d"
     cat > "$UBUNTU_DIR/etc/profile.d/acro-gpu.sh" << 'GPU_FIX_EOF'
 #!/bin/bash
-# ACRO PRO Edition - GPU Configuration (Fixed)
+# ACRO PRO Edition - GPU Configuration
 export LIBGL_ALWAYS_SOFTWARE=1
 export GALLIUM_DRIVER=llvmpipe
 export LP_NUM_THREADS=$(nproc)
-export MESA_GL_VERSION_OVERRIDE=3.3
-export MESA_GLSL_VERSION_OVERRIDE=330
+export MESA_GL_VERSION_OVERRIDE=4.5
+export MESA_GLSL_VERSION_OVERRIDE=450
+export MESA_EXTENSION_MAX_YEAR=2030
+export __GL_SYNC_TO_VBLANK=0
 export __GL_SHADER_DISK_CACHE=1
 export QT_XCB_FORCE_SOFTWARE_OPENGL=1
-export KRITA_USE_SWRAST=1
 export CYCLES_OPENCL_TEST=none
 export LIBGL_DRI3_DISABLE=1
 GPU_FIX_EOF

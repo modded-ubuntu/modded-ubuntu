@@ -1290,27 +1290,24 @@ export LIBGL_ALWAYS_SOFTWARE=1
 export GALLIUM_DRIVER=llvmpipe
 export LP_NUM_THREADS=$(nproc)
 
-# Mesa version override (for app compatibility)
-export MESA_GL_VERSION_OVERRIDE=3.3
-export MESA_GLSL_VERSION_OVERRIDE=330
-
-# Disable problematic features in proot
-export MESA_NO_ERROR=0
-export __GL_SYNC_TO_VBLANK=0
+# Mesa version override - MUST BE 4.5+ for Blender and modern apps
+export MESA_GL_VERSION_OVERRIDE=4.5
+export MESA_GLSL_VERSION_OVERRIDE=450
+export MESA_EXTENSION_MAX_YEAR=2030
 
 # Shader cache for performance
+export __GL_SYNC_TO_VBLANK=0
 export __GL_SHADER_DISK_CACHE=1
 export __GL_SHADER_DISK_CACHE_PATH="$HOME/.cache/mesa_shader_cache"
 
-# Blender specific - force software rendering
+# Blender specific
 export BLENDER_SYSTEM_SCRIPTS=/usr/share/blender/scripts
 export CYCLES_OPENCL_TEST=none
 
-# Krita specific
-export KRITA_USE_SWRAST=1
+# Krita/Qt software rendering
 export QT_XCB_FORCE_SOFTWARE_OPENGL=1
 
-# General Qt/GTK software rendering fallback
+# General fixes for proot
 export LIBGL_DRI3_DISABLE=1
 GPU_ENV_EOF
     chmod +x /etc/profile.d/acro-gpu.sh
