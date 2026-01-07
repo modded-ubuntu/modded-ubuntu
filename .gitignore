@@ -1,7 +1,8 @@
 # ACRO PRO - Git Ignore
 
 # Premium editions (proprietary - NOT open source)
-premium/
+# Premium editions (Now included in repo)
+# premium/
 
 # Separate web gateway repo
 Aleocrophic_ACRO/
