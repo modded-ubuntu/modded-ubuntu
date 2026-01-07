@@ -34,7 +34,11 @@ BG_C=$'\033[46m'
 # LOGGING
 # ═══════════════════════════════════════════════════════════════════════════
 
-LOG_FILE="/var/log/acro-ultimate-install.log"
+if [ -w "/var/log" ]; then
+    LOG_FILE="/var/log/acro-ultimate-install.log"
+else
+    LOG_FILE="${HOME}/acro-ultimate-install.log"
+fi
 echo "ACRO ULTIMATE Installation started: $(date)" > "$LOG_FILE"
 
 log() { echo "[$(date '+%H:%M:%S')] $1" >> "$LOG_FILE"; }

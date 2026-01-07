@@ -32,7 +32,11 @@ BG_B=$'\033[44m'
 # LOGGING
 # ═══════════════════════════════════════════════════════════════════════════
 
-LOG_FILE="/var/log/acro-proplus-install.log"
+if [ -w "/var/log" ]; then
+    LOG_FILE="/var/log/acro-proplus-install.log"
+else
+    LOG_FILE="${HOME}/acro-proplus-install.log"
+fi
 echo "ACRO PRO+ Installation started: $(date)" > "$LOG_FILE"
 
 log() {
