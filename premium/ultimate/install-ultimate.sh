@@ -144,6 +144,49 @@ validate_license() {
 # INCLUDE PRO+ FEATURES
 # ═══════════════════════════════════════════════════════════════════════════
 
+
+# ═══════════════════════════════════════════════════════════════════════════
+# TUI & LICENSE INPUT
+# ═══════════════════════════════════════════════════════════════════════════
+
+get_license_input() {
+    local max_attempts=3
+    local attempt=1
+    
+    while [ $attempt -le $max_attempts ]; do
+        banner
+        
+        echo "${Y}  🏆  Feature Activation (FULL PACK)${D}"
+        echo "  This installer requires a valid ULTIMATE License Key."
+        echo "  Get yours at: ${W}https://aleocrophic-acron.vercel.app${D}"
+        echo ""
+        echo "${C}  [Attempt $attempt/$max_attempts]${D}"
+        echo ""
+        echo -n "  ${G}🔐 Enter License Key (e.g., ACRO-ULT-XXXXXXXX): ${W}"
+        read -r INPUT_KEY
+        
+        INPUT_KEY=$(echo "$INPUT_KEY" | xargs)
+        
+        if [[ -z "$INPUT_KEY" ]]; then
+            echo ""
+            error_msg "License key cannot be empty."
+            sleep 1.5
+        else
+            echo ""
+            status_msg "Verifying format..."
+            sleep 0.5
+            validate_license "$INPUT_KEY"
+            return 0
+        fi
+        
+        ((attempt++))
+    done
+    
+    echo ""
+    error_msg "Too many failed attempts. Exiting."
+    exit 1
+}
+
 install_proplus_features() {
     echo ""
     echo "${M}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${D}"
@@ -742,34 +785,62 @@ show_completion() {
 # ═══════════════════════════════════════════════════════════════════════════
 
 main() {
-    banner
-    
-    if [[ "$1" != "--license" ]] || [[ -z "$2" ]]; then
-        echo "${R}Usage: sudo bash install-ultimate.sh --license YOUR_LICENSE_KEY${D}"
+    # Detect execution environment
+    if [ -d "/data/data/com.termux/files" ] && [ "$(id -u)" != "0" ]; then
+        # === TERMUX MODE ===
+        
+        if ! command -v curl &> /dev/null; then
+            echo "Installing dependencies..."
+            pkg install curl -y >/dev/null 2>&1
+        fi
+        
+        banner
+        get_license_input
+        
+        UBUNTU_ROOT="$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu"
+        
+        if [ ! -d "$UBUNTU_ROOT" ]; then
+            echo ""
+            echo "${R}Error: Ubuntu distribution not found!${D}"
+            echo "${Y}Please run setup.sh first to install the base system.${D}"
+            exit 1
+        fi
+        
+        cp "$0" "$UBUNTU_ROOT/root/install-ultimate.sh"
+        chmod +x "$UBUNTU_ROOT/root/install-ultimate.sh"
+        
         echo ""
-        echo "${Y}Don't have a license? Purchase at:${D}"
-        echo "${C}https://aleocrophic.com/acro-ultimate${D}"
-        echo ""
-        echo "${W}Price: Rp 125.000 - FULL PACK${D}"
-        exit 1
+        echo "${C}Launching ULTIMATE installer inside Ubuntu environment...${D}"
+        echo "${G}Please wait...${D}"
+        sleep 1
+        
+        proot-distro login ubuntu --user root --shared-tmp -- bash /root/install-ultimate.sh --internal "$INPUT_KEY"
+        
+        exit $?
+        
+    else
+        # === PROOT / INTERNAL MODE ===
+        
+        if [ "$1" == "--internal" ] && [ -n "$2" ]; then
+            LICENSE_KEY="$2"
+            banner
+            echo "${G}Continued from Termux installer...${D}"
+        else
+            banner
+            get_license_input
+            LICENSE_KEY="$INPUT_KEY"
+        fi
+        
+        validate_license "$LICENSE_KEY"
+        install_proplus_features
+        install_pentest_suite
+        install_privacy_suite
+        install_developer_pack
+        install_content_creator
+        create_ultimate_scripts
+        final_setup
+        show_completion
     fi
-    
-    if [[ $EUID -ne 0 ]]; then
-        echo "${R}This script must be run as root (use sudo)${D}"
-        exit 1
-    fi
-    
-    LICENSE_KEY="$2"
-    
-    validate_license "$LICENSE_KEY"
-    install_proplus_features
-    install_pentest_suite
-    install_privacy_suite
-    install_developer_pack
-    install_content_creator
-    create_ultimate_scripts
-    final_setup
-    show_completion
 }
 
 main "$@"

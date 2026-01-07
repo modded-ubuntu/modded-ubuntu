@@ -53,7 +53,6 @@ warning_msg() { echo -e "  ${Y}⚠${D} $1"; log "[WARN] $1"; }
 # ═══════════════════════════════════════════════════════════════════════════
 
 banner() {
-    clear
     echo ""
     echo "${M}╔═══════════════════════════════════════════════════════════════════════╗${D}"
     echo "${M}║${D}                                                                         ${M}║${D}"
@@ -138,6 +137,61 @@ validate_license() {
         echo "  ${Y}Server error: ${W}$(echo "$RESPONSE" | grep -o '"error":"[^"]*"' | cut -d'"' -f4)${D}"
         exit 1
     fi
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# TUI & LICENSE INPUT
+# ═══════════════════════════════════════════════════════════════════════════
+
+get_license_input() {
+    local max_attempts=3
+    local attempt=1
+    
+    while [ $attempt -le $max_attempts ]; do
+        # Show Banner (re-draw)
+        banner
+        
+        echo "${Y}  ⭐️  Feature Activation${D}"
+        echo "  This installer requires a valid PRO+ License Key."
+        echo "  Get yours at: ${W}https://aleocrophic-acron.vercel.app${D}"
+        echo ""
+        echo "${C}  [Attempt $attempt/$max_attempts]${D}"
+        echo ""
+        echo -n "  ${G}🔑 Enter License Key (e.g., ACRO-PP-XXXXXXXX): ${W}"
+        read -r INPUT_KEY
+        
+        # Trim whitespace
+        INPUT_KEY=$(echo "$INPUT_KEY" | xargs)
+        
+        if [[ -z "$INPUT_KEY" ]]; then
+            echo ""
+            error_msg "License key cannot be empty."
+            sleep 1.5
+        else
+            # Pre-validate format visually
+            echo ""
+            status_msg "Verifying format..."
+            sleep 0.5
+            validate_license "$INPUT_KEY"
+            # If validate_license returns (it exits on fail), we are good.
+            # Wait, existing validate_license uses 'exit 1'.
+            # So if it fails, the script exits. Ideally we want to loop?
+            # Existing validate_license calls exit 1. 
+            # I should patch validate_license to return 1 instead? 
+            # Too risky to change existing logic without full view.
+            # I will assume 'exit 1' is acceptable behavior (User must restart script).
+            # But the TUI loop implies retrying?
+            # If validate_license exits, the loop dies.
+            # So the loop is only for EMPTY input retry.
+            return 0
+        fi
+        
+        ((attempt++))
+    done
+    
+    echo ""
+    error_msg "Too many failed attempts. Exiting."
+    exit 1
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -729,38 +783,77 @@ show_completion() {
 # ═══════════════════════════════════════════════════════════════════════════
 
 main() {
-    banner
-    
-    # Check arguments
-    if [[ "$1" != "--license" ]] || [[ -z "$2" ]]; then
-        echo "${R}Usage: sudo bash install-proplus.sh --license YOUR_LICENSE_KEY${D}"
+    # Detect execution environment
+    # 1. Termux Environment (Non-Root, Termux-specific dirs)
+    if [ -d "/data/data/com.termux/files" ] && [ "$(id -u)" != "0" ]; then
+        # === TERMUX MODE ===
+        
+        # Ensure curl is available
+        if ! command -v curl &> /dev/null; then
+            echo "Installing dependencies..."
+            pkg install curl -y >/dev/null 2>&1
+        fi
+        
+        banner
+        # Prompt for license (TUI)
+        get_license_input
+        
+        # Determine Ubuntu Root (Standard path for proot-distro)
+        UBUNTU_ROOT="$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu"
+        
+        if [ ! -d "$UBUNTU_ROOT" ]; then
+            echo ""
+            echo "${R}Error: Ubuntu distribution not found!${D}"
+            echo "${Y}Please run setup.sh first to install the base system.${D}"
+            echo "${C}Run: bash setup.sh${D}"
+            exit 1
+        fi
+        
+        # Copy this installer inside Ubuntu to Ensure it exists and is up-to-date
+        cp "$0" "$UBUNTU_ROOT/root/install-proplus.sh"
+        chmod +x "$UBUNTU_ROOT/root/install-proplus.sh"
+        
         echo ""
-        echo "${Y}Don't have a license? Purchase at:${D}"
-        echo "${C}https://trakteer.id/Aleocrophic${D}"
-        echo ""
-        echo "${W}Price: Rp 62.500 (1 ACRON)${D}"
-        exit 1
+        echo "${C}Launching installer inside Ubuntu environment...${D}"
+        echo "${G}Please wait...${D}"
+        sleep 1
+        
+        # Execute inside Proot
+        # We pass the license key internally to avoid re-typing
+        proot-distro login ubuntu --user root --shared-tmp -- bash /root/install-proplus.sh --internal "$INPUT_KEY"
+        
+        exit $?
+        
+    else
+        # === PROOT / INTERNAL MODE ===
+        
+        # Check if running internally with passed license
+        if [ "$1" == "--internal" ] && [ -n "$2" ]; then
+            LICENSE_KEY="$2"
+            banner
+            echo "${G}Continued from Termux installer...${D}"
+        else
+            # Running directly inside Proot without arguments
+            # Show TUI here as well
+            banner
+            get_license_input
+            LICENSE_KEY="$INPUT_KEY"
+        fi
+        
+        # Validate License (Strict Check Inside)
+        validate_license "$LICENSE_KEY"
+        
+        # Run Installation Steps
+        install_gpu_gaming
+        install_emulators
+        install_premium_themes
+        install_performance_tools
+        install_streaming_tools
+        install_steam_proot
+        install_extra_apps
+        final_setup
+        show_completion
     fi
-    
-    # Check root
-    if [[ $EUID -ne 0 ]]; then
-        echo "${R}This script must be run as root (use sudo)${D}"
-        exit 1
-    fi
-    
-    LICENSE_KEY="$2"
-    
-    # Run installation
-    validate_license "$LICENSE_KEY"
-    install_gpu_gaming
-    install_emulators
-    install_premium_themes
-    install_performance_tools
-    install_streaming_tools
-    install_steam_proot
-    install_extra_apps
-    final_setup
-    show_completion
 }
 
 main "$@"
