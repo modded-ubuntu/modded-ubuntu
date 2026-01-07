@@ -17,6 +17,12 @@
 <p align="center"><b>Premium Linux Distribution for Termux with 1000+ Pre-Installed Software</b></p>
 <p align="center"><i>Ubuntu 25.10 | 24/7 Keep-Alive | GPU Optimization | Flatpak Support</i></p>
 
+<p align="center">
+<a href="https://aleocrophic-acron.vercel.app/" target="_blank">
+<img src="https://img.shields.io/badge/🛒%20Get%20PRO+%20%2F%20ULTIMATE-Purchase%20Now-gold?style=for-the-badge" alt="Purchase Premium">
+</a>
+</p>
+
 ---
 
 ## 🆕 What's New in v3.5.0
