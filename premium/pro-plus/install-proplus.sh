@@ -787,16 +787,11 @@ main() {
     # 1. Termux Environment (Non-Root, Termux-specific dirs)
     if [ -d "/data/data/com.termux/files" ] && [ "$(id -u)" != "0" ]; then
         # === TERMUX MODE ===
-        
-        # Ensure curl is available
-        if ! command -v curl &> /dev/null; then
-            echo "Installing dependencies..."
-            pkg install curl -y >/dev/null 2>&1
-        fi
+        # Just launch the installer inside Ubuntu.
+        # The TUI and Validation will happen THERE (where /etc is writable).
         
         banner
-        # Prompt for license (TUI)
-        get_license_input
+        echo "${C}Initialize Installer...${D}"
         
         # Determine Ubuntu Root (Standard path for proot-distro)
         UBUNTU_ROOT="$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu"
@@ -809,41 +804,43 @@ main() {
             exit 1
         fi
         
-        # Copy this installer inside Ubuntu to Ensure it exists and is up-to-date
+        # Copy this installer inside Ubuntu
         cp "$0" "$UBUNTU_ROOT/root/install-proplus.sh"
         chmod +x "$UBUNTU_ROOT/root/install-proplus.sh"
         
-        echo ""
-        echo "${C}Launching installer inside Ubuntu environment...${D}"
-        echo "${G}Please wait...${D}"
+        echo "${G}Entering Ubuntu Environment...${D}"
         sleep 1
         
-        # Execute inside Proot
-        # We pass the license key internally to avoid re-typing
-        proot-distro login ubuntu --user root --shared-tmp -- bash /root/install-proplus.sh --internal "$INPUT_KEY"
+        # Execute inside Proot (No arguments passed, so it triggers TUI inside)
+        proot-distro login ubuntu --user root --shared-tmp -- bash /root/install-proplus.sh
         
         exit $?
         
     else
         # === PROOT / INTERNAL MODE ===
+        # This runs inside Ubuntu.
         
-        # Check if running internally with passed license
-        if [ "$1" == "--internal" ] && [ -n "$2" ]; then
+        banner
+        
+        # Check argument
+        if [[ "$1" == "--license" ]] && [[ -n "$2" ]]; then
+            # Command line mode
             LICENSE_KEY="$2"
-            banner
-            echo "${G}Continued from Termux installer...${D}"
         else
-            # Running directly inside Proot without arguments
-            # Show TUI here as well
-            banner
+            # TUI Mode (Default)
+            # Ensure dependencies for validation
+            if ! command -v curl &> /dev/null; then
+                 echo "${Y}Installing dependencies (curl)...${D}"
+                 apt-get update >/dev/null 2>&1
+                 apt-get install -y curl >/dev/null 2>&1
+            fi
+            
             get_license_input
             LICENSE_KEY="$INPUT_KEY"
         fi
         
-        # Validate License (Strict Check Inside)
+        # Proceed with installation
         validate_license "$LICENSE_KEY"
-        
-        # Run Installation Steps
         install_gpu_gaming
         install_emulators
         install_premium_themes

@@ -788,14 +788,11 @@ main() {
     # Detect execution environment
     if [ -d "/data/data/com.termux/files" ] && [ "$(id -u)" != "0" ]; then
         # === TERMUX MODE ===
-        
-        if ! command -v curl &> /dev/null; then
-            echo "Installing dependencies..."
-            pkg install curl -y >/dev/null 2>&1
-        fi
+        # Just launch the installer inside Ubuntu. 
+        # The TUI and Validation will happen THERE (where /etc is writable).
         
         banner
-        get_license_input
+        echo "${C}Initialize Installer...${D}"
         
         UBUNTU_ROOT="$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu"
         
@@ -806,31 +803,42 @@ main() {
             exit 1
         fi
         
+        # Copy this installer inside Ubuntu
         cp "$0" "$UBUNTU_ROOT/root/install-ultimate.sh"
         chmod +x "$UBUNTU_ROOT/root/install-ultimate.sh"
         
-        echo ""
-        echo "${C}Launching ULTIMATE installer inside Ubuntu environment...${D}"
-        echo "${G}Please wait...${D}"
+        echo "${G}Entering Ubuntu Environment...${D}"
         sleep 1
         
-        proot-distro login ubuntu --user root --shared-tmp -- bash /root/install-ultimate.sh --internal "$INPUT_KEY"
+        # Execute inside Proot (No arguments passed, so it triggers TUI inside)
+        proot-distro login ubuntu --user root --shared-tmp -- bash /root/install-ultimate.sh
         
         exit $?
         
     else
         # === PROOT / INTERNAL MODE ===
+        # This runs inside Ubuntu.
         
-        if [ "$1" == "--internal" ] && [ -n "$2" ]; then
+        banner
+        
+        # Check argument
+        if [[ "$1" == "--license" ]] && [[ -n "$2" ]]; then
+            # Command line mode
             LICENSE_KEY="$2"
-            banner
-            echo "${G}Continued from Termux installer...${D}"
         else
-            banner
+            # TUI Mode (Default)
+            # Ensure dependencies for validation
+            if ! command -v curl &> /dev/null; then
+                 echo "${Y}Installing dependencies (curl)...${D}"
+                 apt-get update >/dev/null 2>&1
+                 apt-get install -y curl >/dev/null 2>&1
+            fi
+            
             get_license_input
             LICENSE_KEY="$INPUT_KEY"
         fi
         
+        # Proceed with installation
         validate_license "$LICENSE_KEY"
         install_proplus_features
         install_pentest_suite
