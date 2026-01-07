@@ -3,7 +3,7 @@
 </p>
 <p align="center">
 <img src="https://img.shields.io/badge/ACRO-PRO%20EDITION-cyan?style=for-the-badge">
-<img src="https://img.shields.io/badge/Version-3.3.3-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/Version-3.5.0-blue?style=for-the-badge">
 <img src="https://img.shields.io/badge/BY-ZetaGo--Aurum-purple?style=for-the-badge">
 </p>
 <p align="center">
@@ -19,16 +19,17 @@
 
 ---
 
-## 🆕 What's New in v3.3.3
+## 🆕 What's New in v3.5.0
 
+- **Premium Tiers** - PRO+ and ULTIMATE add-on packs available
 - **24/7 Keep-Alive** - `acro-keepalive` prevents Android from killing Termux
 - **GPU Optimization** - OpenGL 4.5, Mesa llvmpipe, optimized for Blender/Krita
 - **Flatpak Support** - Install apps from Flathub with `flatpak`
 - **Software Center** - gnome-software for easy app management
-- **Synaptic Fixed** - Package manager now works properly
-- **Pavucontrol Fixed** - Audio mixer without window glitches
+- **Steam for proot** - Patched Steam client in premium tiers
 - **Permanent Audio** - PulseAudio auto-starts on `ubuntu` login
 - **User Preserved** - Updates don't delete your user account
+- **Better Themes** - More premium themes in PRO+ edition
 
 ---
 
@@ -66,7 +67,7 @@
 
 ## ⚡ Why ACRO PRO Edition?
 
-| Feature           | Original       | ACRO PRO v3.3.3                  |
+| Feature           | Original       | ACRO PRO v3.5.0                  |
 | ----------------- | -------------- | -------------------------------- |
 | Software Packages | ~10            | **1000+**                        |
 | Installation      | Manual prompts | **Fully Automatic**              |

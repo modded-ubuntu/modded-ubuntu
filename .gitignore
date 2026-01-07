@@ -1,0 +1,25 @@
+# ACRO PRO - Git Ignore
+
+# Premium editions (proprietary - NOT open source)
+premium/
+
+# Separate web gateway repo
+Aleocrophic_ACRO/
+acro-gateway/
+
+# Logs
+*.log
+
+# Temp files
+*.tmp
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.sublime-*
