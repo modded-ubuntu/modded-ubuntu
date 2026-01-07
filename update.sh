@@ -2,7 +2,7 @@
 
 ##############################################################################
 #                                                                            #
-#   ACRO PRO Edition v3.2.0 - UPDATE SCRIPT                                  #
+#   ACRO PRO Edition v3.5.0 - UPDATE SCRIPT                                  #
 #   System & GUI Updater for Existing Installations                          #
 #                                                                            #
 #   Original Base: modded-ubuntu                                             #
@@ -39,7 +39,7 @@ BOLD=$'\033[1m'
 
 CURR_DIR=$(realpath "$(dirname "$BASH_SOURCE")")
 UBUNTU_DIR="$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu"
-VERSION="3.2.0"
+VERSION="3.5.0"
 DISTRO_NAME="ACRO PRO Edition"
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -107,7 +107,7 @@ banner() {
     ║                          |____|/                   \|____|               ║
     ║                                                                           ║
     ╠═══════════════════════════════════════════════════════════════════════════╣
-    ║              🔄 A C R O   U P D A T E R   v3.2.0 🔄                       ║
+    ║              🔄 A C R O   U P D A T E R   v3.5.0 🔄                       ║
     ╚═══════════════════════════════════════════════════════════════════════════╝
 EOF
     echo "${D}"

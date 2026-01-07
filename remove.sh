@@ -2,7 +2,7 @@
 
 ##############################################################################
 #                                                                            #
-#   ACRO PRO Edition v3.2.0 - UNINSTALLER                                    #
+#   ACRO PRO Edition v3.5.0 - UNINSTALLER                                    #
 #   Premium Linux Distribution for Termux (Ubuntu-based)                     #
 #                                                                            #
 #   Original Base: modded-ubuntu                                             #
@@ -36,7 +36,7 @@ RED_L=$'\033[38;5;196m'
 
 BG_DGRAY=$'\033[48;5;236m'
 
-VERSION="3.2.0"
+VERSION="3.5.0"
 DISTRO_NAME="ACRO PRO Edition"
 
 # ═══════════════════════════════════════════════════════════════════════════

@@ -2,7 +2,7 @@
 
 ##############################################################################
 #                                                                            #
-#   ACRO PRO Edition v3.2.0                                                  #
+#   ACRO PRO Edition v3.5.0                                                  #
 #   Premium Linux Distribution for Termux (Ubuntu-based)                     #
 #                                                                            #
 #   Original Base: modded-ubuntu                                             #
@@ -49,7 +49,7 @@ BLINK=$'\033[5m'
 
 CURR_DIR=$(realpath "$(dirname "$BASH_SOURCE")")
 UBUNTU_DIR="$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu"
-VERSION="3.2.0"
+VERSION="3.5.0"
 DISTRO_NAME="ACRO PRO Edition"
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -138,7 +138,7 @@ banner() {
     ║                          |____|/                   \|____|               ║
     ║                                                                           ║
     ╠═══════════════════════════════════════════════════════════════════════════╣
-    ║              🚀 A C R O   P R O   E D I T I O N   v3.2.0 🚀               ║
+    ║              🚀 A C R O   P R O   E D I T I O N   v3.5.0 🚀               ║
     ╚═══════════════════════════════════════════════════════════════════════════╝
 EOF
     echo "${D}"

@@ -2,7 +2,7 @@
 
 ##############################################################################
 #                                                                            #
-#   ACRO PRO Edition v3.2.0 - GUI INSTALLER                                  #
+#   ACRO PRO Edition v3.5.0 - GUI INSTALLER                                  #
 #   Premium Linux Distribution for Termux (Ubuntu-based)                     #
 #                                                                            #
 #   Original Base: modded-ubuntu                                             #
@@ -41,7 +41,7 @@ BG_PURPLE=$'\033[48;5;54m'
 # System info
 ARCH=$(uname -m)
 USERNAME=$(getent group sudo | awk -F ':' '{print $4}' | cut -d ',' -f1)
-VERSION="3.2.0"
+VERSION="3.5.0"
 DISTRO_NAME="ACRO PRO Edition"
 LOG_FILE="/tmp/acro-install.log"
 TOTAL_PACKAGES=0
@@ -1108,7 +1108,7 @@ ACRO_ASCII_EOF
 
 print_info() {
     prin "$(color 6)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    prin "$(color 15) ACRO PRO Edition $(color 4)v3.2"
+    prin "$(color 15) ACRO PRO Edition $(color 4)v3.5"
     prin "$(color 6)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     info underline
     info "OS" distro
@@ -1127,7 +1127,7 @@ print_info() {
 }
 
 # ACRO Distribution settings
-distro="ACRO PRO Edition v3.2"
+distro="ACRO PRO Edition v3.5"
 ascii_distro="auto"
 image_source="/etc/neofetch/acro_ascii"
 image_backend="ascii"

@@ -2,7 +2,7 @@
 
 ##############################################################################
 #                                                                            #
-#   ACRO PRO Edition v3.2.0 - SETTINGS UTILITY                               #
+#   ACRO PRO Edition v3.5.0 - SETTINGS UTILITY                               #
 #   Comprehensive GUI Configuration Tool                                     #
 #                                                                            #
 #   ACRO Distro By: ZetaGo-Aurum                                             #
@@ -33,7 +33,7 @@ DGRAY=$'\033[38;5;238m'
 
 BG_DGRAY=$'\033[48;5;236m'
 
-VERSION="3.2.0"
+VERSION="3.5.0"
 DISTRO_NAME="ACRO PRO Edition"
 CONFIG_DIR="$HOME/.config/acro"
 VNC_CONFIG="$HOME/.vnc/config"
