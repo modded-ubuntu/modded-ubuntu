@@ -14,24 +14,7 @@
 set -e
 
 # ═══════════════════════════════════════════════════════════════════════════
-# COLORS AND STYLING
-# ═══════════════════════════════════════════════════════════════════════════
-
-R=$'\033[1;31m'
-G=$'\033[1;32m'
-Y=$'\033[1;33m'
-B=$'\033[1;34m'
-M=$'\033[1;35m'
-C=$'\033[1;36m'
-W=$'\033[1;37m'
-D=$'\033[0m'
-BG_R=$'\033[41m'
-BG_G=$'\033[42m'
-BG_M=$'\033[45m'
-BG_C=$'\033[46m'
-
-# ═══════════════════════════════════════════════════════════════════════════
-# LOGGING
+# LOGGING & STYLES
 # ═══════════════════════════════════════════════════════════════════════════
 
 if [ -w "/var/log" ]; then
@@ -41,11 +24,27 @@ else
 fi
 echo "ACRO ULTIMATE Installation started: $(date)" > "$LOG_FILE"
 
-log() { echo "[$(date '+%H:%M:%S')] $1" >> "$LOG_FILE"; }
-status_msg() { echo -e "  ${C}▸${D} $1"; log "$1"; }
-success_msg() { echo -e "  ${G}✓${D} $1"; log "[OK] $1"; }
-error_msg() { echo -e "  ${R}✗${D} $1"; log "[ERROR] $1"; }
-warning_msg() { echo -e "  ${Y}⚠${D} $1"; log "[WARN] $1"; }
+# Fetch Premium Styles
+STYLE_URL="https://raw.githubusercontent.com/ZetaGo-Aurum/modded-ubuntu/master/distro/styles.sh"
+TEMP_STYLE="/tmp/acro_styles.sh"
+
+if ! command -v curl &> /dev/null; then
+    apt-get update >/dev/null 2>&1 || pkg update >/dev/null 2>&1 || true
+    apt-get install -y curl >/dev/null 2>&1 || pkg install -y curl >/dev/null 2>&1 || true
+fi
+
+curl -sL "$STYLE_URL" -o "$TEMP_STYLE" || true
+
+if [ -f "$TEMP_STYLE" ]; then
+    source "$TEMP_STYLE"
+else
+    # Fallback Styles
+    R=$'\033[1;31m'; G=$'\033[1;32m'; Y=$'\033[1;33m'; C=$'\033[1;36m'; D=$'\033[0m'
+    status_msg() { echo -e "  $1"; echo "[$(date)] $1" >> "$LOG_FILE"; }
+    success_msg() { echo -e "  $1"; echo "[OK] $1" >> "$LOG_FILE"; }
+    error_msg() { echo -e "  $1"; echo "[ERROR] $1" >> "$LOG_FILE"; }
+    warning_msg() { echo -e "  $1"; echo "[WARN] $1" >> "$LOG_FILE"; }
+fi
 
 # ═══════════════════════════════════════════════════════════════════════════
 # BANNER
