@@ -44,7 +44,11 @@ fi
 run_installer() {
     local script_url=$1
     local name=$2
-    local target="/tmp/install-$name.sh"
+    
+    # Termux uses $TMPDIR, not /tmp (which doesn't exist in Termux)
+    local tmpdir="${TMPDIR:-${PREFIX:-$HOME}/tmp}"
+    mkdir -p "$tmpdir" 2>/dev/null
+    local target="$tmpdir/install-$name.sh"
     
     type_text "${C}Initializing $name Installer...${D}" 0.02
     
