@@ -624,7 +624,7 @@ RecQuality=Quality
 VBitrate=2500
 ABitrate=160
 FileNameWithoutSpace=true
-OBSEOF
+OBS_EOF
     success_msg "OBS optimized config created"
 }
 
