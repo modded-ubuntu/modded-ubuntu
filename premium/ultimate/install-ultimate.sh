@@ -775,6 +775,485 @@ EMU_EOF
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
+# FLATPAK & PYTHON GTK SETUP
+# ═══════════════════════════════════════════════════════════════════════════
+
+setup_ultimate_deps() {
+    echo ""
+    echo "${C}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${D}"
+    echo "${W} 📦 Setting up ULTIMATE Dependencies                        ${D}"
+    echo "${C}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${D}"
+    echo ""
+    
+    # Flatpak
+    status_msg "Installing Flatpak..."
+    apt-get install -y flatpak >> "$LOG_FILE" 2>&1 || true
+    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >> "$LOG_FILE" 2>&1 || true
+    
+    # Python GTK
+    status_msg "Installing Python GTK dependencies..."
+    apt-get install -y python3 python3-gi python3-gi-cairo gir1.2-gtk-3.0 gir1.2-notify-0.7 >> "$LOG_FILE" 2>&1 || true
+    
+    success_msg "ULTIMATE dependencies installed"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# ACRO ULTIMATE GUI APPLICATION
+# ═══════════════════════════════════════════════════════════════════════════
+
+create_ultimate_gui() {
+    echo ""
+    echo "${R}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${D}"
+    echo "${W} 🖥️  Creating ACRO ULTIMATE GUI Application                  ${D}"
+    echo "${R}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${D}"
+    echo ""
+    
+    mkdir -p /usr/share/acro-ultimate
+    mkdir -p /usr/share/applications
+    
+    status_msg "Creating ULTIMATE GUI application..."
+    
+    # Create the Python GTK GUI
+    cat > /usr/share/acro-ultimate/acro-ultimate-gui.py << 'ULTGUIEOF'
+#!/usr/bin/env python3
+"""
+ACRO ULTIMATE Tools - Premium Security & Productivity Suite
+Copyright 2024-2026 ZetaGo-Aurum | ALEOCROPHIC Brand
+"""
+
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk, Gdk, Pango
+import subprocess
+import os
+
+class AcroUltimateApp(Gtk.Window):
+    def __init__(self):
+        Gtk.Window.__init__(self, title="🏆 ACRO ULTIMATE Tools")
+        self.set_default_size(800, 600)
+        self.set_border_width(10)
+        
+        # Dark theme
+        settings = Gtk.Settings.get_default()
+        settings.set_property("gtk-application-prefer-dark-theme", True)
+        
+        # Custom CSS
+        css = b"""
+        window { background: #0d1117; }
+        .header-label { font-size: 28px; font-weight: bold; color: #ff6b6b; }
+        .section-label { font-size: 18px; font-weight: bold; color: #ffd93d; }
+        .tool-button { background: #21262d; border: 1px solid #30363d; 
+                       border-radius: 6px; padding: 12px; color: #c9d1d9; }
+        .tool-button:hover { background: #30363d; border-color: #58a6ff; }
+        .danger-button { background: #da3633; color: white; }
+        .success-button { background: #238636; color: white; }
+        .code-text { font-family: monospace; background: #161b22; 
+                     color: #79c0ff; padding: 10px; }
+        """
+        style_provider = Gtk.CssProvider()
+        style_provider.load_from_data(css)
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(), style_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+        
+        # Main container
+        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.add(main_box)
+        
+        # Header
+        header = Gtk.Label(label="🏆 ACRO ULTIMATE Tools")
+        header.get_style_context().add_class("header-label")
+        main_box.pack_start(header, False, False, 10)
+        
+        # Notebook (tabs)
+        notebook = Gtk.Notebook()
+        main_box.pack_start(notebook, True, True, 0)
+        
+        # Tab 1: Security Tools
+        security_page = self.create_security_page()
+        notebook.append_page(security_page, Gtk.Label(label="🔓 Security"))
+        
+        # Tab 2: Privacy
+        privacy_page = self.create_privacy_page()
+        notebook.append_page(privacy_page, Gtk.Label(label="🛡️ Privacy"))
+        
+        # Tab 3: Gaming
+        gaming_page = self.create_gaming_page()
+        notebook.append_page(gaming_page, Gtk.Label(label="🎮 Gaming"))
+        
+        # Tab 4: Wine
+        wine_page = self.create_wine_page()
+        notebook.append_page(wine_page, Gtk.Label(label="🍷 Wine"))
+        
+        # Tab 5: Development
+        dev_page = self.create_dev_page()
+        notebook.append_page(dev_page, Gtk.Label(label="💻 Dev"))
+        
+        # Tab 6: Documentation
+        docs_page = self.create_docs_page()
+        notebook.append_page(docs_page, Gtk.Label(label="📚 Docs"))
+        
+        # Footer
+        footer = Gtk.Label(label="VIP Support: vip@aleocrophic.com | ULTIMATE Edition")
+        footer.set_margin_top(10)
+        main_box.pack_end(footer, False, False, 5)
+        
+    def create_security_page(self):
+        scroll = Gtk.ScrolledWindow()
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        box.set_margin_start(15)
+        box.set_margin_end(15)
+        box.set_margin_top(10)
+        
+        # Network Scanning
+        label = Gtk.Label(label="🌐 Network Scanning")
+        label.get_style_context().add_class("section-label")
+        label.set_halign(Gtk.Align.START)
+        box.pack_start(label, False, False, 5)
+        
+        tools = [
+            ("nmap - Port Scanner", "nmap -sV -sC", "xfce4-terminal -e 'bash -c \"nmap -h; read\"'"),
+            ("masscan - Fast Scanner", "masscan -p1-65535", "xfce4-terminal -e 'bash -c \"masscan -h; read\"'"),
+            ("netdiscover - ARP Scanner", "netdiscover -r 192.168.1.0/24", "xfce4-terminal -e 'bash -c \"netdiscover -h; read\"'"),
+        ]
+        for name, example, cmd in tools:
+            hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=5)
+            btn = Gtk.Button(label=name)
+            btn.connect("clicked", self.run_command, cmd)
+            btn.get_style_context().add_class("tool-button")
+            hbox.pack_start(btn, True, True, 0)
+            ex_label = Gtk.Label(label=f"Ex: {example}")
+            ex_label.get_style_context().add_class("code-text")
+            hbox.pack_start(ex_label, True, True, 0)
+            box.pack_start(hbox, False, False, 2)
+        
+        # Web Penetration
+        label2 = Gtk.Label(label="🌍 Web Penetration")
+        label2.get_style_context().add_class("section-label")
+        label2.set_halign(Gtk.Align.START)
+        box.pack_start(label2, False, False, 10)
+        
+        web_tools = [
+            ("sqlmap - SQL Injection", "sqlmap -u 'url?id=1' --dbs", "xfce4-terminal -e 'bash -c \"sqlmap -h; read\"'"),
+            ("nikto - Web Scanner", "nikto -h target.com", "xfce4-terminal -e 'bash -c \"nikto -h; read\"'"),
+            ("gobuster - Dir Bruteforce", "gobuster dir -u url -w wordlist", "xfce4-terminal -e 'bash -c \"gobuster -h; read\"'"),
+        ]
+        for name, example, cmd in web_tools:
+            hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=5)
+            btn = Gtk.Button(label=name)
+            btn.connect("clicked", self.run_command, cmd)
+            btn.get_style_context().add_class("tool-button")
+            hbox.pack_start(btn, True, True, 0)
+            ex_label = Gtk.Label(label=f"Ex: {example}")
+            ex_label.get_style_context().add_class("code-text")
+            hbox.pack_start(ex_label, True, True, 0)
+            box.pack_start(hbox, False, False, 2)
+        
+        # Password Cracking
+        label3 = Gtk.Label(label="🔑 Password Cracking")
+        label3.get_style_context().add_class("section-label")
+        label3.set_halign(Gtk.Align.START)
+        box.pack_start(label3, False, False, 10)
+        
+        pwd_tools = [
+            ("hydra - Online Cracker", "hydra -l admin -P list.txt ssh://ip", "xfce4-terminal -e 'bash -c \"hydra -h; read\"'"),
+            ("john - Offline Cracker", "john --wordlist=rockyou.txt hash.txt", "xfce4-terminal -e 'bash -c \"john --help; read\"'"),
+            ("hashcat - GPU Cracker", "hashcat -m 0 hash.txt wordlist", "xfce4-terminal -e 'bash -c \"hashcat -h; read\"'"),
+        ]
+        for name, example, cmd in pwd_tools:
+            hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=5)
+            btn = Gtk.Button(label=name)
+            btn.connect("clicked", self.run_command, cmd)
+            btn.get_style_context().add_class("tool-button")
+            hbox.pack_start(btn, True, True, 0)
+            ex_label = Gtk.Label(label=f"Ex: {example}")
+            ex_label.get_style_context().add_class("code-text")
+            hbox.pack_start(ex_label, True, True, 0)
+            box.pack_start(hbox, False, False, 2)
+        
+        # Wireless
+        label4 = Gtk.Label(label="📡 Wireless Security")
+        label4.get_style_context().add_class("section-label")
+        label4.set_halign(Gtk.Align.START)
+        box.pack_start(label4, False, False, 10)
+        
+        wifi_tools = [
+            ("aircrack-ng - WiFi Cracker", "aircrack-ng -w wordlist cap.cap", "xfce4-terminal -e 'bash -c \"aircrack-ng --help; read\"'"),
+            ("wifite - Auto WiFi Attack", "wifite --kill", "xfce4-terminal -e 'bash -c \"wifite -h; read\"'"),
+        ]
+        for name, example, cmd in wifi_tools:
+            hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=5)
+            btn = Gtk.Button(label=name)
+            btn.connect("clicked", self.run_command, cmd)
+            btn.get_style_context().add_class("tool-button")
+            hbox.pack_start(btn, True, True, 0)
+            ex_label = Gtk.Label(label=f"Ex: {example}")
+            ex_label.get_style_context().add_class("code-text")
+            hbox.pack_start(ex_label, True, True, 0)
+            box.pack_start(hbox, False, False, 2)
+        
+        scroll.add(box)
+        return scroll
+    
+    def create_privacy_page(self):
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        box.set_margin_start(20)
+        box.set_margin_end(20)
+        box.set_margin_top(15)
+        
+        label = Gtk.Label(label="🛡️ Privacy & Anonymity Suite")
+        label.get_style_context().add_class("section-label")
+        box.pack_start(label, False, False, 5)
+        
+        # Tor controls
+        btn_tor_start = Gtk.Button(label="▶️ Start Tor Service")
+        btn_tor_start.connect("clicked", self.run_command, "xfce4-terminal -e 'sudo service tor start; read'")
+        btn_tor_start.get_style_context().add_class("success-button")
+        box.pack_start(btn_tor_start, False, False, 5)
+        
+        btn_tor_stop = Gtk.Button(label="⏹️ Stop Tor Service")
+        btn_tor_stop.connect("clicked", self.run_command, "xfce4-terminal -e 'sudo service tor stop; read'")
+        btn_tor_stop.get_style_context().add_class("danger-button")
+        box.pack_start(btn_tor_stop, False, False, 5)
+        
+        btn_tor_browser = Gtk.Button(label="🧅 Launch Tor Browser")
+        btn_tor_browser.connect("clicked", self.run_command, "torbrowser-launcher")
+        btn_tor_browser.get_style_context().add_class("tool-button")
+        box.pack_start(btn_tor_browser, False, False, 5)
+        
+        btn_proxy = Gtk.Button(label="🔗 ProxyChains Terminal")
+        btn_proxy.connect("clicked", self.run_command, "xfce4-terminal -e 'proxychains4 bash'")
+        btn_proxy.get_style_context().add_class("tool-button")
+        box.pack_start(btn_proxy, False, False, 5)
+        
+        btn_mac = Gtk.Button(label="🔄 Randomize MAC Address")
+        btn_mac.connect("clicked", self.run_command, "xfce4-terminal -e 'sudo macchanger -r wlan0; read'")
+        btn_mac.get_style_context().add_class("tool-button")
+        box.pack_start(btn_mac, False, False, 5)
+        
+        return box
+    
+    def create_gaming_page(self):
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        box.set_margin_start(20)
+        box.set_margin_end(20)
+        box.set_margin_top(15)
+        
+        label = Gtk.Label(label="🕹️ Gaming Emulators")
+        label.get_style_context().add_class("section-label")
+        box.pack_start(label, False, False, 5)
+        
+        grid = Gtk.Grid()
+        grid.set_column_spacing(10)
+        grid.set_row_spacing(10)
+        
+        emulators = [
+            ("PPSSPP (PSP)", "flatpak run org.ppsspp.PPSSPP"),
+            ("mGBA (GBA)", "flatpak run io.mgba.mGBA"),
+            ("DOSBox", "flatpak run net.dosbox.DOSBox"),
+            ("ScummVM", "flatpak run org.scummvm.ScummVM"),
+            ("DuckStation (PS1)", "flatpak run org.duckstation.DuckStation"),
+            ("FCEux (NES)", "fceux"),
+        ]
+        
+        for i, (name, cmd) in enumerate(emulators):
+            btn = Gtk.Button(label=name)
+            btn.connect("clicked", self.run_command, cmd)
+            btn.get_style_context().add_class("tool-button")
+            grid.attach(btn, i % 3, i // 3, 1, 1)
+        
+        box.pack_start(grid, False, False, 10)
+        return box
+    
+    def create_wine_page(self):
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        box.set_margin_start(20)
+        box.set_margin_end(20)
+        box.set_margin_top(15)
+        
+        label = Gtk.Label(label="🍷 Wine Gaming")
+        label.get_style_context().add_class("section-label")
+        box.pack_start(label, False, False, 5)
+        
+        btn_install = Gtk.Button(label="📦 Install Windows Game (.exe)")
+        btn_install.connect("clicked", self.wine_install)
+        btn_install.get_style_context().add_class("tool-button")
+        box.pack_start(btn_install, False, False, 5)
+        
+        btn_run = Gtk.Button(label="▶️ Run Windows Game")
+        btn_run.connect("clicked", self.wine_run)
+        btn_run.get_style_context().add_class("tool-button")
+        box.pack_start(btn_run, False, False, 5)
+        
+        btn_tricks = Gtk.Button(label="🔧 Winetricks")
+        btn_tricks.connect("clicked", self.run_command, "winetricks")
+        btn_tricks.get_style_context().add_class("tool-button")
+        box.pack_start(btn_tricks, False, False, 5)
+        
+        btn_config = Gtk.Button(label="⚙️ Wine Configuration")
+        btn_config.connect("clicked", self.run_command, "winecfg")
+        btn_config.get_style_context().add_class("tool-button")
+        box.pack_start(btn_config, False, False, 5)
+        
+        return box
+    
+    def create_dev_page(self):
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        box.set_margin_start(20)
+        box.set_margin_end(20)
+        box.set_margin_top(15)
+        
+        label = Gtk.Label(label="💻 Developer Tools")
+        label.get_style_context().add_class("section-label")
+        box.pack_start(label, False, False, 5)
+        
+        tools = [
+            ("VS Code", "code"),
+            ("NeoVim", "xfce4-terminal -e nvim"),
+            ("Docker", "xfce4-terminal -e 'docker ps; read'"),
+            ("Git Status", "xfce4-terminal -e 'git status; read'"),
+            ("Python3 REPL", "xfce4-terminal -e python3"),
+            ("Node.js REPL", "xfce4-terminal -e node"),
+        ]
+        
+        for name, cmd in tools:
+            btn = Gtk.Button(label=name)
+            btn.connect("clicked", self.run_command, cmd)
+            btn.get_style_context().add_class("tool-button")
+            box.pack_start(btn, False, False, 3)
+        
+        return box
+    
+    def create_docs_page(self):
+        scroll = Gtk.ScrolledWindow()
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
+        box.set_margin_start(15)
+        box.set_margin_end(15)
+        box.set_margin_top(10)
+        
+        label = Gtk.Label(label="📚 Quick Reference Guide")
+        label.get_style_context().add_class("section-label")
+        box.pack_start(label, False, False, 5)
+        
+        docs = """
+NETWORK SCANNING
+================
+nmap -sV -sC target.com        # Service detection + default scripts
+nmap -p- target.com            # Scan all ports
+nmap -sU target.com            # UDP scan
+masscan -p1-65535 target.com   # Fast port scan
+
+WEB PENETRATION
+===============
+sqlmap -u "url?id=1" --dbs     # Enumerate databases
+sqlmap -u "url?id=1" --dump    # Dump database
+nikto -h target.com            # Web vulnerability scan
+gobuster dir -u url -w /usr/share/wordlists/dirb/common.txt
+
+PASSWORD CRACKING
+=================
+hydra -l admin -P passwords.txt ssh://target
+john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
+hashcat -m 0 hash.txt /usr/share/wordlists/rockyou.txt
+
+WIRELESS
+========
+airmon-ng start wlan0          # Monitor mode
+airodump-ng wlan0mon           # Capture packets
+aircrack-ng -w wordlist capture.cap
+
+PRIVACY
+=======
+service tor start              # Start Tor
+proxychains4 curl ipinfo.io    # Route through Tor
+macchanger -r wlan0            # Random MAC
+"""
+        
+        text_view = Gtk.TextView()
+        text_view.set_editable(False)
+        text_view.set_monospace(True)
+        text_view.get_buffer().set_text(docs)
+        text_view.get_style_context().add_class("code-text")
+        box.pack_start(text_view, True, True, 0)
+        
+        scroll.add(box)
+        return scroll
+    
+    def run_command(self, widget, cmd):
+        subprocess.Popen(cmd, shell=True)
+    
+    def wine_install(self, widget):
+        dialog = Gtk.FileChooserDialog(
+            title="Select Windows Installer (.exe)",
+            parent=self,
+            action=Gtk.FileChooserAction.OPEN
+        )
+        dialog.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                          Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+        filter_exe = Gtk.FileFilter()
+        filter_exe.set_name("Windows Executables")
+        filter_exe.add_pattern("*.exe")
+        dialog.add_filter(filter_exe)
+        
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            filepath = dialog.get_filename()
+            subprocess.Popen(f'wine "{filepath}"', shell=True)
+        dialog.destroy()
+    
+    def wine_run(self, widget):
+        dialog = Gtk.FileChooserDialog(
+            title="Select Windows Game (.exe)",
+            parent=self,
+            action=Gtk.FileChooserAction.OPEN
+        )
+        dialog.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                          "Run", Gtk.ResponseType.OK)
+        dialog.set_current_folder(os.path.expanduser("~/.wine/drive_c"))
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            filepath = dialog.get_filename()
+            subprocess.Popen(f'wine "{filepath}"', shell=True)
+        dialog.destroy()
+
+def main():
+    app = AcroUltimateApp()
+    app.connect("destroy", Gtk.main_quit)
+    app.show_all()
+    Gtk.main()
+
+if __name__ == "__main__":
+    main()
+ULTGUIEOF
+    
+    chmod +x /usr/share/acro-ultimate/acro-ultimate-gui.py
+    
+    # Create launcher script
+    cat > /usr/local/bin/acro-ultimate-tools << 'LAUNCHER_EOF'
+#!/bin/bash
+python3 /usr/share/acro-ultimate/acro-ultimate-gui.py
+LAUNCHER_EOF
+    chmod +x /usr/local/bin/acro-ultimate-tools
+    
+    # Create desktop entry
+    cat > /usr/share/applications/acro-ultimate.desktop << 'DESKTOP_EOF'
+[Desktop Entry]
+Name=ACRO ULTIMATE Tools
+Comment=Premium Security & Productivity Suite
+Exec=/usr/local/bin/acro-ultimate-tools
+Icon=security-high
+Terminal=false
+Type=Application
+Categories=Security;System;Utility;
+Keywords=hacking;security;privacy;pentest;ultimate;
+DESKTOP_EOF
+    
+    success_msg "ACRO ULTIMATE GUI created"
+    echo "${G}✓ Launch with: acro-ultimate-tools${D}"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
 # FINAL SETUP
 # ═══════════════════════════════════════════════════════════════════════════
 
@@ -911,6 +1390,9 @@ main() {
         # Proceed with installation
         validate_license "$LICENSE_KEY"
         
+        # Setup dependencies first (Flatpak + Python GTK)
+        setup_ultimate_deps
+        
         # ULTIMATE EXCLUSIVE: Desktop Environment Choice
         choose_desktop
         
@@ -928,6 +1410,11 @@ main() {
         install_developer_pack
         install_content_creator
         create_ultimate_scripts
+        
+        # Create ULTIMATE GUI Application
+        create_ultimate_gui
+        
+        # Final setup
         final_setup
         show_completion
     fi
