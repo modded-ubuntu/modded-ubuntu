@@ -44,12 +44,56 @@ fi
 run_installer() {
     local script_url=$1
     local name=$2
+    local target="/tmp/install-$name.sh"
     
     type_text "${C}Initializing $name Installer...${D}" 0.02
     
-    # Download execute
-    curl -sL "$script_url" -o "/tmp/install-$name.sh"
-    bash "/tmp/install-$name.sh"
+    # Remove old file if exists
+    rm -f "$target" 2>/dev/null
+    
+    # Download with verbose output and retry
+    echo "${Y}▸ Downloading installer from GitHub...${D}"
+    
+    # Try up to 3 times
+    local attempt=1
+    while [ $attempt -le 3 ]; do
+        echo "  ${GRAY}Attempt $attempt/3...${D}"
+        curl -fL --connect-timeout 10 --max-time 60 "$script_url" -o "$target" 2>&1
+        
+        if [ -f "$target" ] && [ -s "$target" ]; then
+            echo "${G}✓ Download successful${D}"
+            break
+        else
+            echo "${R}✗ Download failed${D}"
+            rm -f "$target" 2>/dev/null
+            ((attempt++))
+            sleep 2
+        fi
+    done
+    
+    # Verify file exists and is not empty
+    if [ ! -f "$target" ] || [ ! -s "$target" ]; then
+        echo ""
+        echo "${R}═══════════════════════════════════════════════════════════════${D}"
+        echo "${R}  ERROR: Failed to download installer script!${D}"
+        echo "${R}═══════════════════════════════════════════════════════════════${D}"
+        echo ""
+        echo "${Y}Possible causes:${D}"
+        echo "  1. No internet connection"
+        echo "  2. GitHub is blocked or down"
+        echo "  3. DNS resolution failed"
+        echo ""
+        echo "${C}Try:${D}"
+        echo "  • Check internet: ${W}curl -I https://github.com${D}"
+        echo "  • Update Termux: ${W}pkg update && pkg upgrade${D}"
+        echo "  • Reinstall curl: ${W}pkg install curl${D}"
+        echo ""
+        exit 1
+    fi
+    
+    # Make executable and run
+    chmod +x "$target"
+    bash "$target"
 }
 
 # Main Menu
