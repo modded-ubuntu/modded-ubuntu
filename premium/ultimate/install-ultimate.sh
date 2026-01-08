@@ -143,6 +143,77 @@ validate_license() {
 # INCLUDE PRO+ FEATURES
 # ═══════════════════════════════════════════════════════════════════════════
 
+# Desktop choice variable (set by user during install)
+DESKTOP_CHOICE="xfce"  # Default
+
+# ═══════════════════════════════════════════════════════════════════════════
+# DESKTOP CHOICE MENU
+# ═══════════════════════════════════════════════════════════════════════════
+
+choose_desktop() {
+    echo ""
+    echo "${R}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${D}"
+    echo "${W} 🖥️  Choose Your Desktop Environment                        ${D}"
+    echo "${R}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${D}"
+    echo ""
+    echo "  ${G}[1]${D} XFCE ${W}(Recommended - Lightweight, Fast)${D}"
+    echo "      • RAM Usage: ~250MB idle"
+    echo "      • Best for: Gaming, General Use"
+    echo ""
+    echo "  ${C}[2]${D} GNOME ${W}(Modern, Stylish)${D}"
+    echo "      • RAM Usage: ~400MB idle (optimized)"
+    echo "      • Best for: Productivity, Premium Look"
+    echo ""
+    read -p "  Select [1/2] (default: 1): " choice
+    
+    case "$choice" in
+        2)
+            DESKTOP_CHOICE="gnome"
+            echo ""
+            success_msg "Selected: GNOME Desktop (Optimized)"
+            ;;
+        *)
+            DESKTOP_CHOICE="xfce"
+            echo ""
+            success_msg "Selected: XFCE Desktop (Lightweight)"
+            ;;
+    esac
+}
+
+install_gnome_desktop() {
+    echo ""
+    echo "${M}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${D}"
+    echo "${W} 🖥️  Installing GNOME Desktop (Optimized for Performance)     ${D}"
+    echo "${M}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${D}"
+    echo ""
+    
+    status_msg "Installing GNOME Core..."
+    apt-get install -y gnome-session gnome-shell gnome-terminal nautilus >> "$LOG_FILE" 2>&1 || true
+    success_msg "GNOME Core installed"
+    
+    status_msg "Installing GNOME Extensions..."
+    apt-get install -y gnome-shell-extensions gnome-tweaks >> "$LOG_FILE" 2>&1 || true
+    success_msg "GNOME Extensions installed"
+    
+    status_msg "Installing Nordic Theme & Papirus Icons..."
+    apt-get install -y papirus-icon-theme >> "$LOG_FILE" 2>&1 || true
+    # Nordic theme via git
+    mkdir -p ~/.themes
+    git clone https://github.com/EliverLara/Nordic.git ~/.themes/Nordic >> "$LOG_FILE" 2>&1 || true
+    success_msg "Theme installed"
+    
+    # Optimize GNOME for proot
+    status_msg "Optimizing GNOME for proot performance..."
+    mkdir -p ~/.config/dconf
+    
+    # Disable animations and effects
+    gsettings set org.gnome.desktop.interface enable-animations false 2>/dev/null || true
+    gsettings set org.gnome.desktop.interface gtk-theme 'Nordic' 2>/dev/null || true
+    gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark' 2>/dev/null || true
+    
+    success_msg "GNOME Desktop installed and optimized"
+    echo "${Y}  Note: Start GNOME with 'gnome-session' or via VNC${D}"
+}
 
 # ═══════════════════════════════════════════════════════════════════════════
 # TUI & LICENSE INPUT
@@ -214,9 +285,9 @@ GAMING_EOF
     chmod +x /etc/profile.d/acro-gaming.sh
     success_msg "Gaming GPU Profile installed"
     
-    # Gaming Emulators
+    # Gaming Emulators (PROOT COMPATIBLE)
     status_msg "Installing Gaming Emulators..."
-    apt-get install -y retroarch ppsspp dolphin-emu desmume mgba mupen64plus-qt snes9x-gtk fceux mednafen >> "$LOG_FILE" 2>&1 || true
+    apt-get install -y ppsspp visualboyadvance-m stella dosbox scummvm zsnes nestopia >> "$LOG_FILE" 2>&1 || true
     success_msg "Emulators installed"
     
     # Premium Themes
@@ -839,7 +910,19 @@ main() {
         
         # Proceed with installation
         validate_license "$LICENSE_KEY"
+        
+        # ULTIMATE EXCLUSIVE: Desktop Environment Choice
+        choose_desktop
+        
+        # Install base PRO+ features
         install_proplus_features
+        
+        # Install GNOME if selected
+        if [ "$DESKTOP_CHOICE" = "gnome" ]; then
+            install_gnome_desktop
+        fi
+        
+        # ULTIMATE exclusive features
         install_pentest_suite
         install_privacy_suite
         install_developer_pack

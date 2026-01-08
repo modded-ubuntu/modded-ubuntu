@@ -146,8 +146,9 @@ get_license_input() {
     local attempt=1
     
     while [ $attempt -le $max_attempts ]; do
-        # Only clear screen, don't redraw banner (already shown)
+        # Redraw banner after clear
         clear
+        banner
         
         echo "${Y}  ⭐️  Feature Activation${D}"
         echo "  This installer requires a valid PRO+ License Key."
@@ -354,17 +355,17 @@ install_emulators() {
     echo "${G}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${D}"
     echo ""
     
+    # PROOT-COMPATIBLE EMULATORS ONLY
+    # Removed: retroarch, dolphin-emu, pcsx2, mupen64plus (not available in proot)
     local emulators=(
-        "retroarch:RetroArch (Multi-system)"
         "ppsspp:PPSSPP (PSP Emulator)"
-        "dolphin-emu:Dolphin (GameCube/Wii)"
-        "desmume:DeSmuME (Nintendo DS)"
-        "mgba:mGBA (Game Boy Advance)"
-        "pcsx2:PCSX2 (PlayStation 2)"
-        "mupen64plus-qt:Mupen64Plus (Nintendo 64)"
-        "snes9x-gtk:Snes9x (Super Nintendo)"
-        "fceux:FCEux (NES/Famicom)"
-        "mednafen:Mednafen (Multi-system)"
+        "visualboyadvance-m:VBA-M (GBA/GB)"
+        "stella:Stella (Atari 2600)"
+        "hatari:Hatari (Atari ST)"
+        "dosbox:DOSBox (DOS Games)"
+        "scummvm:ScummVM (Classic Adventure)"
+        "zsnes:ZSNES (Super Nintendo)"
+        "nestopia:Nestopia (NES)"
     )
     
     for emu in "${emulators[@]}"; do
@@ -381,22 +382,20 @@ install_emulators() {
 #!/bin/bash
 echo ""
 echo "╔═══════════════════════════════════════════════════════════════╗"
-echo "║  🕹️  ACRO PRO+ Gaming Emulators                               ║"
+echo "║  🕹️  ACRO PRO+ Gaming Emulators (Proot Compatible)           ║"
 echo "╠═══════════════════════════════════════════════════════════════╣"
 echo "║                                                               ║"
-echo "║  retroarch       - Multi-system emulator                      ║"
-echo "║  ppsspp          - PSP Emulator                               ║"
-echo "║  dolphin-emu     - GameCube/Wii                               ║"
-echo "║  desmume         - Nintendo DS                                ║"
-echo "║  mgba            - Game Boy Advance                           ║"
-echo "║  pcsx2           - PlayStation 2                              ║"
-echo "║  mupen64plus     - Nintendo 64                                ║"
-echo "║  snes9x-gtk      - Super Nintendo                             ║"
-echo "║  fceux           - NES/Famicom                                ║"
+echo "║  ppsspp          - PSP Emulator (Best for mobile games)       ║"
+echo "║  visualboyadvance-m - GBA/GB Emulator                         ║"
+echo "║  stella          - Atari 2600                                 ║"
+echo "║  dosbox          - DOS Games (Classic PC)                     ║"
+echo "║  scummvm         - Classic Adventure Games                    ║"
+echo "║  zsnes           - Super Nintendo                             ║"
+echo "║  nestopia        - NES/Famicom                                ║"
 echo "║                                                               ║"
 echo "╚═══════════════════════════════════════════════════════════════╝"
 echo ""
-echo "Run emulator directly: e.g., 'retroarch' or 'ppsspp'"
+echo "Run emulator directly, e.g., 'ppsspp' or 'dosbox'"
 EMU_EOF
     chmod +x /usr/local/bin/acro-emulators
 }
@@ -629,47 +628,87 @@ OBS_EOF
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
-# STEAM FOR PROOT
+# BOX86/WINE GAMING (PROOT COMPATIBLE - REPLACES STEAM)
 # ═══════════════════════════════════════════════════════════════════════════
 
-install_steam_proot() {
+install_wine_gaming() {
     echo ""
     echo "${C}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${D}"
-    echo "${W} 🎮 Steam for proot                                       ${D}"
+    echo "${W} 🍷 Wine Gaming (x86 Games on ARM)                       ${D}"
     echo "${C}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${D}"
     echo ""
     
-    status_msg "Installing Steam dependencies..."
-    dpkg --add-architecture i386 >> "$LOG_FILE" 2>&1 || true
-    apt-get update >> "$LOG_FILE" 2>&1
-    apt-get install -y libc6:i386 libgl1:i386 libx11-6:i386 >> "$LOG_FILE" 2>&1 || true
+    # Install Wine and dependencies
+    status_msg "Installing Wine and dependencies..."
+    dpkg --add-architecture armhf >> "$LOG_FILE" 2>&1 || true
+    apt-get update >> "$LOG_FILE" 2>&1 || true
+    apt-get install -y \
+        wine \
+        wine32 \
+        winetricks \
+        cabextract \
+        zenity >> "$LOG_FILE" 2>&1 || warning_msg "Some Wine components unavailable"
     
-    status_msg "Installing Steam (patched for proot)..."
-    apt-get install -y steam-installer steam-devices >> "$LOG_FILE" 2>&1 || true
+    success_msg "Wine installed"
     
-    # Create Steam proot wrapper
-    cat > /usr/local/bin/steam-proot << 'STEAM_EOF'
+    # Create Wine gaming launcher
+    status_msg "Creating Wine gaming launcher..."
+    cat > /usr/local/bin/acro-wine-gaming << 'WINE_EOF'
 #!/bin/bash
-# Steam for proot - ACRO PRO+ Edition
-# Patched to work in proot environment
+# ACRO PRO+ Wine Gaming Launcher
+# Run Windows games/apps on Linux ARM
 
-export STEAM_RUNTIME=1
-export STEAM_RUNTIME_PREFER_HOST_LIBRARIES=0
-export PRESSURE_VESSEL_FILESYSTEMS_RO=
-export PROTON_USE_WINED3D=1
-export DXVK_ASYNC=1
+R=$'\033[1;31m'
+G=$'\033[1;32m'
+Y=$'\033[1;33m'
+C=$'\033[1;36m'
+W=$'\033[1;37m'
+D=$'\033[0m'
 
-# Disable sandboxing for proot
-export STEAM_ENABLE_SHADER_CACHE_MANAGEMENT=0
+echo ""
+echo "${C}╔═══════════════════════════════════════════════════════╗${D}"
+echo "${C}║${W}  🍷 ACRO PRO+ Wine Gaming                            ${C}║${D}"
+echo "${C}╚═══════════════════════════════════════════════════════╝${D}"
+echo ""
 
-# Run Steam with compatibility flags
-steam -no-browser -no-sandbox "$@"
-STEAM_EOF
-    chmod +x /usr/local/bin/steam-proot
-    success_msg "Steam for proot installed"
+case "$1" in
+    install)
+        echo "${Y}Installing game/app: $2${D}"
+        wine "$2"
+        ;;
+    run)
+        echo "${G}Running: $2${D}"
+        wine "$2"
+        ;;
+    tricks)
+        echo "${C}Opening Winetricks...${D}"
+        winetricks
+        ;;
+    config)
+        echo "${C}Opening Wine Configuration...${D}"
+        winecfg
+        ;;
+    *)
+        echo "Usage: acro-wine-gaming [command] [file]"
+        echo ""
+        echo "Commands:"
+        echo "  install <setup.exe>  - Install a Windows game/app"
+        echo "  run <game.exe>       - Run a Windows executable"
+        echo "  tricks               - Open Winetricks (install DLLs)"
+        echo "  config               - Open Wine configuration"
+        echo ""
+        echo "Example:"
+        echo "  acro-wine-gaming install ~/Downloads/game_setup.exe"
+        echo "  acro-wine-gaming run ~/.wine/drive_c/Games/game.exe"
+        ;;
+esac
+WINE_EOF
+    chmod +x /usr/local/bin/acro-wine-gaming
+    success_msg "Wine gaming launcher created"
     
     echo ""
-    echo "${Y}Note: Run 'steam-proot' to launch Steam in proot mode${D}"
+    echo "${G}✓ Wine Gaming Ready!${D}"
+    echo "${Y}  Run: acro-wine-gaming --help${D}"
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -845,7 +884,7 @@ main() {
         install_premium_themes
         install_performance_tools
         install_streaming_tools
-        install_steam_proot
+        install_wine_gaming
         install_extra_apps
         final_setup
         show_completion
