@@ -54,12 +54,12 @@ banner() {
     echo ""
     echo "${M}╔═══════════════════════════════════════════════════════════════════════╗${D}"
     echo "${M}║${D}                                                                         ${M}║${D}"
-    echo "${M}║${W}        █████╗  ██████╗██████╗  ██████╗     ██████╗ ██████╗  ██████╗     ${M}║${D}"
-    echo "${M}║${W}       ██╔══██╗██╔════╝██╔══██╗██╔═══██╗    ██╔══██╗██╔══██╗██╔═══██╗    ${M}║${D}"
-    echo "${M}║${C}       ███████║██║     ██████╔╝██║   ██║    ██████╔╝██████╔╝██║   ██║    ${M}║${D}"
-    echo "${M}║${C}       ██╔══██║██║     ██╔══██╗██║   ██║    ██╔═══╝ ██╔══██╗██║   ██║    ${M}║${D}"
-    echo "${M}║${M}       ██║  ██║╚██████╗██║  ██║╚██████╔╝    ██║     ██║  ██║╚██████╔╝    ${M}║${D}"
-    echo "${M}║${M}       ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝ ╚═════╝     ╚═╝     ╚═╝  ╚═╝ ╚═════╝+   ${M}║${D}"
+    echo "${M}║${W}      █████╗  ██████╗██████╗  ██████╗    ██████╗ ██████╗  ██████╗  ██╗   ${M}║${D}"
+    echo "${M}║${W}     ██╔══██╗██╔════╝██╔══██╗██╔═══██╗   ██╔══██╗██╔══██╗██╔═══██╗ ╚██╗  ${M}║${D}"
+    echo "${M}║${C}     ███████║██║     ██████╔╝██║   ██║   ██████╔╝██████╔╝██║   ██║  ██║  ${M}║${D}"
+    echo "${M}║${C}     ██╔══██║██║     ██╔══██╗██║   ██║   ██╔═══╝ ██╔══██╗██║   ██║  ██║  ${M}║${D}"
+    echo "${M}║${M}     ██║  ██║╚██████╗██║  ██║╚██████╔╝   ██║     ██║  ██║╚██████╔╝ ██╔╝  ${M}║${D}"
+    echo "${M}║${M}     ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝ ╚═════╝    ╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚═╝   ${M}║${D}"
     echo "${M}║${D}                                                                         ${M}║${D}"
     echo "${M}║${Y}                    ━━━ PRO+ EDITION INSTALLER ━━━                       ${M}║${D}"
     echo "${M}║${D}                                                                         ${M}║${D}"
@@ -146,8 +146,8 @@ get_license_input() {
     local attempt=1
     
     while [ $attempt -le $max_attempts ]; do
-        # Show Banner (re-draw)
-        banner
+        # Only clear screen, don't redraw banner (already shown)
+        clear
         
         echo "${Y}  ⭐️  Feature Activation${D}"
         echo "  This installer requires a valid PRO+ License Key."
@@ -788,7 +788,8 @@ main() {
         # Just launch the installer inside Ubuntu.
         # The TUI and Validation will happen THERE (where /etc is writable).
         
-        banner
+        # Don't show banner here - it will be shown inside Ubuntu
+        clear
         echo "${C}Initialize Installer...${D}"
         
         # Determine Ubuntu Root (Standard path for proot-distro)
