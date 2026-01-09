@@ -50,15 +50,18 @@ export function decryptLicenseData(encryptedData: string): LicenseData | null {
 
 /**
  * Validate ACRON count for tier
- * Pro+ = 1 ACRON (62,500 IDR)
- * Ultimate = 2 ACRON (125,000 IDR)
+ * Pro+ = 25 ACRON (75,000 IDR @ Rp 3,000/ACRON)
+ * Ultimate = 50 ACRON (150,000 IDR @ Rp 3,000/ACRON)
  */
 export function validateAcronForTier(acronCount: number, requestedTier: LicenseType): {
   valid: boolean;
   actualTier: LicenseType | null;
   message: string;
 } {
-  if (acronCount >= 2) {
+  const PROPLUS_REQUIRED = 25;
+  const ULTIMATE_REQUIRED = 50;
+  
+  if (acronCount >= ULTIMATE_REQUIRED) {
     return {
       valid: true,
       actualTier: requestedTier === 'ultimate' ? 'ultimate' : 'proplus',
@@ -66,12 +69,12 @@ export function validateAcronForTier(acronCount: number, requestedTier: LicenseT
         ? 'Payment valid for Ultimate Edition!'
         : 'Payment valid for Pro+ Edition!'
     };
-  } else if (acronCount === 1) {
+  } else if (acronCount >= PROPLUS_REQUIRED) {
     if (requestedTier === 'ultimate') {
       return {
         valid: false,
         actualTier: 'proplus',
-        message: 'Insufficient ACRON for Ultimate. You paid 1 ACRON which is valid for Pro+ only. Add 1 more ACRON for Ultimate or proceed with Pro+.'
+        message: `Insufficient ACRON for Ultimate. You paid ${acronCount} ACRON which is valid for Pro+ only. Add ${ULTIMATE_REQUIRED - acronCount} more ACRON for Ultimate or proceed with Pro+.`
       };
     }
     return {
@@ -84,7 +87,7 @@ export function validateAcronForTier(acronCount: number, requestedTier: LicenseT
   return {
     valid: false,
     actualTier: null,
-    message: 'No valid payment detected.'
+    message: `Insufficient ACRON. Minimum ${PROPLUS_REQUIRED} ACRON required for Pro+, ${ULTIMATE_REQUIRED} for Ultimate.`
   };
 }
 
