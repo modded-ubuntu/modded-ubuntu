@@ -114,7 +114,7 @@ banner() {
     ║                          |____|/                   \|____|               ║
     ║                                                                           ║
     ╠═══════════════════════════════════════════════════════════════════════════╣
-    ║            🎨 A C R O   G U I   I N S T A L L E R   v3.2.0 🎨            ║
+    ║            🎨 A C R O   G U I   I N S T A L L E R   v3.5.0 🎨            ║
     ╚═══════════════════════════════════════════════════════════════════════════╝
 EOF
     echo "${D}"
@@ -1098,7 +1098,7 @@ ${c2}  ███████║██║     ██████╔╝██║  
 ${c2}  ██╔══██║██║     ██╔══██╗██║   ██║
 ${c3}  ██║  ██║╚██████╗██║  ██║╚██████╔╝
 ${c3}  ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝ ╚═════╝ 
-${c4}     ━━━ PRO EDITION v3.2 ━━━
+${c4}     ━━━ PRO EDITION v3.5 ━━━
 ACRO_ASCII_EOF
     
     # Create custom neofetch config with ACRO branding
@@ -1202,7 +1202,7 @@ BLEACHBIT_EOF
     # Create hard reset script
     cat > /usr/local/bin/vncreset << 'VNCRESET_EOF'
 #!/bin/bash
-# ACRO PRO Edition v3.2.0 - Hard Reset Script
+# ACRO PRO Edition v3.5.0 - Hard Reset Script
 # Performs a complete session reset like restarting a computer
 
 R=$'\033[1;31m'
@@ -1674,8 +1674,8 @@ show_complete() {
     echo -e "  ${M}║${D}                                                                   ${M}║${D}"
     echo -e "  ${M}║${C}  PRO+ Edition (25 ACRON = Rp 75.000):${D}                            ${M}║${D}"
     echo -e "  ${M}║${W}    📦 500 Software Packages                                       ${M}║${D}"
-    echo -e "  ${M}║${W}    🎮 vGPU Gaming Optimization + Emulators                        ${M}║${D}"
-    echo -e "  ${M}║${W}    ⚡ Performance & RAM Tweaks                                    ${M}║${D}"
+    echo -e "  ${M}║${W}    🎮 vGPU Gaming Optimization + Wine                             ${M}║${D}"
+    echo -e "  ${M}║${W}    ⚡ Performance & RAM Tweaks + Dev Tools                        ${M}║${D}"
     echo -e "  ${M}║${D}                                                                   ${M}║${D}"
     echo -e "  ${M}║${R}  🏆 ULTIMATE Edition (50 ACRON = Rp 150.000):${D}                    ${M}║${D}"
     echo -e "  ${M}║${W}    📦 1000+ Software Packages (ALL)                               ${M}║${D}"

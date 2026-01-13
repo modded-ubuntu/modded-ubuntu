@@ -100,10 +100,6 @@ PROPLUS_PACKAGES=(
     xfce4-systemload-plugin xfce4-timer-plugin xfce4-verve-plugin
     xfce4-wavelan-plugin xfce4-weather-plugin
     
-    # Emulators (10)
-    dosbox scummvm stella mednafen fceux
-    visualboyadvance-m nestopia hatari ppsspp mgba
-    
     # Premium Themes (20)
     arc-theme numix-gtk-theme materia-gtk-theme
     papirus-icon-theme breeze-cursor-theme breeze-icon-theme
