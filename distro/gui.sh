@@ -1648,30 +1648,99 @@ show_complete() {
     echo -e "  ${GREEN_L}║${W}            🎉 INSTALLATION COMPLETED SUCCESSFULLY! 🎉            ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}╠═══════════════════════════════════════════════════════════════════╣${D}"
     echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}  ✓ 1000+ Software packages installed                             ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}  ✓ Premium dark theme configured                                 ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}  ✓ Audio system with microphone support                          ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${W}  ✓ 50 Essential Software Packages installed (FREE Tier)         ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${W}  ✓ XFCE Desktop (Basic) configured                              ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${W}  ✓ Audio system with PulseAudio ready                           ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}║${W}  ✓ VNC server ready                                              ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}  ✓ Neofetch and pavucontrol fixed                                ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}╠═══════════════════════════════════════════════════════════════════╣${D}"
     echo -e "  ${GREEN_L}║${CYAN_L}  HOW TO USE:${D}                                                      ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}║${W}  Type ${Y}vncstart${W} to start VNC server${D}                               ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}║${W}  Type ${Y}vncstop${W} to stop VNC server${D}                                 ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}  Type ${Y}mu-settings${W} to configure system${D}                            ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${W}  Type ${Y}sudo bash update.sh${W} to update packages${D}                     ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}║${CYAN_L}  Connect with VNC Viewer:${D}                                         ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}║${W}  Address: ${Y}localhost:1${D}                                                ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}  Set Picture Quality to ${Y}HIGH${D}                                        ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}╠═══════════════════════════════════════════════════════════════════╣${D}"
-    echo -e "  ${GREEN_L}║${PINK}  PRO Edition by ZetaGo-Aurum    ${Y}│${PURPLE}    ALEOCROPHIC Brand${D}           ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${GRAY}  Original: Mustakim Ahmed, Tahmid Rayat, 0xBaryonyx${D}              ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}╚═══════════════════════════════════════════════════════════════════╝${D}"
+    echo ""
+    
+    # Premium Promotion
+    echo ""
+    echo -e "  ${M}╔═══════════════════════════════════════════════════════════════════╗${D}"
+    echo -e "  ${M}║${Y}            ⭐ UPGRADE TO PREMIUM FOR MORE FEATURES! ⭐           ${M}║${D}"
+    echo -e "  ${M}╠═══════════════════════════════════════════════════════════════════╣${D}"
+    echo -e "  ${M}║${D}                                                                   ${M}║${D}"
+    echo -e "  ${M}║${C}  PRO+ Edition (25 ACRON = Rp 75.000):${D}                            ${M}║${D}"
+    echo -e "  ${M}║${W}    📦 500 Software Packages                                       ${M}║${D}"
+    echo -e "  ${M}║${W}    🎮 vGPU Gaming Optimization + Emulators                        ${M}║${D}"
+    echo -e "  ${M}║${W}    ⚡ Performance & RAM Tweaks                                    ${M}║${D}"
+    echo -e "  ${M}║${D}                                                                   ${M}║${D}"
+    echo -e "  ${M}║${R}  🏆 ULTIMATE Edition (50 ACRON = Rp 150.000):${D}                    ${M}║${D}"
+    echo -e "  ${M}║${W}    📦 1000+ Software Packages (ALL)                               ${M}║${D}"
+    echo -e "  ${M}║${W}    🚀 Super GPU Config + Super Performance                        ${M}║${D}"
+    echo -e "  ${M}║${W}    🔓 100+ Security/Hacking Tools                                 ${M}║${D}"
+    echo -e "  ${M}║${W}    🐛 All Bugs Fixed + Lifetime Updates                           ${M}║${D}"
+    echo -e "  ${M}║${D}                                                                   ${M}║${D}"
+    echo -e "  ${M}║${G}  🌐 BUY: https://aleocrophic-acron.vercel.app${D}                    ${M}║${D}"
+    echo -e "  ${M}║${D}                                                                   ${M}║${D}"
+    echo -e "  ${M}╠═══════════════════════════════════════════════════════════════════╣${D}"
+    echo -e "  ${M}║${PINK}  PRO Edition by ZetaGo-Aurum    ${Y}│${PURPLE}    ALEOCROPHIC Brand${D}           ${M}║${D}"
+    echo -e "  ${M}╚═══════════════════════════════════════════════════════════════════╝${D}"
     echo ""
     echo -e "  ${Y}📋 Installation log: ${W}$LOG_FILE${D}"
     echo ""
+    
+    # Ask about premium upgrade
+    echo ""
+    read -p "  Would you like to install a premium tier now? (y/n): " UPGRADE_CHOICE
+    if [[ "$UPGRADE_CHOICE" == "y" ]] || [[ "$UPGRADE_CHOICE" == "Y" ]]; then
+        show_premium_menu
+    fi
+}
+
+# Premium tier menu (integrated from premium-menu.sh)
+show_premium_menu() {
+    clear
+    echo ""
+    echo -e "  ${M}╔═══════════════════════════════════════════════════════════════════╗${D}"
+    echo -e "  ${M}║${Y}                 ACRO PREMIUM TIER SELECTION                      ${M}║${D}"
+    echo -e "  ${M}╠═══════════════════════════════════════════════════════════════════╣${D}"
+    echo -e "  ${M}║${D}                                                                   ${M}║${D}"
+    echo -e "  ${M}║${W}  [1] ⭐ PRO+ Edition     - 500 Packages + GPU + Performance      ${M}║${D}"
+    echo -e "  ${M}║${W}  [2] 🏆 ULTIMATE Edition - 1000+ Packages + EVERYTHING           ${M}║${D}"
+    echo -e "  ${M}║${W}  [3] ❌ Cancel                                                    ${M}║${D}"
+    echo -e "  ${M}║${D}                                                                   ${M}║${D}"
+    echo -e "  ${M}╚═══════════════════════════════════════════════════════════════════╝${D}"
+    echo ""
+    read -p "  Select tier [1-3]: " TIER_CHOICE
+    
+    case "$TIER_CHOICE" in
+        1)
+            echo ""
+            echo -e "  ${C}Installing PRO+ Edition...${D}"
+            if [ -f "/root/premium/pro-plus/install-proplus.sh" ]; then
+                bash /root/premium/pro-plus/install-proplus.sh
+            else
+                echo -e "  ${R}PRO+ installer not found. Please purchase from:${D}"
+                echo -e "  ${Y}https://aleocrophic-acron.vercel.app${D}"
+            fi
+            ;;
+        2)
+            echo ""
+            echo -e "  ${C}Installing ULTIMATE Edition...${D}"
+            if [ -f "/root/premium/ultimate/install-ultimate.sh" ]; then
+                bash /root/premium/ultimate/install-ultimate.sh
+            else
+                echo -e "  ${R}ULTIMATE installer not found. Please purchase from:${D}"
+                echo -e "  ${Y}https://aleocrophic-acron.vercel.app${D}"
+            fi
+            ;;
+        *)
+            echo -e "  ${G}Skipped premium installation.${D}"
+            ;;
+    esac
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
