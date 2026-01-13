@@ -597,6 +597,289 @@ LOCALE_PACKAGES=(
 )
 
 # ═══════════════════════════════════════════════════════════════════════════
+# FREE TIER - 50 ESSENTIAL PACKAGES ONLY (Fast Installation)
+# ═══════════════════════════════════════════════════════════════════════════
+
+FREE_TIER_PACKAGES=(
+    # Core System (10)
+    sudo curl wget nano vim git unzip tar htop
+    apt-utils ca-certificates
+    
+    # Desktop - Minimal XFCE (10)
+    xfce4 xfce4-terminal thunar xfce4-notifyd
+    xfce4-whiskermenu-plugin xfce4-power-manager
+    xfce4-taskmanager xfce4-screenshooter
+    ristretto tumbler
+    
+    # VNC (5)
+    tigervnc-standalone-server x11-utils xinit
+    xvfb dbus-x11
+    
+    # Basic Utils (10)
+    neofetch screen tmux tree ncdu
+    pulseaudio pavucontrol alsa-utils
+    at-spi2-core libcanberra-gtk3-module
+    
+    # Browser (2)
+    firefox
+    
+    # Fonts - English only (8)
+    fonts-dejavu fonts-liberation fonts-noto
+    fonts-noto-color-emoji fonts-roboto
+    fonts-firacode fontconfig fonts-ubuntu
+    
+    # Locale - English only (5)
+    locales language-pack-en language-pack-gnome-en
+)
+
+# Global tier variable
+SELECTED_TIER="free"
+
+# ═══════════════════════════════════════════════════════════════════════════
+# TIER SELECTION MENU
+# ═══════════════════════════════════════════════════════════════════════════
+
+show_tier_selection() {
+    banner
+    echo ""
+    echo -e "  ${M}╔═══════════════════════════════════════════════════════════════════╗${D}"
+    echo -e "  ${M}║${Y}               🏆 SELECT YOUR ACRO EDITION 🏆                     ${M}║${D}"
+    echo -e "  ${M}╠═══════════════════════════════════════════════════════════════════╣${D}"
+    echo -e "  ${M}║${D}                                                                   ${M}║${D}"
+    echo -e "  ${M}║${W}  [1] 🆓 FREE Edition (Basic)${D}                                     ${M}║${D}"
+    echo -e "  ${M}║${GRAY}      • 50 Essential Packages only${D}                               ${M}║${D}"
+    echo -e "  ${M}║${GRAY}      • Basic XFCE Desktop${D}                                       ${M}║${D}"
+    echo -e "  ${M}║${GRAY}      • English Only, Fast Install (~15 min)${D}                     ${M}║${D}"
+    echo -e "  ${M}║${GRAY}      • No vGPU, No Performance Tweaks${D}                           ${M}║${D}"
+    echo -e "  ${M}║${D}                                                                   ${M}║${D}"
+    echo -e "  ${M}║${C}  [2] ⭐ PRO+ Edition (25 ACRON = Rp 75.000)${D}                       ${M}║${D}"
+    echo -e "  ${M}║${W}      • 500 Software Packages${D}                                     ${M}║${D}"
+    echo -e "  ${M}║${W}      • vGPU Gaming + Wine/Box86 (Windows Apps!)${D}                  ${M}║${D}"
+    echo -e "  ${M}║${W}      • Performance Tweaks + 15 Premium Themes${D}                    ${M}║${D}"
+    echo -e "  ${M}║${W}      • OBS Streaming + Dev Tools${D}                                 ${M}║${D}"
+    echo -e "  ${M}║${D}                                                                   ${M}║${D}"
+    echo -e "  ${M}║${R}  [3] 🏆 ULTIMATE Edition (50 ACRON = Rp 150.000)${D}                  ${M}║${D}"
+    echo -e "  ${M}║${W}      • 1000+ Software Packages (ALL)${D}                             ${M}║${D}"
+    echo -e "  ${M}║${W}      • Super GPU + Super Performance${D}                             ${M}║${D}"
+    echo -e "  ${M}║${W}      • 100+ Security/Hacking Tools${D}                               ${M}║${D}"
+    echo -e "  ${M}║${W}      • Privacy Suite + Full Dev Pack${D}                             ${M}║${D}"
+    echo -e "  ${M}║${D}                                                                   ${M}║${D}"
+    echo -e "  ${M}╠═══════════════════════════════════════════════════════════════════╣${D}"
+    echo -e "  ${M}║${G}  💳 Purchase: https://aleocrophic-acron.vercel.app${D}                ${M}║${D}"
+    echo -e "  ${M}╚═══════════════════════════════════════════════════════════════════╝${D}"
+    echo ""
+    read -p "  Select edition [1-3]: " TIER_CHOICE
+    
+    case "$TIER_CHOICE" in
+        2)
+            SELECTED_TIER="proplus"
+            # Check for license
+            if [ -f "$HOME/.acro-license" ]; then
+                LICENSE_KEY=$(cat "$HOME/.acro-license" 2>/dev/null | head -1)
+                if [[ "$LICENSE_KEY" == ACRO-PP-* ]] || [[ "$LICENSE_KEY" == ACRO-ULT-* ]]; then
+                    echo -e "  ${G}✓ Valid PRO+ license detected!${D}"
+                    return 0
+                fi
+            fi
+            echo ""
+            echo -e "  ${Y}PRO+ requires a license key.${D}"
+            read -p "  Enter license key (or press Enter to go FREE): " INPUT_KEY
+            if [[ "$INPUT_KEY" == ACRO-PP-* ]]; then
+                echo "$INPUT_KEY" > "$HOME/.acro-license"
+                echo -e "  ${G}✓ License saved!${D}"
+            else
+                echo -e "  ${Y}Invalid key. Installing FREE edition instead.${D}"
+                SELECTED_TIER="free"
+            fi
+            ;;
+        3)
+            SELECTED_TIER="ultimate"
+            # Check for license
+            if [ -f "$HOME/.acro-license" ]; then
+                LICENSE_KEY=$(cat "$HOME/.acro-license" 2>/dev/null | head -1)
+                if [[ "$LICENSE_KEY" == ACRO-ULT-* ]]; then
+                    echo -e "  ${G}✓ Valid ULTIMATE license detected!${D}"
+                    return 0
+                fi
+            fi
+            echo ""
+            echo -e "  ${Y}ULTIMATE requires a license key.${D}"
+            read -p "  Enter license key (or press Enter to go FREE): " INPUT_KEY
+            if [[ "$INPUT_KEY" == ACRO-ULT-* ]]; then
+                echo "$INPUT_KEY" > "$HOME/.acro-license"
+                echo -e "  ${G}✓ License saved!${D}"
+            else
+                echo -e "  ${Y}Invalid key. Installing FREE edition instead.${D}"
+                SELECTED_TIER="free"
+            fi
+            ;;
+        *)
+            SELECTED_TIER="free"
+            echo -e "  ${C}Installing FREE Edition (50 packages, fast)...${D}"
+            ;;
+    esac
+    
+    sleep 1
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# WINE/BOX86/BOX64 CONFIGURATION (Mobox-style for proot)
+# Works for PRO+ and ULTIMATE tiers
+# ═══════════════════════════════════════════════════════════════════════════
+
+configure_wine_box86() {
+    section_header "🍷 WINE/BOX86 CONFIGURATION (Mobox-style)"
+    
+    # Box86/Box64 for ARM devices to run x86/x64 Windows apps
+    info_msg "Setting up Box86/Box64 for Windows compatibility..."
+    
+    # Add Box86/Box64 repository
+    if [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "armv7l" ]]; then
+        # Add i386 architecture for Wine
+        dpkg --add-architecture armhf >> "$LOG_FILE" 2>&1 || true
+        
+        # Install Box86 dependencies
+        apt-get install -y libc6:armhf libstdc++6:armhf >> "$LOG_FILE" 2>&1 || true
+        
+        # Try to install box86 from repository
+        apt-get install -y box86 >> "$LOG_FILE" 2>&1 || {
+            # Manual install from GitHub
+            info_msg "Installing Box86 from GitHub..."
+            wget -q https://ryanfortner.github.io/box86-debs/box86.list -O /etc/apt/sources.list.d/box86.list 2>/dev/null || true
+            wget -qO- https://ryanfortner.github.io/box86-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box86-debs-archive-keyring.gpg 2>/dev/null || true
+            apt-get update >> "$LOG_FILE" 2>&1 || true
+            apt-get install -y box86-android >> "$LOG_FILE" 2>&1 || apt-get install -y box86 >> "$LOG_FILE" 2>&1 || true
+        }
+        
+        # Try to install box64
+        apt-get install -y box64 >> "$LOG_FILE" 2>&1 || {
+            info_msg "Installing Box64 from GitHub..."
+            wget -q https://ryanfortner.github.io/box64-debs/box64.list -O /etc/apt/sources.list.d/box64.list 2>/dev/null || true
+            wget -qO- https://ryanfortner.github.io/box64-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg 2>/dev/null || true
+            apt-get update >> "$LOG_FILE" 2>&1 || true
+            apt-get install -y box64-android >> "$LOG_FILE" 2>&1 || apt-get install -y box64 >> "$LOG_FILE" 2>&1 || true
+        }
+    fi
+    
+    # Install Wine
+    info_msg "Installing Wine..."
+    apt-get install -y wine wine64 wine32 winetricks >> "$LOG_FILE" 2>&1 || {
+        # Fallback Wine installation
+        add-apt-repository -y ppa:ubuntu-wine/ppa >> "$LOG_FILE" 2>&1 || true
+        apt-get update >> "$LOG_FILE" 2>&1 || true
+        apt-get install -y wine >> "$LOG_FILE" 2>&1 || true
+    }
+    
+    # Install PlayOnLinux as alternative
+    info_msg "Installing PlayOnLinux..."
+    apt-get install -y playonlinux >> "$LOG_FILE" 2>&1 || true
+    
+    # Configure Wine environment for proot
+    mkdir -p /etc/profile.d
+    cat > /etc/profile.d/wine-proot.sh << 'WINE_ENV'
+#!/bin/bash
+# Wine/Box86 environment for proot (Mobox-style)
+export WINEDLLOVERRIDES="mscoree,mshtml="
+export WINEARCH=win32
+export WINEPREFIX="$HOME/.wine32"
+export BOX86_LOG=0
+export BOX86_NOBANNER=1
+export BOX64_LOG=0
+export BOX64_NOBANNER=1
+
+# Wine display fix for VNC
+export DISPLAY=:1
+
+# Performance optimizations
+export WINEDEBUG=-all
+export MESA_GL_VERSION_OVERRIDE=4.5
+export MESA_GLSL_VERSION_OVERRIDE=450
+WINE_ENV
+    chmod +x /etc/profile.d/wine-proot.sh
+    
+    # Create Wine launcher script
+    cat > /usr/local/bin/acro-wine << 'WINELAUNCHER'
+#!/bin/bash
+# ACRO Wine Launcher - Run Windows apps in proot
+# Based on Mobox configuration
+
+R=$'\033[1;31m'
+G=$'\033[1;32m'
+Y=$'\033[1;33m'
+C=$'\033[1;36m'
+D=$'\033[0m'
+
+export WINEDLLOVERRIDES="mscoree,mshtml="
+export WINEARCH=win32
+export WINEPREFIX="$HOME/.wine32"
+export BOX86_LOG=0
+export BOX86_NOBANNER=1
+export DISPLAY=:1
+export WINEDEBUG=-all
+
+echo ""
+echo "${C}╔═══════════════════════════════════════════════════════════╗${D}"
+echo "${C}║${Y}         🍷 ACRO WINE LAUNCHER (Mobox-style)             ${C}║${D}"
+echo "${C}╚═══════════════════════════════════════════════════════════╝${D}"
+echo ""
+
+if [ -z "$1" ]; then
+    echo "${Y}Usage:${D}"
+    echo "  ${G}acro-wine setup${D}      - Initialize Wine prefix"
+    echo "  ${G}acro-wine winetricks${D} - Run Winetricks"
+    echo "  ${G}acro-wine winecfg${D}    - Configure Wine"
+    echo "  ${G}acro-wine file.exe${D}   - Run Windows executable"
+    echo "  ${G}acro-wine explorer${D}   - Open Wine Explorer"
+    echo ""
+    exit 0
+fi
+
+case "$1" in
+    setup)
+        echo "${Y}Initializing Wine prefix...${D}"
+        wineboot --init
+        echo "${G}✓ Wine prefix created at $WINEPREFIX${D}"
+        ;;
+    winetricks)
+        shift
+        winetricks "$@"
+        ;;
+    winecfg)
+        winecfg
+        ;;
+    explorer)
+        wine explorer
+        ;;
+    *)
+        if [ -f "$1" ]; then
+            echo "${Y}Running: $1${D}"
+            wine "$1"
+        else
+            wine "$@"
+        fi
+        ;;
+esac
+WINELAUNCHER
+    chmod +x /usr/local/bin/acro-wine
+    
+    # Create desktop entry
+    cat > /usr/share/applications/acro-wine.desktop << 'WINEDESKTOP'
+[Desktop Entry]
+Name=ACRO Wine
+Comment=Run Windows applications (Mobox-style)
+Exec=/usr/local/bin/acro-wine explorer
+Icon=wine
+Terminal=false
+Type=Application
+Categories=System;Emulator;
+Keywords=wine;windows;exe;box86;
+WINEDESKTOP
+
+    success_msg "Wine/Box86 configured (Mobox-style)"
+    echo "${G}✓ Run Windows apps with: acro-wine file.exe${D}"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
 # INSTALLATION FUNCTIONS
 # ═══════════════════════════════════════════════════════════════════════════
 
@@ -1747,119 +2030,195 @@ show_premium_menu() {
 # MAIN EXECUTION
 # ═══════════════════════════════════════════════════════════════════════════
 
+install_free_tier() {
+    # Fast installation for FREE tier - 50 packages, English only
+    section_header "🆓 FREE TIER - FAST INSTALLATION"
+    
+    TOTAL_PACKAGES=${#FREE_TIER_PACKAGES[@]}
+    CURRENT_PACKAGE=0
+    
+    echo ""
+    echo -e "  ${G}Installing ${TOTAL_PACKAGES} essential packages...${D}"
+    echo -e "  ${GRAY}English only, Basic XFCE, ~15 minutes${D}"
+    echo ""
+    
+    for pkg in "${FREE_TIER_PACKAGES[@]}"; do
+        install_pkg "$pkg"
+    done
+    
+    echo ""
+    success_msg "FREE tier packages installed"
+}
+
 main() {
     # Initialize log
-    echo "=== Modded Ubuntu PRO v${VERSION} Installation Log ===" > "$LOG_FILE"
+    echo "=== ACRO v${VERSION} Installation Log ===" > "$LOG_FILE"
     echo "Started: $(date)" >> "$LOG_FILE"
     echo "Architecture: $ARCH" >> "$LOG_FILE"
     echo "User: $USERNAME" >> "$LOG_FILE"
     echo "" >> "$LOG_FILE"
     
-    # Calculate total packages (base + browsers, IDEs, themes = +10)
-    TOTAL_PACKAGES=$((
-        ${#BASE_PACKAGES[@]} +
-        ${#XFCE_PACKAGES[@]} +
-        ${#VNC_PACKAGES[@]} +
-        ${#FONT_PACKAGES[@]} +
-        ${#THEME_PACKAGES[@]} +
-        ${#DEV_PACKAGES[@]} +
-        ${#DATABASE_PACKAGES[@]} +
-        ${#GPU_PACKAGES[@]} +
-        ${#SOFTWARE_PACKAGES[@]} +
-        ${#OFFICE_PACKAGES[@]} +
-        ${#GRAPHICS_PACKAGES[@]} +
-        ${#AUDIO_PACKAGES[@]} +
-        ${#VIDEO_PACKAGES[@]} +
-        ${#UTILITY_PACKAGES[@]} +
-        ${#NETWORK_PACKAGES[@]} +
-        ${#SECURITY_PACKAGES[@]} +
-        ${#VIRTUALIZATION_PACKAGES[@]} +
-        ${#LOCALE_PACKAGES[@]} +
-        10
-    ))
+    # Check root first
+    check_root
     
-    # Add 64-bit packages if applicable
-    if [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "x86_64" ]]; then
-        TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#VIDEO_EDITING_64[@]}))
-    fi
+    # Show tier selection at the beginning
+    show_tier_selection
+    
+    echo "Selected Tier: $SELECTED_TIER" >> "$LOG_FILE"
     
     banner
     
-    echo -e "  ${Y}╔═══════════════════════════════════════════════════════════════════╗${D}"
-    echo -e "  ${Y}║${W}            🚀 AUTOMATIC INSTALLATION STARTING 🚀                ${Y}║${D}"
-    echo -e "  ${Y}╠═══════════════════════════════════════════════════════════════════╣${D}"
-    echo -e "  ${Y}║${D}                                                                   ${Y}║${D}"
-    echo -e "  ${Y}║${W}  This will install 1000+ software packages including:            ${Y}║${D}"
-    echo -e "  ${Y}║${D}                                                                   ${Y}║${D}"
-    echo -e "  ${Y}║${CYAN_L}  • VSCode, Sublime, LibreOffice, GIMP, Inkscape, Krita          ${Y}║${D}"
-    echo -e "  ${Y}║${CYAN_L}  • Audacity, VLC, Firefox, Chromium, FileZilla                 ${Y}║${D}"
-    echo -e "  ${Y}║${CYAN_L}  • Git, Node.js, Python, Ruby, Go, Rust, PHP, Java             ${Y}║${D}"
-    echo -e "  ${Y}║${CYAN_L}  • Blender, Kdenlive, OBS Studio, DaVinci (64-bit)             ${Y}║${D}"
-    echo -e "  ${Y}║${CYAN_L}  • 100+ fonts for all languages including Indonesian           ${Y}║${D}"
-    echo -e "  ${Y}║${D}                                                                   ${Y}║${D}"
-    echo -e "  ${Y}║${GREEN_L}  Estimated time: 60-120 minutes                                ${Y}║${D}"
-    echo -e "  ${Y}║${ORANGE}  Storage required: ~15-20 GB                                   ${Y}║${D}"
-    echo -e "  ${Y}║${D}                                                                   ${Y}║${D}"
-    echo -e "  ${Y}╚═══════════════════════════════════════════════════════════════════╝${D}"
-    echo ""
-    
-    sleep 3
-    
-    # Check root
-    check_root
-    
-    # Fix package manager
-    fix_dpkg
-    
-    # Install all package categories
-    install_category "BASE SYSTEM" "${BASE_PACKAGES[@]}"
-    install_category "XFCE DESKTOP" "${XFCE_PACKAGES[@]}"
-    install_category "VNC SERVER" "${VNC_PACKAGES[@]}"
-    install_category "FONTS (All Languages)" "${FONT_PACKAGES[@]}"
-    install_category "THEMES & APPEARANCE" "${THEME_PACKAGES[@]}"
-    install_category "DEVELOPMENT TOOLS" "${DEV_PACKAGES[@]}"
-    install_category "DATABASES" "${DATABASE_PACKAGES[@]}"
-    install_category "GPU & 3D GRAPHICS" "${GPU_PACKAGES[@]}"
-    install_category "SOFTWARE CENTER" "${SOFTWARE_PACKAGES[@]}"
-    install_category "OFFICE SUITE" "${OFFICE_PACKAGES[@]}"
-    install_category "GRAPHICS & DESIGN" "${GRAPHICS_PACKAGES[@]}"
-    install_category "AUDIO PRODUCTION" "${AUDIO_PACKAGES[@]}"
-    install_category "VIDEO & MEDIA" "${VIDEO_PACKAGES[@]}"
-    install_category "SYSTEM UTILITIES" "${UTILITY_PACKAGES[@]}"
-    install_category "NETWORK TOOLS" "${NETWORK_PACKAGES[@]}"
-    install_category "SECURITY TOOLS" "${SECURITY_PACKAGES[@]}"
-    install_category "VIRTUALIZATION" "${VIRTUALIZATION_PACKAGES[@]}"
-    install_category "LOCALES (All Languages)" "${LOCALE_PACKAGES[@]}"
-    
-    # 64-bit only packages
-    if [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "x86_64" ]]; then
-        install_category "VIDEO EDITING (64-bit)" "${VIDEO_EDITING_64[@]}"
+    if [[ "$SELECTED_TIER" == "free" ]]; then
+        # ═══════════════════════════════════════════════════════════════
+        # FREE TIER - 50 PACKAGES, FAST, ENGLISH ONLY
+        # ═══════════════════════════════════════════════════════════════
+        
+        echo -e "  ${C}╔═══════════════════════════════════════════════════════════════════╗${D}"
+        echo -e "  ${C}║${W}            🆓 FREE EDITION - FAST INSTALLATION 🆓                ${C}║${D}"
+        echo -e "  ${C}╠═══════════════════════════════════════════════════════════════════╣${D}"
+        echo -e "  ${C}║${D}                                                                   ${C}║${D}"
+        echo -e "  ${C}║${W}  Installing 50 essential packages only:                          ${C}║${D}"
+        echo -e "  ${C}║${GRAY}  • Basic XFCE Desktop                                           ${C}║${D}"
+        echo -e "  ${C}║${GRAY}  • VNC Server + PulseAudio                                      ${C}║${D}"
+        echo -e "  ${C}║${GRAY}  • Firefox Browser                                              ${C}║${D}"
+        echo -e "  ${C}║${GRAY}  • English fonts only                                           ${C}║${D}"
+        echo -e "  ${C}║${D}                                                                   ${C}║${D}"
+        echo -e "  ${C}║${GREEN_L}  Estimated time: ~15 minutes                                    ${C}║${D}"
+        echo -e "  ${C}║${D}                                                                   ${C}║${D}"
+        echo -e "  ${C}╚═══════════════════════════════════════════════════════════════════╝${D}"
+        echo ""
+        
+        sleep 2
+        
+        # Fix package manager
+        fix_dpkg
+        
+        # Install FREE tier packages only
+        install_free_tier
+        
+        # Basic configurations
+        configure_audio
+        fix_neofetch
+        fix_apps
+        configure_storage_sharing
+        final_cleanup
+        
+    else
+        # ═══════════════════════════════════════════════════════════════
+        # PREMIUM TIER - FULL INSTALLATION (PRO+ or ULTIMATE)
+        # ═══════════════════════════════════════════════════════════════
+        
+        # Calculate total packages
+        TOTAL_PACKAGES=$((
+            ${#BASE_PACKAGES[@]} +
+            ${#XFCE_PACKAGES[@]} +
+            ${#VNC_PACKAGES[@]} +
+            ${#FONT_PACKAGES[@]} +
+            ${#THEME_PACKAGES[@]} +
+            ${#DEV_PACKAGES[@]} +
+            ${#DATABASE_PACKAGES[@]} +
+            ${#GPU_PACKAGES[@]} +
+            ${#SOFTWARE_PACKAGES[@]} +
+            ${#OFFICE_PACKAGES[@]} +
+            ${#GRAPHICS_PACKAGES[@]} +
+            ${#AUDIO_PACKAGES[@]} +
+            ${#VIDEO_PACKAGES[@]} +
+            ${#UTILITY_PACKAGES[@]} +
+            ${#NETWORK_PACKAGES[@]} +
+            ${#SECURITY_PACKAGES[@]} +
+            ${#VIRTUALIZATION_PACKAGES[@]} +
+            ${#LOCALE_PACKAGES[@]} +
+            10
+        ))
+        
+        if [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "x86_64" ]]; then
+            TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#VIDEO_EDITING_64[@]}))
+        fi
+        
+        local tier_name="PRO+"
+        local tier_color="${M}"
+        if [[ "$SELECTED_TIER" == "ultimate" ]]; then
+            tier_name="ULTIMATE"
+            tier_color="${R}"
+        fi
+        
+        echo -e "  ${tier_color}╔═══════════════════════════════════════════════════════════════════╗${D}"
+        echo -e "  ${tier_color}║${W}           🏆 ${tier_name} EDITION - FULL INSTALLATION 🏆              ${tier_color}║${D}"
+        echo -e "  ${tier_color}╠═══════════════════════════════════════════════════════════════════╣${D}"
+        echo -e "  ${tier_color}║${D}                                                                   ${tier_color}║${D}"
+        echo -e "  ${tier_color}║${W}  Installing 1000+ software packages including:                    ${tier_color}║${D}"
+        echo -e "  ${tier_color}║${CYAN_L}  • VSCode, LibreOffice, GIMP, Inkscape, Krita                   ${tier_color}║${D}"
+        echo -e "  ${tier_color}║${CYAN_L}  • Wine/Box86 for Windows apps (Mobox-style)                    ${tier_color}║${D}"
+        echo -e "  ${tier_color}║${CYAN_L}  • vGPU Optimization + Performance Tweaks                       ${tier_color}║${D}"
+        echo -e "  ${tier_color}║${CYAN_L}  • 100+ fonts for all languages                                 ${tier_color}║${D}"
+        echo -e "  ${tier_color}║${D}                                                                   ${tier_color}║${D}"
+        echo -e "  ${tier_color}║${GREEN_L}  Estimated time: 60-120 minutes                                 ${tier_color}║${D}"
+        echo -e "  ${tier_color}║${ORANGE}  Storage required: ~15-20 GB                                    ${tier_color}║${D}"
+        echo -e "  ${tier_color}║${D}                                                                   ${tier_color}║${D}"
+        echo -e "  ${tier_color}╚═══════════════════════════════════════════════════════════════════╝${D}"
+        echo ""
+        
+        sleep 3
+        
+        # Fix package manager
+        fix_dpkg
+        
+        # Install all package categories
+        install_category "BASE SYSTEM" "${BASE_PACKAGES[@]}"
+        install_category "XFCE DESKTOP" "${XFCE_PACKAGES[@]}"
+        install_category "VNC SERVER" "${VNC_PACKAGES[@]}"
+        install_category "FONTS (All Languages)" "${FONT_PACKAGES[@]}"
+        install_category "THEMES & APPEARANCE" "${THEME_PACKAGES[@]}"
+        install_category "DEVELOPMENT TOOLS" "${DEV_PACKAGES[@]}"
+        install_category "DATABASES" "${DATABASE_PACKAGES[@]}"
+        install_category "GPU & 3D GRAPHICS" "${GPU_PACKAGES[@]}"
+        install_category "SOFTWARE CENTER" "${SOFTWARE_PACKAGES[@]}"
+        install_category "OFFICE SUITE" "${OFFICE_PACKAGES[@]}"
+        install_category "GRAPHICS & DESIGN" "${GRAPHICS_PACKAGES[@]}"
+        install_category "AUDIO PRODUCTION" "${AUDIO_PACKAGES[@]}"
+        install_category "VIDEO & MEDIA" "${VIDEO_PACKAGES[@]}"
+        install_category "SYSTEM UTILITIES" "${UTILITY_PACKAGES[@]}"
+        install_category "NETWORK TOOLS" "${NETWORK_PACKAGES[@]}"
+        install_category "SECURITY TOOLS" "${SECURITY_PACKAGES[@]}"
+        install_category "VIRTUALIZATION" "${VIRTUALIZATION_PACKAGES[@]}"
+        install_category "LOCALES (All Languages)" "${LOCALE_PACKAGES[@]}"
+        
+        # 64-bit only packages
+        if [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "x86_64" ]]; then
+            install_category "VIDEO EDITING (64-bit)" "${VIDEO_EDITING_64[@]}"
+        fi
+        
+        # Special installations
+        install_firefox
+        install_chromium
+        install_vscode
+        install_sublime
+        install_nodejs
+        
+        # Configure system
+        configure_audio
+        configure_gpu
+        configure_flatpak
+        install_themes
+        fix_neofetch
+        fix_apps
+        fix_window_glitches
+        configure_language
+        configure_storage_sharing
+        
+        # Wine/Box86 for premium tiers
+        configure_wine_box86
+        
+        final_cleanup
     fi
-    
-    # Special installations
-    install_firefox
-    install_chromium
-    install_vscode
-    install_sublime
-    install_nodejs
-    
-    # Configure system
-    configure_audio
-    configure_gpu
-    configure_flatpak
-    install_themes
-    fix_neofetch
-    fix_apps
-    fix_window_glitches
-    configure_language
-    configure_storage_sharing
-    final_cleanup
     
     # Show completion
     show_complete
     
+    echo "Tier: $SELECTED_TIER" >> "$LOG_FILE"
     echo "Completed: $(date)" >> "$LOG_FILE"
 }
 
 # Run main
 main
+
