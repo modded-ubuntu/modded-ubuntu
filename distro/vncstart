@@ -1,2 +1,89 @@
 #!/usr/bin/env bash
-dbus-launch vncserver -geometry 1440x720 -depth 24 -zliblevel 0 -name modded-ubuntu -xstartup /usr/bin/xfce4-session
+##############################################################################
+#   ACRO PRO Edition v3.2.1 - VNC START                                      #
+#   By: ZetaGo-Aurum | Brand: ALEOCROPHIC                                    #
+##############################################################################
+
+# Colors
+GREEN=$'\033[38;5;120m'
+CYAN=$'\033[38;5;81m'
+YELLOW=$'\033[38;5;220m'
+PURPLE=$'\033[38;5;141m'
+GRAY=$'\033[38;5;245m'
+WHITE=$'\033[1;37m'
+D=$'\033[0m'
+
+# Configuration file
+VNC_CONFIG="$HOME/.vnc/config"
+
+# Default settings
+DEFAULT_RESOLUTION="1920x1080"
+DEFAULT_DEPTH="24"
+DEFAULT_ZLEVEL="5"
+
+# Read settings from config or use defaults
+if [[ -f "$VNC_CONFIG" ]]; then
+    RESOLUTION=$(grep "geometry=" "$VNC_CONFIG" | cut -d= -f2 || echo "$DEFAULT_RESOLUTION")
+    DEPTH=$(grep "depth=" "$VNC_CONFIG" | cut -d= -f2 || echo "$DEFAULT_DEPTH")
+    [[ -z "$RESOLUTION" ]] && RESOLUTION="$DEFAULT_RESOLUTION"
+    [[ -z "$DEPTH" ]] && DEPTH="$DEFAULT_DEPTH"
+else
+    RESOLUTION="$DEFAULT_RESOLUTION"
+    DEPTH="$DEFAULT_DEPTH"
+fi
+
+ZLEVEL="$DEFAULT_ZLEVEL"
+
+# Get current username
+USERNAME=$(whoami)
+
+echo ""
+echo "${CYAN}  ┌───────────────────────────────────────────────────────┐${D}"
+echo "${CYAN}  │${WHITE}   🚀 ACRO PRO VNC Server v3.2.1${CYAN}                       │${D}"
+echo "${CYAN}  └───────────────────────────────────────────────────────┘${D}"
+echo ""
+
+# Kill any existing sessions
+echo "  ${CYAN}▸${D} Stopping existing VNC sessions..."
+vncserver -kill :* 2>/dev/null
+
+# Clean up old lock files
+rm -rf /tmp/.X*-lock 2>/dev/null
+rm -rf /tmp/.X11-unix/X* 2>/dev/null
+rm -rf "/home/${USERNAME}/.vnc/"*.pid 2>/dev/null
+rm -rf "/root/.vnc/"*.pid 2>/dev/null
+
+echo "  ${GREEN}✓${WHITE} Cleanup complete${D}"
+echo ""
+
+# Set environment (NO audio init here - prevents sink spam)
+export DISPLAY=":1"
+export PULSE_SERVER="tcp:127.0.0.1:4713"
+
+# Start VNC with settings
+echo "  ${CYAN}▸${D} Starting VNC server..."
+dbus-launch vncserver \
+    -geometry "$RESOLUTION" \
+    -depth "$DEPTH" \
+    -zliblevel "$ZLEVEL" \
+    -name "acro-pro" \
+    -xstartup /usr/bin/xfce4-session \
+    -localhost no \
+    -SecurityTypes VncAuth 2>/dev/null
+
+echo ""
+echo "  ${GREEN}✓${WHITE} VNC Server started on display :1${D}"
+echo ""
+echo "${GREEN}  ┌───────────────────────────────────────────────────────┐${D}"
+echo "${GREEN}  │${WHITE}  📺 Connection Info${GREEN}                                   │${D}"
+echo "${GREEN}  ├───────────────────────────────────────────────────────┤${D}"
+echo "${GREEN}  │${D}                                                       ${GREEN}│${D}"
+echo "${GREEN}  │${WHITE}  Address:    ${YELLOW}localhost:1${D}                            ${GREEN}│${D}"
+echo "${GREEN}  │${WHITE}  Resolution: ${CYAN}${RESOLUTION}${D}                           ${GREEN}│${D}"
+echo "${GREEN}  │${WHITE}  Depth:      ${CYAN}${DEPTH}-bit${D}                                  ${GREEN}│${D}"
+echo "${GREEN}  │${D}                                                       ${GREEN}│${D}"
+echo "${GREEN}  │${GRAY}  Tip: Set VNC Viewer Picture Quality to HIGH${D}        ${GREEN}│${D}"
+echo "${GREEN}  │${GRAY}  Tip: Use 'acro-settings' to change resolution${D}      ${GREEN}│${D}"
+echo "${GREEN}  │${D}                                                       ${GREEN}│${D}"
+echo "${GREEN}  └───────────────────────────────────────────────────────┘${D}"
+echo ""

@@ -1,18 +1,24 @@
 [Desktop Entry]
 Name=Visual Studio Code
-Comment=Code Editing. Redefined.
+Comment=Code Editing. Redefined. - PRO Edition
 GenericName=Text Editor
-Exec=/usr/share/code/code --no-sandbox  --unity-launch %F
+Exec=/usr/share/code/code --no-sandbox --disable-gpu-sandbox --unity-launch --enable-features=UseOzonePlatform --ozone-platform=x11 %F
 Icon=com.visualstudio.code
 Type=Application
-StartupNotify=false
+StartupNotify=true
 StartupWMClass=Code
-Categories=TextEditor;Development;IDE;
-MimeType=text/plain;inode/directory;application/x-code-workspace;
-Actions=new-empty-window;
-Keywords=vscode;
+Categories=TextEditor;Development;IDE;Utility;
+MimeType=text/plain;inode/directory;application/x-code-workspace;application/json;application/javascript;text/html;text/css;text/x-python;text/x-java;text/x-c;text/x-c++;
+Actions=new-empty-window;new-file;
+Keywords=vscode;code;editor;ide;development;programming;
+X-Desktop-File-Install-Version=0.26
 
 [Desktop Action new-empty-window]
 Name=New Empty Window
-Exec=/usr/share/code/code  --no-sandbox --new-window %F
+Exec=/usr/share/code/code --no-sandbox --disable-gpu-sandbox --new-window %F
+Icon=com.visualstudio.code
+
+[Desktop Action new-file]
+Name=New File
+Exec=/usr/share/code/code --no-sandbox --disable-gpu-sandbox --new-file
 Icon=com.visualstudio.code

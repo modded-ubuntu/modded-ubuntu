@@ -1,5 +1,44 @@
 #!/usr/bin/env bash
-vncserver -kill :*
-rm -rf /username/.vnc/localhost:*.pid
-rm -rf /tmp/.X1-lock
-rm -rf /tmp/.X11-unix/X1
+##############################################################################
+#   ACRO PRO Edition v3.2.1 - VNC STOP                                       #
+#   By: ZetaGo-Aurum | Brand: ALEOCROPHIC                                    #
+##############################################################################
+
+# Colors
+RED=$'\033[38;5;196m'
+GREEN=$'\033[38;5;120m'
+CYAN=$'\033[38;5;81m'
+PURPLE=$'\033[38;5;141m'
+WHITE=$'\033[1;37m'
+D=$'\033[0m'
+
+# Get current username
+USERNAME=$(whoami)
+
+echo ""
+echo "${PURPLE}  ┌───────────────────────────────────────────────────────┐${D}"
+echo "${PURPLE}  │${WHITE}   🛑 ACRO PRO - Stopping VNC Server${PURPLE}                  │${D}"
+echo "${PURPLE}  └───────────────────────────────────────────────────────┘${D}"
+echo ""
+
+# Kill all VNC sessions
+echo "  ${CYAN}▸${D} Terminating VNC sessions..."
+vncserver -kill :* 2>/dev/null
+
+# Clean up PID files
+echo "  ${CYAN}▸${D} Cleaning up PID files..."
+rm -rf "/home/${USERNAME}/.vnc/"*.pid 2>/dev/null
+rm -rf "/root/.vnc/"*.pid 2>/dev/null
+
+# Clean up lock files
+echo "  ${CYAN}▸${D} Removing lock files..."
+rm -rf /tmp/.X*-lock 2>/dev/null
+rm -rf /tmp/.X11-unix/X* 2>/dev/null
+
+echo ""
+echo "  ${GREEN}✓${WHITE} VNC Server stopped and cleaned up${D}"
+echo ""
+echo "${GREEN}  ┌───────────────────────────────────────────────────────┐${D}"
+echo "${GREEN}  │${WHITE}  To restart, type: ${CYAN}vncstart${D}                          ${GREEN}│${D}"
+echo "${GREEN}  └───────────────────────────────────────────────────────┘${D}"
+echo ""
