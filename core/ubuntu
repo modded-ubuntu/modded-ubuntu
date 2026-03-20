@@ -1,0 +1,125 @@
+#!/bin/bash
+# ==============================================================================
+# 🚀 UBUNTU TERMUX ENVIRONMENT MANAGER
+# ==============================================================================
+# Advanced, modular, production-grade platform for Termux Ubuntu via proot-distro
+# ==============================================================================
+
+# Constants
+export PROJ_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." &>/dev/null && pwd)"
+export CONFIG_FILE="${PROJ_ROOT}/config/system.env"
+export LOG_FILE="${PROJ_ROOT}/logs/system.log"
+
+# Source Utilities
+source "${PROJ_ROOT}/utils/logger.sh"
+source "${PROJ_ROOT}/utils/config_manager.sh"
+
+function show_help() {
+    cat << EOF
+Usage: ubuntu <command> [options]
+
+Commands:
+  start      Start the Ubuntu environment
+  stop       Stop the Ubuntu environment
+  gui        Manage GUI sessions (start, stop, switch)
+  dev        Developer toolkit management (enable, disable)
+  security   Cybersecurity toolkit mode management
+  backup     Create a system backup (compress home directory)
+  restore    Restore from a backup
+  update     Update the manager and modules
+  status     Show system dashboard and active sessions
+  install    Launch the interactive modular installer
+
+Options:
+  -h, --help    Show this help message
+
+Example:
+  ubuntu gui start
+EOF
+}
+
+command="$1"
+shift
+
+case "$command" in
+    start)
+        log_info "Starting Ubuntu environment..."
+        proot-distro login ubuntu
+        ;;
+    stop)
+        log_info "Stopping Ubuntu environment processes..."
+        killall -9 proot 2>/dev/null
+        log_success "Environment stopped."
+        ;;
+    gui)
+        bash "${PROJ_ROOT}/modules/gui/cli.sh" "$@"
+        ;;
+    dev)
+        bash "${PROJ_ROOT}/modules/dev/cli.sh" "$@"
+        ;;
+    security)
+        bash "${PROJ_ROOT}/modules/security/cli.sh" "$@"
+        ;;
+    network)
+        bash "${PROJ_ROOT}/modules/network/cli.sh" "$@"
+        ;;
+    dashboard)
+        bash "${PROJ_ROOT}/modules/dashboard/cli.sh" "$@"
+        ;;
+    modules)
+        if [ "$1" == "list" ]; then
+            bash "${PROJ_ROOT}/core/module_loader.sh"
+        else
+            log_error "Usage: ubuntu modules list"
+        fi
+        ;;
+    ai)
+        bash "${PROJ_ROOT}/core/ai_parser.sh" "$@"
+        ;;
+    backup|restore|snapshot)
+        bash "${PROJ_ROOT}/core/snapshot_manager.sh" "$command" "$@"
+        ;;
+    update)
+        bash "${PROJ_ROOT}/core/updater.sh" "$@"
+        ;;
+    status)
+        bash "${PROJ_ROOT}/core/system_monitor.sh" "$@"
+        ;;
+    install)
+        bash "${PROJ_ROOT}/core/installer.sh" "$@"
+        ;;
+    config)
+        action="$1"
+        key="$2"
+        val="$3"
+        if [ "$action" == "show" ]; then
+            cat "$CONFIG_FILE"
+        elif [ "$action" == "set" ]; then
+            set_config "$key" "$val"
+        else
+            log_error "Usage: ubuntu config {show|set key value}"
+        fi
+        ;;
+    version)
+        if [ -f "${PROJ_ROOT}/VERSION" ]; then
+            cat "${PROJ_ROOT}/VERSION"
+        else
+            echo "1.0.0 (dev)"
+        fi
+        ;;
+    -h|--help)
+        show_help
+        ;;
+    *)
+        if [[ -n "$command" ]]; then
+            log_error "Unknown command: $command"
+            # Intelligent spelling suggestion
+            suggestions=$(echo -e "start\nstop\ngui\ndev\nsecurity\ndashboard\nmodules\nai\nsnapshot\nstatus\nupdate\nconfig" | grep "^${command:0:1}" | head -n 1)
+            if [ -n "$suggestions" ]; then
+                echo -e "${COLOR_YELLOW}Did you mean: ubuntu $suggestions?${COLOR_RESET}"
+            fi
+        fi
+        show_help
+        exit 1
+        ;;
+esac

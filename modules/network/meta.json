@@ -1,0 +1,6 @@
+{
+  "name": "Network",
+  "version": "1.0",
+  "description": "Networking, SSH, and Tunneling integrations",
+  "dependencies": ["core"]
+}
