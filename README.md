@@ -1,100 +1,206 @@
-<p align="center">
-<img src="./distro/image.jpg">
-</p>
-<p align="center">
-<img src="https://img.shields.io/badge/MADE%20IN-BANGLADESH-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge">
-<img src="https://img.shields.io/badge/Version-2.0-blue?style=for-the-badge">
-</p>
-<p align="center">
-<img src="https://img.shields.io/badge/Written%20In-Bash-darkgreen?style=flat-square">
-<img src="https://img.shields.io/badge/Open%20Source-Yes-darkviolet?style=flat-square">
-<img src="https://img.shields.io/github/stars/modded-ubuntu/modded-ubuntu?style=flat-square">
-<img src="https://img.shields.io/github/issues/modded-ubuntu/modded-ubuntu?color=red&style=flat-square">
-<img src="https://img.shields.io/github/forks/modded-ubuntu/modded-ubuntu?color=teal&style=flat-square">
-</p>
-<p align="center"><b>Run Ubuntu GUI on your termux with much features.</b></p>
+<div align="center">
 
-### Features
+# 🚀 Termux Ubuntu Environment Manager
 
-- Fixed Audio Output
-- Lightweight {Requires at least 4GB Storage}
-- 2 Browsers (Chromium & Mozilla Firefox)
-- Supports Bangla Fonts
-- VLC Media Player and MPV media player
-- Visual Studio Code (buggy on arm )
-- Sublime Text Editor (only for arm64/aarch64)
-- Easy for Beginners
-- Comes with some cool themes.
+**A highly advanced, modular, and production-grade platform transforming Termux into a full-fledged Linux distribution lab.**
 
-### Installation
-- Firstly install [Termux](https://termux.com) apk from [HERE](https://f-droid.org/repo/com.termux_118.apk)
-- Secondly Clone the Repository & Run the setup File
+> Turn your Android device into a fully modular Linux workstation — powered entirely from Termux.
 
-  - `yes | pkg up`
-  - `pkg install git wget -y`
-  - `git clone --depth=1 https://github.com/modded-ubuntu/modded-ubuntu.git`
-  - `cd modded-ubuntu`
-  - `bash setup.sh`
+![Version](https://img.shields.io/badge/version-3.0.0-blue.svg?style=for-the-badge)
+![License](https://img.shields.io/badge/license-Apache_2.0-green.svg?style=for-the-badge)
+![Bash](https://img.shields.io/badge/language-Bash-darkgreen.svg?style=for-the-badge)
+![Stars](https://img.shields.io/github/stars/taezeem14/modded-ubuntu?style=for-the-badge)
 
-- Then Restart your Termux & Type the following commands
+*Built and engineered by **Muhammad Taezeem Tariq Matta***
+[GitHub](https://github.com/taezeem14) • [LinkedIn](https://linkedin.com/in/muhammad-taezeem-tariq-matta) • [Telegram](https://t.me/Taezeem_14)
 
-   - `ubuntu`
-   - `bash user.sh`
+</div>
 
-- Type your ubuntu root username. Must be lowercase & no space included.
+---
 
-- Then Again Restart your Termux & Type the following commands
+## ✨ Features
 
-   - `ubuntu`
-   - `sudo bash gui.sh`
+### ⚙️ Core CLI Engine
 
-- **You have to note your VNC password !!**
+An intelligent, subcommand-routing CLI framework (`ubuntu <module> <action>`). Complete with typo suggestions, dynamic argument parsing, and built-in help systems.
 
-- Ubuntu image is now successfully installed .
+### 🧩 Modular Plugin System
 
-  - Type `vncstart` to run Vncserver
-  - Type `vncstop` to stop Vncserver
+Hot-swappable plugins with `meta.json` manifests. Extend the OS capabilities without bloating the system.
 
-- Install VNC VIEWER Apk on your Device. [Google Play Store](https://play.google.com/store/apps/details?id=com.realvnc.viewer.android&hl=en)
+### 🖥️ Swappable GUI Support
 
-- Open VNC VIEWER & Click on + Button & Enter the Address `localhost:1` & Name anything you like
-- Set the Picture Quality to High for better Quality
-- Click on Connect & Input the Password 
-- Enjoy :D
+Switch between **XFCE**, **LXDE**, and **KDE** with managed multi-instance VNC pipelines.
 
-### NOTE :
+### 👨‍💻 Developer Tools
 
-- **Type `ubuntu` to run Ubuntu CLI.**
-- **Type `vncstart` to run Vncserver**
-- **Type `vncstop` to stop Vncserver**
+Quickly provision Node.js, Python, Git + CLI, and VS Code Server.
 
-- **Type `bash remove.sh` to remove Ubuntu Modded Os**
+### 🛡️ Security Lab
 
-### Video Tutorial : 
+Sandboxed toolkit with safe installs (Nmap, Wireshark, Metasploit) + isolated Kali containers.
 
-[![Watch the Tutorial](./distro/image1.jpg)](https://mega.nz/embed/QvIC1TLQ#3z27MRNPwANAg6JTtx1Ei8kDouOZsZgk00bg4TsJMNQ!1m)
+### 🌐 Web Dashboard
 
-#
-### Click to see the [Changelog](./CHANGELOG.md)
-Licensed under [Apache License](./LICENSE)
-#
+Control everything from a local web UI (`localhost:8080`) — monitor stats, logs, and modules.
 
-### Credits : 
+### 💾 Snapshot System
 
-```
-This Tool Uses the ubuntu image provided by the termux package `proot-distro` 
+Create and restore full system states instantly. No more dependency nightmares.
 
-Full Credit of the Ubuntu image goes to them .
+---
 
-Termux Proot Distro - https://github.com/termux/proot-distro
+## 🧠 Why This Exists
+
+Because a phone shouldn’t just be a phone.
+
+This project transforms Termux into a controllable Linux environment with modular architecture, dev tools, and cybersecurity capabilities — without unnecessary bloat.
+
+---
+
+## 🚀 Demo
+
+```bash
+$ ubuntu dev enable
+[INFO] Enabling Developer Toolkit...
+[✔] Node.js installed
+[✔] Python environment ready
+[✔] Git configured
+[SUCCESS] Developer tools online.
+
+$ ubuntu gui start --resolution 1280x720
+[INFO] Starting GUI Server (VNC)...
+[INFO] Allocating display :1
+[SUCCESS] GUI available at http://127.0.0.1:5901
 ```
 
-### Maintainers
+---
 
-- [**Mustakim Ahmed**](https://github.com/BDhackers009)
-- [**Tahmid Rayat**](https://github.com/htr-tech)
-- [**0xBaryonyx**](https://github.com/Mahfuz-THBD)
+## 📦 Installation
 
+**Prerequisites:** Android device with Termux installed
 
-### If you like our work then dont forget to give a Star :)
+> ⚡ Installation takes ~5–10 minutes depending on device performance.
 
+```bash
+git clone https://github.com/taezeem14/modded-ubuntu.git
+cd modded-ubuntu
+
+bash core/installer.sh
+bash install.sh
+```
+
+---
+
+## 🛠️ Usage
+
+```bash
+ubuntu start
+ubuntu dashboard start
+ubuntu security lab start
+ubuntu snapshot create "stable-setup"
+```
+
+---
+
+## 🏗️ Architecture Overview
+
+```text
+/core      - Core CLI engine & system logic
+/modules   - Plugin-based modules
+/utils     - Shared utilities
+/config    - Persistent configs
+/snapshots - System state backups
+```
+
+---
+
+## 🧩 Module System
+
+Modules are dynamically discovered at runtime — no manual linking required.
+
+Example:
+
+```json
+{
+  "name": "Dev",
+  "version": "1.1",
+  "description": "Developer toolkit",
+  "dependencies": ["core"]
+}
+```
+
+---
+
+## ⚠️ Safety Notes
+
+* Default: Safe Ubuntu packages
+* Kali Lab: Isolated container (recommended)
+* Kali Repo: Experimental ⚠️ (not recommended)
+
+---
+
+## 💻 CLI Help Preview
+
+```bash
+Usage: ubuntu <command> [options]
+
+Commands:
+  start      Start environment
+  stop       Stop environment
+  gui        Manage GUI
+  dev        Developer tools
+  security   Security lab
+  dashboard  Web UI
+  modules    List modules
+  snapshot   Manage states
+  status     System info
+```
+
+---
+
+## 📸 Screenshots
+
+> What this actually looks like in action 👇
+
+* CLI: Colored logs + clean output
+* Dashboard: Dark-mode local web UI
+* GUI: Full Linux desktop via VNC
+
+---
+
+## 🗺️ Roadmap
+
+* [x] SSH + Cloudflare tunnels
+* [x] Auto GUI scaling
+* [x] Dashboard marketplace
+* [x] VirGL acceleration
+* [ ] CLI module marketplace
+* [ ] Multi-profile system
+
+---
+
+## 🤝 Contributing
+
+1. Fork repo
+2. Create module in `/modules/`
+3. Add `meta.json` + `cli.sh`
+4. Submit PR
+
+---
+
+## 📄 License
+
+Apache 2.0 License — see `LICENSE`.
+
+---
+
+<div align="center">
+
+<b>Initiated, designed, and engineered by Muhammad Taezeem Tariq Matta</b>
+
+<br>
+
+> Built with obsession, late nights, and a deep love for Linux.
+
+</div>

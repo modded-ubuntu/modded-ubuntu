@@ -1,0 +1,6 @@
+{
+  "name": "Dashboard",
+  "version": "1.0",
+  "description": "Local web dashboard for system management",
+  "dependencies": ["core"]
+}

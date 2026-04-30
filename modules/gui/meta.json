@@ -1,0 +1,6 @@
+{
+  "name": "GUI",
+  "version": "1.1",
+  "description": "Manages desktop environments (XFCE, LXDE, KDE)",
+  "dependencies": ["core"]
+}
