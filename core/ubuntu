@@ -93,7 +93,12 @@ case "$command" in
         key="$2"
         val="$3"
         if [ "$action" == "show" ]; then
-            cat "$CONFIG_FILE"
+            if [ -f "$CONFIG_FILE" ]; then
+                cat "$CONFIG_FILE"
+            else
+                log_error "Config file not found at '$CONFIG_FILE'. Use 'ubuntu config set key value' to create it."
+                exit 1
+            fi
         elif [ "$action" == "set" ]; then
             set_config "$key" "$val"
         else
