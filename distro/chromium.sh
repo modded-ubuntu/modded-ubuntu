@@ -6,12 +6,20 @@ W="$(printf '\033[1;37m')"
 
 [[ $(command -v chromium) ]] && echo -e "${Y}Chromium is already Installed!${W}\n" || {
 	echo -e "${G}Installing ${Y}Chromium${W}"
-	apt purge chromium* chromium-browser* snapd -y
+	# Quote wildcards to prevent bash glob expansion in the working directory
+	apt purge "chromium*" "chromium-browser*" snapd -y
 	apt install gnupg2 software-properties-common --no-install-recommends -y
 	
+	# Clean up previous PPA configurations
+	rm -f /etc/apt/sources.list.d/xtradeb.list
+	rm -f /etc/apt/trusted.gpg.d/xtradeb.gpg
+	
+	# Create keyring directory
+	install -d -m 0755 /etc/apt/keyrings
+	
 	# Add the xtradeb key and force the PPA to use jammy
-	curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xBB4553A04231E126" | gpg --dearmor > /etc/apt/trusted.gpg.d/xtradeb.gpg
-	echo "deb http://ppa.launchpad.net/xtradeb/apps/ubuntu jammy main" > /etc/apt/sources.list.d/xtradeb.list
+	curl -sS "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x82BB6851C64F6880" | gpg --dearmor > /etc/apt/keyrings/xtradeb.gpg
+	echo "deb [signed-by=/etc/apt/keyrings/xtradeb.gpg] http://ppa.launchpad.net/xtradeb/apps/ubuntu jammy main" > /etc/apt/sources.list.d/xtradeb.list
 	
 	apt-get update -y
 	apt-get install -y chromium
@@ -23,6 +31,11 @@ exec /usr/bin/chromium --no-sandbox "$@"
 EOF
 	chmod +x /usr/local/bin/chromium
 
-	sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
+	# Apply sandbox flags to desktop files if they exist
+	if [ -f /usr/share/applications/chromium.desktop ]; then
+		sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
+	elif [ -f /usr/share/applications/chromium-browser.desktop ]; then
+		sed -i 's/chromium-browser %U/chromium-browser --no-sandbox %U/g' /usr/share/applications/chromium-browser.desktop
+	fi
 	echo -e "${G} Chromium Installed Successfully\n${W}"
 }
