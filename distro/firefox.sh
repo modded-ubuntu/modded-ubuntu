@@ -27,14 +27,14 @@ echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.gpg] https://package
 PREFFILE="/etc/apt/preferences.d/mozilla"
 mkdir -p /etc/apt/preferences.d/
 cat > "$PREFFILE" <<EOF
-Package: *
+Package: firefox*
 Pin: origin packages.mozilla.org
-Pin-Priority: 1000
+Pin-Priority: 1001
 EOF
 
 # Update and install
 apt-get update
-apt-get install -y firefox --no-install-recommends
+apt-get install -y --allow-downgrades firefox --no-install-recommends
 
 # Create shim to force --no-sandbox
 cat << 'EOF' > /usr/local/bin/firefox
