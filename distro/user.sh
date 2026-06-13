@@ -48,9 +48,15 @@ exec proot-distro login --user $user ubuntu --bind /dev/null:/proc/sys/kernel/ca
 EOF
     #chmod +x /data/data/com.termux/files/usr/bin/ubuntu 
     
-    if [[ -e '/data/data/com.termux/files/home/modded-ubuntu/distro/gui.sh' ]];then
+    if [[ -d '/data/data/com.termux/files/home/modded-ubuntu/distro' ]];then
         cp /data/data/com.termux/files/home/modded-ubuntu/distro/gui.sh /home/$user/gui.sh
         chmod +x /home/$user/gui.sh
+        mkdir -p /home/$user/distro
+        cp -f /data/data/com.termux/files/home/modded-ubuntu/distro/firefox.sh /home/$user/distro/
+        cp -f /data/data/com.termux/files/home/modded-ubuntu/distro/chromium.sh /home/$user/distro/
+        cp -f /data/data/com.termux/files/home/modded-ubuntu/distro/vscode.sh /home/$user/distro/
+        cp -f /data/data/com.termux/files/home/modded-ubuntu/distro/sublime.sh /home/$user/distro/
+        chmod +x /home/$user/distro/*.sh
     else
         wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/gui.sh
         mv -vf gui.sh /home/$user/gui.sh

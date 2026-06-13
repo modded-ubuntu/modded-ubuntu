@@ -79,55 +79,13 @@ install_apt() {
 	done
 }
 
-install_vscode() {
-	[[ $(command -v code) ]] && echo "${Y}VSCode is already Installed!${W}" || {
-		echo -e "${G}Installing ${Y}VSCode${W}"
-		curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
-		install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
-		echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list
-		apt update -y
-		apt install code -y
-		echo "Patching.."
-		curl -fsSL https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/patches/code.desktop > /usr/share/applications/code.desktop
-		echo -e "${C} Visual Studio Code Installed Successfully\n${W}"
-	}
-}
-
-install_sublime() {
-	[[ $(command -v subl) ]] && echo "${Y}Sublime is already Installed!${W}" || {
-		apt install gnupg2 software-properties-common --no-install-recommends -y
-		echo "deb https://download.sublimetext.com/ apt/stable/" | tee /etc/apt/sources.list.d/sublime-text.list
-		curl -fsSL https://download.sublimetext.com/sublimehq-pub.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/sublime.gpg 2> /dev/null
-		apt update -y
-		apt install sublime-text -y 
-		echo -e "${C} Sublime Text Editor Installed Successfully\n${W}"
-	}
-}
-
-install_chromium() {
-	[[ $(command -v chromium) ]] && echo "${Y}Chromium is already Installed!${W}\n" || {
-		echo -e "${G}Installing ${Y}Chromium${W}"
-		apt purge chromium* chromium-browser* snapd -y
-		apt install gnupg2 software-properties-common --no-install-recommends -y
-		echo -e "deb http://ftp.debian.org/debian buster main\ndeb http://ftp.debian.org/debian buster-updates main" >> /etc/apt/sources.list
-		apt-key adv --keyserver keyserver.ubuntu.com --recv-keys DCC9EFBF77E11517
-		apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138
-		apt-key adv --keyserver keyserver.ubuntu.com --recv-keys AA8E81B4331F7F50
-		apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 112695A0E562B32A
-		apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
-		apt update -y
-		apt install chromium -y
-		sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
-		echo -e "${G} Chromium Installed Successfully\n${W}"
-	}
-}
-
-install_firefox() {
-	[[ $(command -v firefox) ]] && echo "${Y}Firefox is already Installed!${W}\n" || {
-		echo -e "${G}Installing ${Y}Firefox${W}"
-		bash <(curl -fsSL "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/firefox.sh")
-		echo -e "${G} Firefox Installed Successfully\n${W}"
-	}
+run_script() {
+	script_name="$1"
+	if [[ -f "/home/$username/distro/$script_name" ]]; then
+		bash "/home/$username/distro/$script_name"
+	else
+		bash <(curl -fsSL "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/$script_name")
+	fi
 }
 
 install_softwares() {
@@ -138,6 +96,7 @@ install_softwares() {
 		${C} [${W}1${C}] Firefox (Default)
 		${C} [${W}2${C}] Chromium
 		${C} [${W}3${C}] Both (Firefox + Chromium)
+		${C} [${W}4${C}] Skip!
 
 	EOF
 	read -n1 -p "${R} [${G}~${R}]${Y} Select an Option: ${G}" BROWSER_OPTION
@@ -169,23 +128,26 @@ install_softwares() {
 	read -n1 -p "${R} [${G}~${R}]${Y} Select an Option: ${G}" PLAYER_OPTION
 	{ banner; sleep 1; }
 
-	if [[ ${BROWSER_OPTION} == 2 ]]; then
-		install_chromium
+	if [[ ${BROWSER_OPTION} == 1 ]] || [[ -z ${BROWSER_OPTION} ]]; then
+		run_script "firefox.sh"
+	elif [[ ${BROWSER_OPTION} == 2 ]]; then
+		run_script "chromium.sh"
 	elif [[ ${BROWSER_OPTION} == 3 ]]; then
-		install_firefox
-		install_chromium
+		run_script "firefox.sh"
+		run_script "chromium.sh"
 	else
-		install_firefox
+		echo -e "${Y} [!] Skipping Browser Installation\n"
+		sleep 1
 	fi
 
 	[[ ("$arch" != 'armhf') || ("$arch" != *'armv7'*) ]] && {
 		if [[ ${IDE_OPTION} == 1 ]]; then
-			install_sublime
+			run_script "sublime.sh"
 		elif [[ ${IDE_OPTION} == 2 ]]; then
-			install_vscode
+			run_script "vscode.sh"
 		elif [[ ${IDE_OPTION} == 3 ]]; then
-			install_sublime
-			install_vscode
+			run_script "sublime.sh"
+			run_script "vscode.sh"
 		else
 			echo -e "${Y} [!] Skipping IDE Installation\n"
 			sleep 1
