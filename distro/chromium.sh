@@ -27,8 +27,15 @@ W="$(printf '\033[1;37m')"
 		echo -e "${Y}Ubuntu 26.04+ (Resolute/Plucky) detected.${W}"
 		echo -e "${Y}Setting up Debian Testing (Trixie) repository for native Chromium...${W}"
 		
+		# Create keyring directory
+		install -d -m 0755 /etc/apt/keyrings
+		
+		# Import Debian Testing archive public keys from keyserver to avoid signature errors
+		touch /etc/apt/keyrings/debian-archive.gpg
+		gpg --no-default-keyring --keyring /etc/apt/keyrings/debian-archive.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 6ED0E7B82643E131 78DBA3BC47EF2265 762F67A0B2C39DE4
+		
 		# Add Debian Testing repository
-		echo "deb [trusted=yes] http://deb.debian.org/debian trixie main" > /etc/apt/sources.list.d/debian-chromium.list
+		echo "deb [signed-by=/etc/apt/keyrings/debian-archive.gpg] http://deb.debian.org/debian trixie main" > /etc/apt/sources.list.d/debian-chromium.list
 		
 		# Pin Chromium packages to Debian, and everything else to a low priority (100) to prevent upgrading Ubuntu base libraries
 		cat << 'EOF' > /etc/apt/preferences.d/debian-chromium
