@@ -8,7 +8,7 @@ C="$(printf '\033[1;36m')"
 W="$(printf '\033[1;37m')" 
 
 CURR_DIR=$(realpath "$(dirname "$BASH_SOURCE")")
-UBUNTU_DIR="$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu"
+UBUNTU_DIR="$PREFIX/var/lib/proot-distro/containers/ubuntu/rootfs"
 
 banner() {
 	clear
@@ -118,7 +118,7 @@ permission() {
 	if [[ -e "$PREFIX/bin/ubuntu" ]]; then
 		banner
 		cat <<- EOF
-			${R} [${W}-${R}]${G} Ubuntu-22.04 (CLI) is now Installed on your Termux
+			${R} [${W}-${R}]${G} Ubuntu-26.04 (CLI) is now Installed on your Termux
 			${R} [${W}-${R}]${G} Restart your Termux to Prevent Some Issues.
 			${R} [${W}-${R}]${G} Type ${C}ubuntu${G} to run Ubuntu CLI.
 			${R} [${W}-${R}]${G} If you Want to Use UBUNTU in GUI MODE then ,
