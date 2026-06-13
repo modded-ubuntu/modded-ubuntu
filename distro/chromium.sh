@@ -55,7 +55,10 @@ EOF
 	fi
 	
 	apt-get update -y
-	apt-get install -y chromium
+	apt-get install -y chromium || {
+		echo -e "${R} [!] Failed to install Chromium.${W}\n"
+		exit 1
+	}
 	
 	# Create shim to force --no-sandbox
 	cat << 'EOF' > /usr/local/bin/chromium
