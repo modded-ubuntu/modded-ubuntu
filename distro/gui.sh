@@ -220,8 +220,8 @@ sound_fix() {
 bash ~/.sound
 exec proot-distro login --user $username ubuntu --bind /dev/null:/proc/sys/kernel/cap_last_last --shared-tmp --fix-low-ports
 EOF
-	echo "export DISPLAY=":1"" >> /etc/profile
-	echo "export PULSE_SERVER=127.0.0.1" >> /etc/profile 
+	grep -q "export DISPLAY=" /etc/profile || echo 'export DISPLAY=":1"' >> /etc/profile
+	grep -q "export PULSE_SERVER=" /etc/profile || echo 'export PULSE_SERVER=127.0.0.1' >> /etc/profile
 	source /etc/profile
 }
 

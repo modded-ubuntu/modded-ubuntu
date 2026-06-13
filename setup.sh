@@ -63,10 +63,11 @@ distro() {
 
 sound() {
 	echo -e "\n${R} [${W}-${R}]${C} Fixing Sound Problem..."${W}
-	[ ! -e "$HOME/.sound" ] && touch "$HOME/.sound"
-	echo "pacmd load-module module-aaudio-sink" >> "$HOME/.sound"
-        echo "pulseaudio --start --exit-idle-time=-1" >> "$HOME/.sound"
-	echo "pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" >> "$HOME/.sound"
+	cat <<EOF > "$HOME/.sound"
+pacmd load-module module-aaudio-sink
+pulseaudio --start --exit-idle-time=-1
+pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1
+EOF
 }
 
 downloader(){
