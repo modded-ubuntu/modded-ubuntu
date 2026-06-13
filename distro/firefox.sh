@@ -24,3 +24,10 @@ EOF
 # Update and install
 apt-get update
 apt-get install -y firefox --no-install-recommends
+
+# Create shim to force --no-sandbox
+cat << 'EOF' > /usr/local/bin/firefox
+#!/bin/sh
+exec /usr/bin/firefox --no-sandbox "$@"
+EOF
+chmod +x /usr/local/bin/firefox

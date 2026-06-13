@@ -15,6 +15,14 @@ W="$(printf '\033[1;37m')"
 	
 	apt-get update -y
 	apt-get install -y chromium
+	
+	# Create shim to force --no-sandbox
+	cat << 'EOF' > /usr/local/bin/chromium
+#!/bin/sh
+exec /usr/bin/chromium --no-sandbox "$@"
+EOF
+	chmod +x /usr/local/bin/chromium
+
 	sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
 	echo -e "${G} Chromium Installed Successfully\n${W}"
 }
