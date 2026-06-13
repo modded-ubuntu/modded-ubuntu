@@ -10,7 +10,7 @@ W="$(printf '\033[1;37m')"
 	apt install gnupg2 software-properties-common --no-install-recommends -y
 	
 	# Add the xtradeb key and force the PPA to use jammy
-	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BB4553A04231E126
+	curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xBB4553A04231E126" | gpg --dearmor > /etc/apt/trusted.gpg.d/xtradeb.gpg
 	echo "deb http://ppa.launchpad.net/xtradeb/apps/ubuntu jammy main" > /etc/apt/sources.list.d/xtradeb.list
 	
 	apt-get update -y
