@@ -43,6 +43,7 @@ $user ALL=(ALL:ALL) NOPASSWD:ALL
 EOF
 
     cat <<EOF > /data/data/com.termux/files/usr/bin/ubuntu
+#!/data/data/com.termux/files/usr/bin/sh
 exec proot-distro login --user $user ubuntu --bind /dev/null:/proc/sys/kernel/cap_last_last --shared-tmp --fix-low-ports
 EOF
     #chmod +x /data/data/com.termux/files/usr/bin/ubuntu 
