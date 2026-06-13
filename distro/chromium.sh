@@ -8,7 +8,7 @@ W="$(printf '\033[1;37m')"
 	echo -e "${G}Installing ${Y}Chromium${W}"
 	# Quote wildcards to prevent bash glob expansion in the working directory
 	apt purge "chromium*" "chromium-browser*" snapd -y
-	apt install gnupg2 software-properties-common --no-install-recommends -y
+	apt install gnupg2 curl software-properties-common --no-install-recommends -y
 	
 	# Clean up previous PPA configurations
 	rm -f /etc/apt/sources.list.d/xtradeb.list
@@ -17,9 +17,16 @@ W="$(printf '\033[1;37m')"
 	# Create keyring directory
 	install -d -m 0755 /etc/apt/keyrings
 	
-	# Add the xtradeb key and force the PPA to use jammy
+	# Add the xtradeb key
 	curl -sS "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x82BB6851C64F6880" | gpg --dearmor > /etc/apt/keyrings/xtradeb.gpg
-	echo "deb [signed-by=/etc/apt/keyrings/xtradeb.gpg] http://ppa.launchpad.net/xtradeb/apps/ubuntu jammy main" > /etc/apt/sources.list.d/xtradeb.list
+	
+	# Detect OS codename, fallback to noble (Ubuntu 24.04 LTS) if the PPA doesn't support the current release yet
+	CODENAME=$(lsb_release -sc 2>/dev/null || grep -oP '(?<=VERSION_CODENAME=)[a-z]+' /etc/os-release 2>/dev/null || echo "noble")
+	if ! curl -sI "https://ppa.launchpadcontent.net/xtradeb/apps/ubuntu/dists/${CODENAME}/Release" | grep -q "200 OK"; then
+		CODENAME="noble"
+	fi
+	
+	echo "deb [signed-by=/etc/apt/keyrings/xtradeb.gpg] http://ppa.launchpad.net/xtradeb/apps/ubuntu ${CODENAME} main" > /etc/apt/sources.list.d/xtradeb.list
 	
 	apt-get update -y
 	apt-get install -y chromium
