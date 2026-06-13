@@ -6,7 +6,12 @@ Y="$(printf '\033[1;33m')"
 W="$(printf '\033[1;37m')"
 C="$(printf '\033[1;36m')"
 arch=$(uname -m)
-username=$(getent group sudo | awk -F ':' '{print $4}' | cut -d ',' -f1)
+if [ -n "$SUDO_USER" ] && [ "$SUDO_USER" != "root" ]; then
+	username="$SUDO_USER"
+else
+	username=$(ls /home | grep -Ev 'ubuntu|lost\+found' | head -n 1)
+	username=${username:-ubuntu}
+fi
 
 check_root(){
 	if [ "$(id -u)" -ne 0 ]; then
@@ -81,8 +86,8 @@ install_apt() {
 
 run_script() {
 	script_name="$1"
-	if [[ -f "/home/$username/distro/$script_name" ]]; then
-		bash "/home/$username/distro/$script_name"
+	if [[ -f "/home/$username/softwares/$script_name" ]]; then
+		bash "/home/$username/softwares/$script_name"
 	else
 		bash <(curl -fsSL "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test-ubuntu-26.04/distro/$script_name")
 	fi

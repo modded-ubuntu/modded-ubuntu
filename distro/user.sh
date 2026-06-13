@@ -39,9 +39,8 @@ login() {
 ${user}:${pass}
 EOF
 
-    cat <<EOF >> /etc/sudoers
-$user ALL=(ALL:ALL) NOPASSWD:ALL
-EOF
+    echo "$user ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-modded-ubuntu
+    chmod 0440 /etc/sudoers.d/90-modded-ubuntu
 
     cat <<EOF > /data/data/com.termux/files/usr/bin/ubuntu
 #!/data/data/com.termux/files/usr/bin/sh
@@ -49,19 +48,25 @@ exec proot-distro login --user $user ubuntu --bind /dev/null:/proc/sys/kernel/ca
 EOF
     #chmod +x /data/data/com.termux/files/usr/bin/ubuntu 
     
+    mkdir -p /home/$user/softwares
     if [[ -d '/data/data/com.termux/files/home/modded-ubuntu/distro' ]];then
         cp /data/data/com.termux/files/home/modded-ubuntu/distro/gui.sh /home/$user/gui.sh
         chmod +x /home/$user/gui.sh
-        mkdir -p /home/$user/distro
-        cp -f /data/data/com.termux/files/home/modded-ubuntu/distro/firefox.sh /home/$user/distro/
-        cp -f /data/data/com.termux/files/home/modded-ubuntu/distro/chromium.sh /home/$user/distro/
-        cp -f /data/data/com.termux/files/home/modded-ubuntu/distro/vscode.sh /home/$user/distro/
-        cp -f /data/data/com.termux/files/home/modded-ubuntu/distro/sublime.sh /home/$user/distro/
-        chmod +x /home/$user/distro/*.sh
+        cp -f /data/data/com.termux/files/home/modded-ubuntu/distro/firefox.sh /home/$user/softwares/
+        cp -f /data/data/com.termux/files/home/modded-ubuntu/distro/chromium.sh /home/$user/softwares/
+        cp -f /data/data/com.termux/files/home/modded-ubuntu/distro/vscode.sh /home/$user/softwares/
+        cp -f /data/data/com.termux/files/home/modded-ubuntu/distro/sublime.sh /home/$user/softwares/
+        chmod +x /home/$user/softwares/*.sh
     else
         wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test-ubuntu-26.04/distro/gui.sh
         mv -vf gui.sh /home/$user/gui.sh
         chmod +x /home/$user/gui.sh
+        
+        wget -q -P /home/$user/softwares/ https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test-ubuntu-26.04/distro/firefox.sh
+        wget -q -P /home/$user/softwares/ https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test-ubuntu-26.04/distro/chromium.sh
+        wget -q -P /home/$user/softwares/ https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test-ubuntu-26.04/distro/vscode.sh
+        wget -q -P /home/$user/softwares/ https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test-ubuntu-26.04/distro/sublime.sh
+        chmod +x /home/$user/softwares/*.sh
     fi
 
     clear
