@@ -187,6 +187,34 @@ EOF
 	source /etc/profile
 }
 
+bwrap_fix() {
+	echo -e "\n${R} [${W}-${R}]${C} Applying Bubblewrap Sandbox Fix..."${W}
+	mkdir -p /usr/local/bin
+	cat << 'EOF' > /usr/local/bin/bwrap
+#!/bin/sh
+# Shim to bypass sandboxing for Termux proot environments
+# This ignores all sandbox-related flags and executes the target directly.
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --unshare-all|--die-with-parent|--clearenv|--new-session|--sandbox|--disable-write)
+            shift ;;
+        --chdir|--dev|--tmpfs|--seccomp|--proc|--dev-bind)
+            shift 2 ;;
+        --ro-bind|--ro-bind-try|--setenv|--symlink|--bind-try|--bind)
+            shift 3 ;;
+        *)
+            # If we hit a non-flag argument, it's the command to execute
+            break ;;
+    esac
+done
+
+# Execute the actual application command
+exec "$@"
+EOF
+	chmod +x /usr/local/bin/bwrap
+}
+
 rem_theme() {
 	theme=(Bright Daloa Emacs Moheli Retro Smoke)
 	for rmi in "${theme[@]}"; do
@@ -208,6 +236,7 @@ rem_icon() {
 config() {
 	banner
 	sound_fix
+	bwrap_fix
 
 	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
 	yes | apt upgrade
