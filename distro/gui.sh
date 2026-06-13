@@ -16,7 +16,7 @@ fi
 check_root(){
 	if [ "$(id -u)" -ne 0 ]; then
 		echo -ne " ${R}Run this program as root!\n\n"${W}
-		echo -ne "   Run 'sudo bash gui.sh'"${G}
+		echo -ne "  Run 'sudo bash gui.sh'\n\n"${G}
 		echo -ne " Note: you don't need to have an actual rooted device.\n\n"${W}
 		exit 1
 	fi
