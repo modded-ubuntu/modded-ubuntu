@@ -5,6 +5,7 @@ G="$(printf '\033[1;32m')"
 Y="$(printf '\033[1;33m')"
 W="$(printf '\033[1;37m')"
 C="$(printf '\033[1;36m')"
+export DEBIAN_FRONTEND=noninteractive
 
 banner() {
     clear
