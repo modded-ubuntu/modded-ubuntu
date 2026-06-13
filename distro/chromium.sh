@@ -30,9 +30,11 @@ W="$(printf '\033[1;37m')"
 		# Create keyring directory
 		install -d -m 0755 /etc/apt/keyrings
 		
-		# Import Debian Testing archive public keys from keyserver to avoid signature errors
-		touch /etc/apt/keyrings/debian-archive.gpg
-		gpg --no-default-keyring --keyring /etc/apt/keyrings/debian-archive.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 6ED0E7B82643E131 78DBA3BC47EF2265 762F67A0B2C39DE4
+		# Import Debian Testing archive public keys via curl to avoid PRoot dirmngr/gpg keyserver issues
+		rm -f /etc/apt/keyrings/debian-archive.gpg
+		for key in 6ED0E7B82643E131 78DBA3BC47EF2265 762F67A0B2C39DE4; do
+			curl -sS "https://keyserver.ubuntu.com/pks/lookup?op=get&options=mr&search=0x${key}" | gpg --dearmor >> /etc/apt/keyrings/debian-archive.gpg
+		done
 		
 		# Add Debian Testing repository
 		echo "deb [signed-by=/etc/apt/keyrings/debian-archive.gpg] http://deb.debian.org/debian trixie main" > /etc/apt/sources.list.d/debian-chromium.list
