@@ -9,19 +9,27 @@ W="$(printf '\033[1;37m')"
 # Ensure gpg and curl are installed
 apt-get install -y gnupg2 curl
 
-# Add the key the modern way
-curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x0AB215679C571D1C8325275B9BDB3D89CE49EC21" | gpg --dearmor > /etc/apt/trusted.gpg.d/firefox.gpg
+# Clean up previous PPA configurations
+rm -f /etc/apt/sources.list.d/mozillateam.list
+rm -f /etc/apt/preferences.d/mozilla-firefox
+rm -f /etc/apt/trusted.gpg.d/firefox.gpg
 
-# Force the PPA to use jammy (most compatible with newer systems)
-echo "deb http://ppa.launchpad.net/mozillateam/ppa/ubuntu jammy main" > /etc/apt/sources.list.d/mozillateam.list
+# Create keyring directory
+install -d -m 0755 /etc/apt/keyrings
+
+# Download official Mozilla signing key
+curl -sS https://packages.mozilla.org/apt/repo-signing-key.gpg | gpg --dearmor > /etc/apt/keyrings/packages.mozilla.org.gpg
+
+# Add the official repository
+echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.gpg] https://packages.mozilla.org/apt mozilla main" > /etc/apt/sources.list.d/mozilla.list
 
 # Create the apt preference pin to bypass the transitional snap packages
-PREFFILE="/etc/apt/preferences.d/mozilla-firefox"
+PREFFILE="/etc/apt/preferences.d/mozilla"
 mkdir -p /etc/apt/preferences.d/
 cat > "$PREFFILE" <<EOF
 Package: *
-Pin: release o=LP-PPA-mozillateam
-Pin-Priority: 1001
+Pin: origin packages.mozilla.org
+Pin-Priority: 1000
 EOF
 
 # Update and install
