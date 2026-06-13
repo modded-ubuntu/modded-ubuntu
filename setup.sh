@@ -49,7 +49,7 @@ distro() {
 		echo -e "\n${R} [${W}-${R}]${G} Distro already installed."${W}
 		exit 0
 	else
-		proot-distro install ubuntu
+		proot-distro install ubuntu:26.04
 		termux-reload-settings
 	fi
 	
