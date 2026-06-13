@@ -14,6 +14,6 @@ C="$(printf '\033[1;36m')"
 	apt update -y
 	apt install code -y
 	echo "Patching.."
-	curl -fsSL https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/patches/code.desktop > /usr/share/applications/code.desktop
+	curl -fsSL https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test-ubuntu-26.04/patches/code.desktop > /usr/share/applications/code.desktop
 	echo -e "${C} Visual Studio Code Installed Successfully\n${W}"
 }

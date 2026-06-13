@@ -58,7 +58,7 @@ EOF
         cp -f /data/data/com.termux/files/home/modded-ubuntu/distro/sublime.sh /home/$user/distro/
         chmod +x /home/$user/distro/*.sh
     else
-        wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/gui.sh
+        wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test-ubuntu-26.04/distro/gui.sh
         mv -vf gui.sh /home/$user/gui.sh
         chmod +x /home/$user/gui.sh
     fi

@@ -84,7 +84,7 @@ run_script() {
 	if [[ -f "/home/$username/distro/$script_name" ]]; then
 		bash "/home/$username/distro/$script_name"
 	else
-		bash <(curl -fsSL "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/$script_name")
+		bash <(curl -fsSL "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test-ubuntu-26.04/distro/$script_name")
 	fi
 }
 
