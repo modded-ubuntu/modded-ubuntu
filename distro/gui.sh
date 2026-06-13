@@ -247,23 +247,30 @@ config() {
 	yes | apt upgrade
 	yes | apt install gtk2-engines-murrine gtk2-engines-pixbuf sassc optipng inkscape libglib2.0-dev-bin
 	mv -vf /usr/share/backgrounds/xfce/xfce-verticals.png /usr/share/backgrounds/xfce/xfceverticals-old.png
-	temp_folder=$(mktemp -d -p "$HOME")
-	{ banner; sleep 1; cd $temp_folder; }
+	if [ ! -f /var/lib/modded-ubuntu-config-done ]; then
+		temp_folder=$(mktemp -d -p "$HOME")
+		{ banner; sleep 1; cd $temp_folder; }
 
-	echo -e "${R} [${W}-${R}]${C} Downloading Required Files..\n"${W}
-	downloader "fonts.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/fonts.tar.gz"
-	downloader "icons.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/icons.tar.gz"
-	downloader "wallpaper.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/wallpaper.tar.gz"
-	downloader "gtk-themes.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/gtk-themes.tar.gz"
-	downloader "ubuntu-settings.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/ubuntu-settings.tar.gz"
+		echo -e "${R} [${W}-${R}]${C} Downloading Required Files..\n"${W}
+		downloader "fonts.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/fonts.tar.gz"
+		downloader "icons.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/icons.tar.gz"
+		downloader "wallpaper.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/wallpaper.tar.gz"
+		downloader "gtk-themes.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/gtk-themes.tar.gz"
+		downloader "ubuntu-settings.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/ubuntu-settings.tar.gz"
 
-	echo -e "${R} [${W}-${R}]${C} Unpacking Files..\n"${W}
-	tar -xvzf fonts.tar.gz -C "/usr/local/share/fonts/"
-	tar -xvzf icons.tar.gz -C "/usr/share/icons/"
-	tar -xvzf wallpaper.tar.gz -C "/usr/share/backgrounds/xfce/"
-	tar -xvzf gtk-themes.tar.gz -C "/usr/share/themes/"
-	tar -xvzf ubuntu-settings.tar.gz -C "/home/$username/"	
-	rm -fr $temp_folder
+		echo -e "${R} [${W}-${R}]${C} Unpacking Files..\n"${W}
+		tar -xvzf fonts.tar.gz -C "/usr/local/share/fonts/"
+		tar -xvzf icons.tar.gz -C "/usr/share/icons/"
+		tar -xvzf wallpaper.tar.gz -C "/usr/share/backgrounds/xfce/"
+		tar -xvzf gtk-themes.tar.gz -C "/usr/share/themes/"
+		tar -xvzf ubuntu-settings.tar.gz -C "/home/$username/"	
+		rm -fr $temp_folder
+
+		touch /var/lib/modded-ubuntu-config-done
+	else
+		echo -e "\n${R} [${W}-${R}]${G} Fonts and Themes are already set up. Skipping download..."${W}
+		sleep 1
+	fi
 
 	echo -e "${R} [${W}-${R}]${C} Purging Unnecessary Files.."${W}
 	rem_theme
