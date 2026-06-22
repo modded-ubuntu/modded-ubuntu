@@ -27,11 +27,11 @@
     <!-- Rounded Button Shadow and Background -->
     <rect x="2" y="2" width="226" height="56" rx="28" fill="url(#waGrad)" filter="url(#shadow)" />
     
-    <!-- White Circle Background for Icon -->
+    <!-- White Circle Background for Icon (Centered at 34, 30) -->
     <circle cx="34" cy="30" r="18" fill="#FFFFFF" />
     
-    <!-- WhatsApp Logo Group -->
-    <g transform="translate(24, 20)">
+    <!-- WhatsApp Logo Group (Centered at x=34, y=30) -->
+    <g transform="translate(24.5, 20)">
       <!-- Speech bubble contour -->
       <path d="M 9.5 0.5 C 4.5 0.5 0.5 4.5 0.5 9.5 C 0.5 11.5 1.1 13.5 2.1 15 L 0.5 19.5 L 5.2 18 C 6.5 18.7 8 19 9.5 19 C 14.5 19 18.5 15 18.5 9.5 C 18.5 4.5 14.5 0.5 9.5 0.5 Z" fill="#25d366" />
       

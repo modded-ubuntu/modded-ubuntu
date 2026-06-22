@@ -27,24 +27,24 @@
     <!-- Rounded Button Shadow and Background -->
     <rect x="2" y="2" width="226" height="56" rx="28" fill="url(#trakteerGrad)" filter="url(#shadow)" />
     
-    <!-- White Circle Background for Icon -->
+    <!-- White Circle Background for Icon (Centered at 34, 30) -->
     <circle cx="34" cy="30" r="18" fill="#FFFFFF" />
     
-    <!-- Trakteer Cup Logo Group -->
-    <g transform="translate(18, 14)">
-      <!-- Steam Lines (Red) -->
-      <path d="M 12 6 C 12.5 4, 11.5 3, 12 1" fill="none" stroke="#ca2027" stroke-width="1.5" stroke-linecap="round" />
-      <path d="M 17 6 C 17.5 4, 16.5 3, 17 1" fill="none" stroke="#ca2027" stroke-width="1.5" stroke-linecap="round" />
-      <path d="M 22 6 C 22.5 4, 21.5 3, 22 1" fill="none" stroke="#ca2027" stroke-width="1.5" stroke-linecap="round" />
+    <!-- Trakteer Coffee Cup Icon (Symmetrical & Centered inside the white circle) -->
+    <g>
+      <!-- Steam Lines (Red, centered above cup) -->
+      <path d="M 29 25 C 29.5 23, 28.5 22, 29 21" fill="none" stroke="#ca2027" stroke-width="1.5" stroke-linecap="round" />
+      <path d="M 34 25 C 34.5 23, 33.5 22, 34 21" fill="none" stroke="#ca2027" stroke-width="1.5" stroke-linecap="round" />
+      <path d="M 39 25 C 39.5 23, 38.5 22, 39 21" fill="none" stroke="#ca2027" stroke-width="1.5" stroke-linecap="round" />
       
-      <!-- Cup Body (Red) -->
-      <path d="M 9 9 L 25 9 C 25 9, 25 21, 17 21 C 9 21, 9 9, 9 9 Z" fill="#ca2027" />
+      <!-- Cup Body (Red, centered at x=34) -->
+      <path d="M 26 27 L 42 27 C 42 27, 42 39, 34 39 C 26 39, 26 27, 26 27 Z" fill="#ca2027" />
       
       <!-- Cup Handle (Red) -->
-      <path d="M 25 11 C 28 11, 29 13, 29 15 C 29 17, 28 19, 25 19" fill="none" stroke="#ca2027" stroke-width="1.8" stroke-linecap="round" />
+      <path d="M 42 29 C 45 29, 46 31, 46 33 C 46 35, 45 37, 42 37" fill="none" stroke="#ca2027" stroke-width="1.8" stroke-linecap="round" />
       
-      <!-- Tiny Heart on Cup (White) -->
-      <path d="M 17 17.5 c -1.2 -1.1 -2.2 -1.7 -2.2 -2.5 c 0 -0.6 0.5 -1.1 1.1 -1.1 c 0.5 0 0.8 0.3 1.1 0.5 c 0.3 -0.2 0.6 -0.5 1.1 -0.5 c 0.6 0 1.1 0.5 1.1 1.1 c 0 0.8 -1 1.4 -2.2 2.5 Z" fill="#FFFFFF" />
+      <!-- Tiny Heart on Cup (White, centered at x=34, y=34) -->
+      <path d="M 34 36.5 c -1.2 -1.1 -2.2 -1.7 -2.2 -2.5 c 0 -0.6 0.5 -1.1 1.1 -1.1 c 0.5 0 0.8 0.3 1.1 0.5 c 0.3 -0.2 0.6 -0.5 1.1 -0.5 c 0.6 0 1.1 0.5 1.1 1.1 c 0 0.8 -1 1.4 -2.2 2.5 Z" fill="#FFFFFF" />
     </g>
     
     <!-- Button Text -->

@@ -17,15 +17,14 @@
 <p align="center"><b>Premium Linux Distribution for Termux with 1000+ Pre-Installed Software - IS NOW 100% FREE!</b></p>
 <p align="center"><i>Ubuntu 25.10 | 24/7 Keep-Alive | GPU & CPU Optimization | Termux-X11 Support | Bit-Perfect Audio | Flatpak Support</i></p>
 
-<p align="center">
-<a href="https://trakteer.id/Aleocrophic/tip" target="_blank">
-  <img src="./distro/trakteer_button.svg" alt="Trakteer Tip" />
-</a>
-&nbsp;&nbsp;
-<a href="https://chat.whatsapp.com/KwTSsF7t5868ERksMPamyQ" target="_blank">
-  <img src="./distro/whatsapp_button.svg" alt="Join Community" />
-</a>
-</p>
+<div align="center">
+  <a href="https://trakteer.id/Aleocrophic/tip" target="_blank" style="display: inline-block; margin: 10px;">
+    <img src="./distro/trakteer_button.svg" alt="Trakteer Tip" width="220" />
+  </a>
+  <a href="https://chat.whatsapp.com/KwTSsF7t5868ERksMPamyQ" target="_blank" style="display: inline-block; margin: 10px;">
+    <img src="./distro/whatsapp_button.svg" alt="Join Community" width="220" />
+  </a>
+</div>
 
 ---
 
@@ -418,15 +417,14 @@ This PRO edition v3.1.0 features:
 
 If you find this project useful and want to support its ongoing development, feel free to support me on Trakteer or join our developer community!
 
-<p align="center">
-<a href="https://trakteer.id/Aleocrophic/tip" target="_blank">
-  <img src="./distro/trakteer_button.svg" alt="Trakteer Tip" />
-</a>
-&nbsp;&nbsp;
-<a href="https://chat.whatsapp.com/KwTSsF7t5868ERksMPamyQ" target="_blank">
-  <img src="./distro/whatsapp_button.svg" alt="Join Community" />
-</a>
-</p>
+<div align="center">
+  <a href="https://trakteer.id/Aleocrophic/tip" target="_blank" style="display: inline-block; margin: 10px;">
+    <img src="./distro/trakteer_button.svg" alt="Trakteer Tip" width="220" />
+  </a>
+  <a href="https://chat.whatsapp.com/KwTSsF7t5868ERksMPamyQ" target="_blank" style="display: inline-block; margin: 10px;">
+    <img src="./distro/whatsapp_button.svg" alt="Join Community" width="220" />
+  </a>
+</div>
 
 ---
 
