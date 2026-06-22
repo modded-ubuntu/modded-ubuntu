@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 60" width="230" height="60">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 70" width="250" height="70">
   <defs>
     <linearGradient id="trakteerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#ca2027" />
       <stop offset="100%" stop-color="#f8555c" />
     </linearGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.25" />
     </filter>
   </defs>
@@ -16,7 +16,7 @@
     }
     .btn {
       animation: pulse 2s infinite ease-in-out;
-      transform-origin: 115px 30px;
+      transform-origin: 125px 35px;
       cursor: pointer;
     }
     .btn:hover {
@@ -24,30 +24,30 @@
     }
   </style>
   <g class="btn">
-    <!-- Rounded Button Shadow and Background -->
-    <rect x="2" y="2" width="226" height="56" rx="28" fill="url(#trakteerGrad)" filter="url(#shadow)" />
+    <!-- Centered Rounded Button Background (size 220x50, margins 15px/10px) -->
+    <rect x="15" y="10" width="220" height="50" rx="25" fill="url(#trakteerGrad)" filter="url(#shadow)" />
     
-    <!-- White Circle Background for Icon (Centered at 34, 30) -->
-    <circle cx="34" cy="30" r="18" fill="#FFFFFF" />
+    <!-- White Circle Background for Icon (Centered at 40, 35) -->
+    <circle cx="40" cy="35" r="16" fill="#FFFFFF" />
     
     <!-- Trakteer Coffee Cup Icon (Symmetrical & Centered inside the white circle) -->
     <g>
       <!-- Steam Lines (Red, centered above cup) -->
-      <path d="M 29 25 C 29.5 23, 28.5 22, 29 21" fill="none" stroke="#ca2027" stroke-width="1.5" stroke-linecap="round" />
-      <path d="M 34 25 C 34.5 23, 33.5 22, 34 21" fill="none" stroke="#ca2027" stroke-width="1.5" stroke-linecap="round" />
-      <path d="M 39 25 C 39.5 23, 38.5 22, 39 21" fill="none" stroke="#ca2027" stroke-width="1.5" stroke-linecap="round" />
+      <path d="M 35 30 C 35.5 28, 34.5 27, 35 26" fill="none" stroke="#ca2027" stroke-width="1.5" stroke-linecap="round" />
+      <path d="M 40 30 C 40.5 28, 39.5 27, 40 26" fill="none" stroke="#ca2027" stroke-width="1.5" stroke-linecap="round" />
+      <path d="M 45 30 C 45.5 28, 44.5 27, 45 26" fill="none" stroke="#ca2027" stroke-width="1.5" stroke-linecap="round" />
       
-      <!-- Cup Body (Red, centered at x=34) -->
-      <path d="M 26 27 L 42 27 C 42 27, 42 39, 34 39 C 26 39, 26 27, 26 27 Z" fill="#ca2027" />
+      <!-- Cup Body (Red, centered at x=40) -->
+      <path d="M 32 32 L 48 32 C 48 32, 48 44, 40 44 C 32 44, 32 32, 32 32 Z" fill="#ca2027" />
       
       <!-- Cup Handle (Red) -->
-      <path d="M 42 29 C 45 29, 46 31, 46 33 C 46 35, 45 37, 42 37" fill="none" stroke="#ca2027" stroke-width="1.8" stroke-linecap="round" />
+      <path d="M 48 34 C 51 34, 52 36, 52 38 C 52 40, 51 42, 48 42" fill="none" stroke="#ca2027" stroke-width="1.8" stroke-linecap="round" />
       
-      <!-- Tiny Heart on Cup (White, centered at x=34, y=34) -->
-      <path d="M 34 36.5 c -1.2 -1.1 -2.2 -1.7 -2.2 -2.5 c 0 -0.6 0.5 -1.1 1.1 -1.1 c 0.5 0 0.8 0.3 1.1 0.5 c 0.3 -0.2 0.6 -0.5 1.1 -0.5 c 0.6 0 1.1 0.5 1.1 1.1 c 0 0.8 -1 1.4 -2.2 2.5 Z" fill="#FFFFFF" />
+      <!-- Tiny Heart on Cup (White, centered at x=40, y=39) -->
+      <path d="M 40 41.5 c -1.2 -1.1 -2.2 -1.7 -2.2 -2.5 c 0 -0.6 0.5 -1.1 1.1 -1.1 c 0.5 0 0.8 0.3 1.1 0.5 c 0.3 -0.2 0.6 -0.5 1.1 -0.5 c 0.6 0 1.1 0.5 1.1 1.1 c 0 0.8 -1 1.4 -2.2 2.5 Z" fill="#FFFFFF" />
     </g>
     
-    <!-- Button Text -->
-    <text x="68" y="36" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="800" fill="#FFFFFF" letter-spacing="0.5">Trakteer Tip</text>
+    <!-- Button Text (y centered around 35) -->
+    <text x="72" y="41" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="800" fill="#FFFFFF" letter-spacing="0.5">Trakteer Tip</text>
   </g>
 </svg>

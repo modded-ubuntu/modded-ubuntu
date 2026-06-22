@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 60" width="230" height="60">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 70" width="250" height="70">
   <defs>
     <linearGradient id="waGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#128c7e" />
       <stop offset="100%" stop-color="#25d366" />
     </linearGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.25" />
     </filter>
   </defs>
@@ -16,7 +16,7 @@
     }
     .btn {
       animation: pulse 2s infinite ease-in-out;
-      transform-origin: 115px 30px;
+      transform-origin: 125px 35px;
       cursor: pointer;
     }
     .btn:hover {
@@ -24,14 +24,14 @@
     }
   </style>
   <g class="btn">
-    <!-- Rounded Button Shadow and Background -->
-    <rect x="2" y="2" width="226" height="56" rx="28" fill="url(#waGrad)" filter="url(#shadow)" />
+    <!-- Centered Rounded Button Background (size 220x50, margins 15px/10px) -->
+    <rect x="15" y="10" width="220" height="50" rx="25" fill="url(#waGrad)" filter="url(#shadow)" />
     
-    <!-- White Circle Background for Icon (Centered at 34, 30) -->
-    <circle cx="34" cy="30" r="18" fill="#FFFFFF" />
+    <!-- White Circle Background for Icon (Centered at 40, 35) -->
+    <circle cx="40" cy="35" r="16" fill="#FFFFFF" />
     
-    <!-- WhatsApp Logo Group (Centered at x=34, y=30) -->
-    <g transform="translate(24.5, 20)">
+    <!-- WhatsApp Logo Group (Centered at x=40, y=35) -->
+    <g transform="translate(30.5, 25)">
       <!-- Speech bubble contour -->
       <path d="M 9.5 0.5 C 4.5 0.5 0.5 4.5 0.5 9.5 C 0.5 11.5 1.1 13.5 2.1 15 L 0.5 19.5 L 5.2 18 C 6.5 18.7 8 19 9.5 19 C 14.5 19 18.5 15 18.5 9.5 C 18.5 4.5 14.5 0.5 9.5 0.5 Z" fill="#25d366" />
       
@@ -39,7 +39,7 @@
       <path d="M 6.8 5.2 C 6.5 4.9 6 4.9 5.7 5.2 L 4.8 6.1 C 4.4 6.5 4.3 7.1 4.6 7.6 C 5.3 8.9 6.2 10.1 7.4 11.2 C 8.6 12.3 9.9 13.1 11.2 13.7 C 11.7 13.9 12.3 13.8 12.7 13.4 L 13.6 12.5 C 13.9 12.2 13.9 11.7 13.6 11.4 L 11.8 9.6 C 11.5 9.3 11 9.3 10.7 9.6 L 10.1 10.2 C 9.1 9.6 8.4 8.9 7.8 7.9 L 8.4 7.3 C 8.7 7 8.7 6.5 8.4 6.2 L 6.8 5.2 Z" fill="#FFFFFF" />
     </g>
     
-    <!-- Button Text -->
-    <text x="64" y="36" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="800" fill="#FFFFFF" letter-spacing="0.5">Join Community</text>
+    <!-- Button Text (y centered around 35) -->
+    <text x="68" y="41" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="800" fill="#FFFFFF" letter-spacing="0.5">Join Community</text>
   </g>
 </svg>
