@@ -191,7 +191,18 @@ create_user() {
     if [[ -e '/data/data/com.termux/files/home/modded-ubuntu/distro/settings.sh' ]]; then
         cp /data/data/com.termux/files/home/modded-ubuntu/distro/settings.sh /usr/local/bin/mu-settings
         chmod +x /usr/local/bin/mu-settings
+        cp /data/data/com.termux/files/home/modded-ubuntu/distro/settings.sh /usr/local/bin/acro-settings
+        chmod +x /usr/local/bin/acro-settings
         success_msg "Settings utility installed"
+    fi
+    
+    # Copy DIY script if available
+    if [[ -e '/data/data/com.termux/files/home/modded-ubuntu/distro/acro-diy.sh' ]]; then
+        cp /data/data/com.termux/files/home/modded-ubuntu/distro/acro-diy.sh /usr/local/bin/mu-diy
+        chmod +x /usr/local/bin/mu-diy
+        cp /data/data/com.termux/files/home/modded-ubuntu/distro/acro-diy.sh /usr/local/bin/acro-diy
+        chmod +x /usr/local/bin/acro-diy
+        success_msg "DIY utility installed"
     fi
     
     # Final message

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 60" width="230" height="60">
+  <defs>
+    <linearGradient id="trakteerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ca2027" />
+      <stop offset="100%" stop-color="#f8555c" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.25" />
+    </filter>
+  </defs>
+  <style>
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+      100% { transform: scale(1); }
+    }
+    .btn {
+      animation: pulse 2s infinite ease-in-out;
+      transform-origin: 115px 30px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      filter: url(#shadow) brightness(1.08);
+    }
+  </style>
+  <g class="btn">
+    <!-- Rounded Button Shadow and Background -->
+    <rect x="2" y="2" width="226" height="56" rx="28" fill="url(#trakteerGrad)" filter="url(#shadow)" />
+    
+    <!-- White Circle Background for Icon -->
+    <circle cx="34" cy="30" r="18" fill="#FFFFFF" />
+    
+    <!-- Trakteer Cup Logo Group -->
+    <g transform="translate(18, 14)">
+      <!-- Steam Lines (Red) -->
+      <path d="M 12 6 C 12.5 4, 11.5 3, 12 1" fill="none" stroke="#ca2027" stroke-width="1.5" stroke-linecap="round" />
+      <path d="M 17 6 C 17.5 4, 16.5 3, 17 1" fill="none" stroke="#ca2027" stroke-width="1.5" stroke-linecap="round" />
+      <path d="M 22 6 C 22.5 4, 21.5 3, 22 1" fill="none" stroke="#ca2027" stroke-width="1.5" stroke-linecap="round" />
+      
+      <!-- Cup Body (Red) -->
+      <path d="M 9 9 L 25 9 C 25 9, 25 21, 17 21 C 9 21, 9 9, 9 9 Z" fill="#ca2027" />
+      
+      <!-- Cup Handle (Red) -->
+      <path d="M 25 11 C 28 11, 29 13, 29 15 C 29 17, 28 19, 25 19" fill="none" stroke="#ca2027" stroke-width="1.8" stroke-linecap="round" />
+      
+      <!-- Tiny Heart on Cup (White) -->
+      <path d="M 17 17.5 c -1.2 -1.1 -2.2 -1.7 -2.2 -2.5 c 0 -0.6 0.5 -1.1 1.1 -1.1 c 0.5 0 0.8 0.3 1.1 0.5 c 0.3 -0.2 0.6 -0.5 1.1 -0.5 c 0.6 0 1.1 0.5 1.1 1.1 c 0 0.8 -1 1.4 -2.2 2.5 Z" fill="#FFFFFF" />
+    </g>
+    
+    <!-- Button Text -->
+    <text x="68" y="36" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="800" fill="#FFFFFF" letter-spacing="0.5">Trakteer Tip</text>
+  </g>
+</svg>

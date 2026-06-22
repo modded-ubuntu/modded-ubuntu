@@ -2084,6 +2084,8 @@ COMPLETE_ASCII
     echo -e "  ${GREEN_L}║${W}    ${Y}vncstart${D}         →  Start VNC server                          ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}║${W}    ${Y}x11start${D}         →  Start Termux-X11 session                  ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}║${W}    ${Y}vncreset${D}         →  Hard reset session                        ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${W}    ${Y}acro-settings${D}    →  System Settings Utility (mu-settings)     ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${W}    ${Y}acro-diy${D}         →  DIY Safe Package Add/Remove (mu-diy)      ${GREEN_L}║${D}"
     
     if [[ "$SELECTED_TIER" == "ultimate" ]] || [[ "$CHOICES" =~ "WINE" ]]; then
         echo -e "  ${GREEN_L}║${W}    ${Y}acro-wine${D}        →  Run Windows apps                          ${GREEN_L}║${D}"

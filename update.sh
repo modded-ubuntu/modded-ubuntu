@@ -241,6 +241,9 @@ update_scripts() {
         "distro/user.sh:$UBUNTU_DIR/root/user.sh"
         "distro/gui.sh:$UBUNTU_DIR/root/gui.sh"
         "distro/settings.sh:$UBUNTU_DIR/usr/local/bin/acro-settings"
+        "distro/settings.sh:$UBUNTU_DIR/usr/local/bin/mu-settings"
+        "distro/acro-diy.sh:$UBUNTU_DIR/usr/local/bin/acro-diy"
+        "distro/acro-diy.sh:$UBUNTU_DIR/usr/local/bin/mu-diy"
     )
     
     local total=${#items[@]}
@@ -377,7 +380,18 @@ AUDIO_HELPER_EOF
     if [[ -f "$CURR_DIR/distro/settings.sh" ]]; then
         cp -f "$CURR_DIR/distro/settings.sh" "$UBUNTU_DIR/usr/local/bin/acro-settings"
         chmod +x "$UBUNTU_DIR/usr/local/bin/acro-settings"
-        success_msg "acro-settings installed"
+        cp -f "$CURR_DIR/distro/settings.sh" "$UBUNTU_DIR/usr/local/bin/mu-settings"
+        chmod +x "$UBUNTU_DIR/usr/local/bin/mu-settings"
+        success_msg "acro-settings and mu-settings installed"
+    fi
+    
+    # Install acro-diy if not exists
+    if [[ -f "$CURR_DIR/distro/acro-diy.sh" ]]; then
+        cp -f "$CURR_DIR/distro/acro-diy.sh" "$UBUNTU_DIR/usr/local/bin/acro-diy"
+        chmod +x "$UBUNTU_DIR/usr/local/bin/acro-diy"
+        cp -f "$CURR_DIR/distro/acro-diy.sh" "$UBUNTU_DIR/usr/local/bin/mu-diy"
+        chmod +x "$UBUNTU_DIR/usr/local/bin/mu-diy"
+        success_msg "acro-diy and mu-diy installed"
     fi
     
     # Copy wallpaper if exists
@@ -619,19 +633,35 @@ settings_update() {
     banner
     check_installation
     
-    section_header "⚙️  SETTINGS UTILITY UPDATE"
+    section_header "⚙️  SETTINGS & DIY UTILITY UPDATE"
     
+    local updated=false
     if [[ -e "$CURR_DIR/distro/settings.sh" ]]; then
         cp -f "$CURR_DIR/distro/settings.sh" "$UBUNTU_DIR/usr/local/bin/mu-settings"
         chmod +x "$UBUNTU_DIR/usr/local/bin/mu-settings"
-        success_msg "Settings utility installed"
-        info_msg "Run 'mu-settings' inside Ubuntu to configure"
+        cp -f "$CURR_DIR/distro/settings.sh" "$UBUNTU_DIR/usr/local/bin/acro-settings"
+        chmod +x "$UBUNTU_DIR/usr/local/bin/acro-settings"
+        success_msg "Settings utility updated"
+        updated=true
+    fi
+    
+    if [[ -e "$CURR_DIR/distro/acro-diy.sh" ]]; then
+        cp -f "$CURR_DIR/distro/acro-diy.sh" "$UBUNTU_DIR/usr/local/bin/acro-diy"
+        chmod +x "$UBUNTU_DIR/usr/local/bin/acro-diy"
+        cp -f "$CURR_DIR/distro/acro-diy.sh" "$UBUNTU_DIR/usr/local/bin/mu-diy"
+        chmod +x "$UBUNTU_DIR/usr/local/bin/mu-diy"
+        success_msg "DIY utility updated"
+        updated=true
+    fi
+    
+    if [[ "$updated" == "true" ]]; then
+        info_msg "Run 'mu-settings' or 'acro-settings' inside Ubuntu to configure"
     else
-        error_msg "Settings script not found in repository"
+        error_msg "Settings/DIY scripts not found in repository"
         info_msg "Try 'git pull' to update the repository first"
     fi
     
-    show_complete "Settings Update"
+    show_complete "Settings & DIY Update"
 }
 
 show_complete() {

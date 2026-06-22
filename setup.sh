@@ -433,14 +433,24 @@ X11STOP_EOF
     success_msg "VNC and X11 scripts installed"
 }
 
-# Setup settings script
+# Setup settings and DIY scripts
 setup_settings() {
-    status_msg "Installing Settings utility..."
+    status_msg "Installing Settings and DIY utilities..."
     
     if [[ -d "$CURR_DIR/distro" ]] && [[ -e "$CURR_DIR/distro/settings.sh" ]]; then
         cp -f "$CURR_DIR/distro/settings.sh" "$UBUNTU_DIR/usr/local/bin/acro-settings"
         chmod +x "$UBUNTU_DIR/usr/local/bin/acro-settings"
-        success_msg "Settings utility installed (run 'acro-settings' in Ubuntu)"
+        cp -f "$CURR_DIR/distro/settings.sh" "$UBUNTU_DIR/usr/local/bin/mu-settings"
+        chmod +x "$UBUNTU_DIR/usr/local/bin/mu-settings"
+        success_msg "Settings utility installed (run 'acro-settings' or 'mu-settings')"
+    fi
+
+    if [[ -d "$CURR_DIR/distro" ]] && [[ -e "$CURR_DIR/distro/acro-diy.sh" ]]; then
+        cp -f "$CURR_DIR/distro/acro-diy.sh" "$UBUNTU_DIR/usr/local/bin/acro-diy"
+        chmod +x "$UBUNTU_DIR/usr/local/bin/acro-diy"
+        cp -f "$CURR_DIR/distro/acro-diy.sh" "$UBUNTU_DIR/usr/local/bin/mu-diy"
+        chmod +x "$UBUNTU_DIR/usr/local/bin/mu-diy"
+        success_msg "DIY utility installed (run 'acro-diy' or 'mu-diy')"
     fi
     
     # Copy wallpaper to Ubuntu for installation

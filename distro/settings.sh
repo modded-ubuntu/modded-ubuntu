@@ -495,6 +495,35 @@ show_system_info() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
+# DONATION & SUPPORT SCREEN
+# ═══════════════════════════════════════════════════════════════════════════
+
+show_donation_info() {
+    banner
+    section_header "💖 SUPPORT & DONATIONS"
+    echo ""
+    echo -e "  ${PINK}  ████████╗██████╗  █████╗ ██╗  ██╗████████╗███████╗███████╗██████╗ ${D}"
+    echo -e "  ${PINK}  ╚══██╔══╝██╔══██╗██╔══██╗██║ ██╔╝╚══██╔══╝██╔════╝██╔════╝██╔══██╗${D}"
+    echo -e "  ${PINK}     ██║   ██████╔╝███████║█████╔╝    ██║   █████╗  █████╗  ██████╔╝${D}"
+    echo -e "  ${PINK}     ██║   ██╔══██╗██╔══██║██╔═██╗    ██║   ██╔══╝  ██╔══╝  ██╔══██╗${D}"
+    echo -e "  ${PINK}     ██║   ██║  ██║██║  ██║██║  ██╗   ██║   ███████╗███████╗██║  ██║${D}"
+    echo -e "  ${PINK}     ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝${D}"
+    echo ""
+    echo -e "  ${Y}─────────────────────────────────────────────────────────────────${D}"
+    echo -e "  ${W}If you enjoy using ${CYAN_L}${DISTRO_NAME}${W} and want to support its ongoing${D}"
+    echo -e "  ${W}development, please consider donating on Trakteer!${D}"
+    echo ""
+    echo -e "  ${LPURPLE}  ☕ Trakteer Tip Link (Click or Copy):${D}"
+    echo -e "  ${GREEN_L}  👉  https://trakteer.id/Aleocrophic/tip  👈${D}"
+    echo ""
+    echo -e "  ${GRAY}  Your support helps keep this project updated, optimized, and free!${D}"
+    echo -e "  ${Y}─────────────────────────────────────────────────────────────────${D}"
+    echo ""
+    echo -e "  ${DGRAY}Press Enter to return to main menu...${D}"
+    read
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
 # MAIN MENU
 # ═══════════════════════════════════════════════════════════════════════════
 
@@ -510,12 +539,14 @@ main_menu() {
         menu_item "4" "🔊" "Audio" "Audio input/output settings"
         menu_item "5" "🎨" "Appearance" "Themes and scaling"
         menu_item "6" "📊" "System Info" "View system information"
-        menu_item "7" "🔄" "Hard Reset" "Clear cache, kill apps, restart VNC"
+        menu_item "7" "🛠️ " "DIY Utility" "Safely manage custom packages & startup"
+        menu_item "8" "🔄" "Hard Reset" "Clear cache, kill apps, restart VNC"
+        menu_item "9" "💖" "Support & Donate" "Trakteer tip to developer"
         echo ""
         echo "  ${R}[0]${W}  Exit${D}"
         echo ""
         
-        read -p "  $(echo -e ${Y}Select option [0-7]: ${D})" choice
+        read -p "  $(echo -e ${Y}Select option [0-9]: ${D})" choice
         
         case $choice in
             1) configure_language ;;
@@ -525,6 +556,17 @@ main_menu() {
             5) configure_appearance ;;
             6) show_system_info ;;
             7) 
+                if [[ -f "/usr/local/bin/acro-diy" ]]; then
+                    /usr/local/bin/acro-diy
+                elif [[ -f "/usr/local/bin/mu-diy" ]]; then
+                    /usr/local/bin/mu-diy
+                else
+                    error_msg "DIY utility not found!"
+                    info_msg "Run 'update.sh' or gui installer to install it."
+                    sleep 2
+                fi
+                ;;
+            8) 
                 if command -v vncreset &> /dev/null; then
                     vncreset
                     echo ""
@@ -535,6 +577,7 @@ main_menu() {
                     sleep 2
                 fi
                 ;;
+            9) show_donation_info ;;
             0) 
                 echo ""
                 info_msg "Goodbye!"

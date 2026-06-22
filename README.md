@@ -17,6 +17,12 @@
 <p align="center"><b>Premium Linux Distribution for Termux with 1000+ Pre-Installed Software - Now 100% Free & Customizable!</b></p>
 <p align="center"><i>Ubuntu 25.10 | 24/7 Keep-Alive | GPU & CPU Optimization | Termux-X11 Support | Bit-Perfect Audio | Flatpak Support</i></p>
 
+<p align="center">
+<a href="https://trakteer.id/Aleocrophic/tip" target="_blank">
+  <img src="./distro/trakteer_button.svg" alt="Trakteer Tip" />
+</a>
+</p>
+
 ---
 
 ## 🆕 What's New in v3.5.0
@@ -282,12 +288,18 @@ Update options:
 
 ---
 
-## ⚙️ Settings Utility
+## ⚙️ Settings & DIY Utility
 
-After GUI installation, use the settings utility:
+After GUI installation, you can use the settings utility:
 
 ```bash
-mu-settings
+mu-settings   # Or 'acro-settings'
+```
+
+Alternatively, you can run the DIY utility directly:
+
+```bash
+mu-diy        # Or 'acro-diy'
 ```
 
 **Features:**
@@ -296,7 +308,9 @@ mu-settings
 - 🖥️ **VNC Display** - Adjust resolution, color depth, scale
 - 🔊 **Audio** - Test speakers, microphone, restart PulseAudio
 - 🎨 **Appearance** - Switch themes, font scaling, DPI
-- 🔄 **Hard Reset** - Clear cache, kill all apps, restart fresh
+- 🛠️ **DIY Utility** - Add/delete packages safely, edit custom startup actions, reset default desktop layouts, and clean system caches
+- 🔄 **Hard Reset** - Clear cache, kill all apps, restart fresh (equivalent to `vncreset`)
+- 💖 **Support & Donate** - View Traktiran options and support the developer directly!
 
 ---
 
@@ -400,6 +414,18 @@ This PRO edition v3.1.0 features:
 
 ---
 
+## 💸 Support & Donations
+
+If you find this project useful and want to support its ongoing development, feel free to support me on Trakteer!
+
+<p align="center">
+<a href="https://trakteer.id/Aleocrophic/tip" target="_blank">
+  <img src="./distro/trakteer_button.svg" alt="Trakteer Tip" />
+</a>
+</p>
+
+---
+
 ## 📄 License
 
 Licensed under [Apache License 2.0](./LICENSE)
@@ -409,5 +435,5 @@ Ubuntu image provided by [Termux proot-distro](https://github.com/termux/proot-d
 ---
 
 <p align="center">
-<b>⭐ If you like this PRO edition, please star the repository! ⭐</b>
+<b>⭐ If you like this suite, please star the repository! ⭐</b>
 </p>
