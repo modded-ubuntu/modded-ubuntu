@@ -2,7 +2,7 @@
 
 ##############################################################################
 #                                                                            #
-#   ACRO PRO Edition v3.5.0 - UPDATE SCRIPT                                  #
+#   ACRO PRO Edition v3.5.1 - UPDATE SCRIPT                                  #
 #   System & GUI Updater for Existing Installations                          #
 #                                                                            #
 #   Original Base: modded-ubuntu                                             #
@@ -39,7 +39,7 @@ BOLD=$'\033[1m'
 
 CURR_DIR=$(realpath "$(dirname "$BASH_SOURCE")")
 UBUNTU_DIR="$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu"
-VERSION="3.5.0"
+VERSION="3.5.1"
 DISTRO_NAME="ACRO PRO Edition"
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -107,7 +107,7 @@ banner() {
     ║                          |____|/                   \|____|               ║
     ║                                                                           ║
     ╠═══════════════════════════════════════════════════════════════════════════╣
-    ║              🔄 A C R O   U P D A T E R   v3.5.0 🔄                       ║
+    ║              🔄 A C R O   U P D A T E R   v3.5.1 🔄                       ║
     ╚═══════════════════════════════════════════════════════════════════════════╝
 EOF
     echo "${D}"
@@ -315,8 +315,12 @@ PULSE_DAEMON_EOF
 load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1 port=4713
 
 # Load AAudio sink for high quality Android audio (falling back to opensl)
-load-module module-aaudio-sink sink_properties=device.description="Android_AAudio_Output" 2>/dev/null || load-module module-opensles-sink 2>/dev/null || true
-load-module module-aaudio-source source_properties=device.description="Android_AAudio_Input" 2>/dev/null || load-module module-opensles-source 2>/dev/null || true
+load-module module-aaudio-sink sink_properties=device.description="Android_AAudio_Output" 2>/dev/null || load-module module-opensles-sink 2>/dev/null || load-module module-sles-sink 2>/dev/null || true
+load-module module-aaudio-source source_properties=device.description="Android_AAudio_Input" 2>/dev/null || load-module module-sles-source 2>/dev/null || load-module module-opensles-source 2>/dev/null || true
+
+# Set default sink and source explicitly
+set-default-sink Android_AAudio_Output 2>/dev/null || set-default-sink opensles_output 2>/dev/null || set-default-sink sles_output 2>/dev/null || true
+set-default-source Android_AAudio_Input 2>/dev/null || set-default-source sles_input 2>/dev/null || set-default-source opensles_input 2>/dev/null || true
 
 # Load CLI protocol for pactl
 load-module module-cli

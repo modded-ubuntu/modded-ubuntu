@@ -2,7 +2,7 @@
 
 ##############################################################################
 #                                                                            #
-#   ACRO PRO Edition v3.5.0 - GUI INSTALLER                                  #
+#   ACRO PRO Edition v3.5.1 - GUI INSTALLER                                  #
 #   Premium Linux Distribution for Termux (Ubuntu-based)                     #
 #                                                                            #
 #   Original Base: modded-ubuntu                                             #
@@ -41,7 +41,7 @@ BG_PURPLE=$'\033[48;5;54m'
 # System info
 ARCH=$(uname -m)
 USERNAME=$(getent group sudo | awk -F ':' '{print $4}' | cut -d ',' -f1)
-VERSION="3.5.0"
+VERSION="3.5.1"
 DISTRO_NAME="ACRO PRO Edition"
 LOG_FILE="/tmp/acro-install.log"
 TOTAL_PACKAGES=0
@@ -114,7 +114,7 @@ banner() {
     ║                          |____|/                   \|____|               ║
     ║                                                                           ║
     ╠═══════════════════════════════════════════════════════════════════════════╣
-    ║            🎨 A C R O   G U I   I N S T A L L E R   v3.5.0 🎨            ║
+    ║            🎨 A C R O   G U I   I N S T A L L E R   v3.5.1 🎨            ║
     ╚═══════════════════════════════════════════════════════════════════════════╝
 EOF
     echo "${D}"
@@ -1562,7 +1562,7 @@ BLEACHBIT_EOF
     # Create hard reset script
     cat > /usr/local/bin/vncreset << 'VNCRESET_EOF'
 #!/bin/bash
-# ACRO PRO Edition v3.5.0 - Hard Reset Script
+# ACRO PRO Edition v3.5.1 - Hard Reset Script
 # Performs a complete session reset like restarting a computer
 
 R=$'\033[1;31m'

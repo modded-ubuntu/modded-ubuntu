@@ -2,7 +2,7 @@
 
 ##############################################################################
 #                                                                            #
-#   ACRO PRO Edition v3.5.0 - TERMUX AUTO-FIX                                #
+#   ACRO PRO Edition v3.5.1 - TERMUX AUTO-FIX                                #
 #   Automatically fixes common Termux problems                                #
 #                                                                            #
 #   By: ZetaGo-Aurum                                                         #

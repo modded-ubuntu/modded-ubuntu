@@ -3,7 +3,7 @@
 </p>
 <p align="center">
 <img src="https://img.shields.io/badge/ACRO-PRO%20EDITION-cyan?style=for-the-badge">
-<img src="https://img.shields.io/badge/Version-3.5.0-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/Version-3.5.1-blue?style=for-the-badge">
 <img src="https://img.shields.io/badge/BY-ZetaGo--Aurum-purple?style=for-the-badge">
 </p>
 <p align="center">
@@ -14,28 +14,28 @@
 </p>
 
 <h1 align="center">🚀 ACRO Suite</h1>
-<p align="center"><b>Premium Linux Distribution for Termux with 1000+ Pre-Installed Software - Now 100% Free & Customizable!</b></p>
+<p align="center"><b>Premium Linux Distribution for Termux with 1000+ Pre-Installed Software - IS NOW 100% FREE!</b></p>
 <p align="center"><i>Ubuntu 25.10 | 24/7 Keep-Alive | GPU & CPU Optimization | Termux-X11 Support | Bit-Perfect Audio | Flatpak Support</i></p>
 
 <p align="center">
 <a href="https://trakteer.id/Aleocrophic/tip" target="_blank">
   <img src="./distro/trakteer_button.svg" alt="Trakteer Tip" />
 </a>
+&nbsp;&nbsp;
+<a href="https://chat.whatsapp.com/KwTSsF7t5868ERksMPamyQ" target="_blank">
+  <img src="./distro/whatsapp_button.svg" alt="Join Community" />
+</a>
 </p>
 
 ---
 
-## 🆕 What's New in v3.5.0
+## 🆕 What's New in v3.5.1
 
-- **Premium Tiers** - PRO+ and ULTIMATE add-on packs available
-- **24/7 Keep-Alive** - `acro-keepalive` prevents Android from killing Termux
-- **GPU Optimization** - OpenGL 4.5, Mesa llvmpipe, optimized for Blender/Krita
-- **Flatpak Support** - Install apps from Flathub with `flatpak`
-- **Software Center** - gnome-software for easy app management
-- **Steam for proot** - Patched Steam client in premium tiers
-- **Permanent Audio** - PulseAudio auto-starts on `ubuntu` login
-- **User Preserved** - Updates don't delete your user account
-- **Better Themes** - More premium themes in PRO+ edition
+- **IS NOW FULL FREE** - Premium gates and registration completely removed. Users can choose Minimal, Complete, or Custom package profiles freely!
+- **DIY Utility** - Added `mu-diy` / `acro-diy` allowing users to safely manage custom package list syncs, startup actions, clean disk caches, and restore default desktop layouts without breaking the GUI or audio system.
+- **Official Mic Input Support** - PulseAudio now captures real microphone input by fallback bindings onto `module-sles-source` and setting the default input source.
+- **WhatsApp Community** - Added WhatsApp community button for creative programmers, cybersecurity/hacking enthusiasts, AI, and technology lovers to discuss and share ideas.
+- **Trakteer Tip Integration** - Added animated Trakteer button and menu inside `acro-settings` to allow users to donate and support the developer directly!
 
 ---
 
@@ -86,7 +86,7 @@
 | Video Editing     | VLC only       | **Kdenlive + OBS + Shotcut**     |
 | Dev Tools         | None           | **Python, Node, Go, Rust, Java** |
 | Language Support  | English        | **23+ Languages (incl. Indonesian)** |
-| Settings Utility  | None           | **Comprehensive mu-settings**    |
+| Settings Utility  | None           | **Comprehensive settings & DIY** |
 | VNC Config        | Fixed          | **Adjustable Resolution/Scale**  |
 | Stability         | Good           | **Enterprise-Grade**             |
 
@@ -414,13 +414,17 @@ This PRO edition v3.1.0 features:
 
 ---
 
-## 💸 Support & Donations
+## 💸 Support & Community
 
-If you find this project useful and want to support its ongoing development, feel free to support me on Trakteer!
+If you find this project useful and want to support its ongoing development, feel free to support me on Trakteer or join our developer community!
 
 <p align="center">
 <a href="https://trakteer.id/Aleocrophic/tip" target="_blank">
   <img src="./distro/trakteer_button.svg" alt="Trakteer Tip" />
+</a>
+&nbsp;&nbsp;
+<a href="https://chat.whatsapp.com/KwTSsF7t5868ERksMPamyQ" target="_blank">
+  <img src="./distro/whatsapp_button.svg" alt="Join Community" />
 </a>
 </p>
 

@@ -2,7 +2,7 @@
 
 ##############################################################################
 #                                                                            #
-#   ACRO PRO Edition v3.5.0 - SETTINGS UTILITY                               #
+#   ACRO PRO Edition v3.5.1 - SETTINGS UTILITY                               #
 #   Comprehensive GUI Configuration Tool                                     #
 #                                                                            #
 #   ACRO Distro By: ZetaGo-Aurum                                             #
@@ -33,7 +33,7 @@ DGRAY=$'\033[38;5;238m'
 
 BG_DGRAY=$'\033[48;5;236m'
 
-VERSION="3.5.0"
+VERSION="3.5.1"
 DISTRO_NAME="ACRO PRO Edition"
 CONFIG_DIR="$HOME/.config/acro"
 VNC_CONFIG="$HOME/.vnc/config"
@@ -382,9 +382,11 @@ configure_audio() {
             status_msg "Restarting PulseAudio..."
             pulseaudio --kill 2>/dev/null
             pulseaudio --start --exit-idle-time=-1 --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1"
-            pacmd load-module module-aaudio-sink 2>/dev/null || true
-            pacmd load-module module-aaudio-source 2>/dev/null || true
-            success_msg "PulseAudio restarted"
+            pacmd load-module module-aaudio-sink 2>/dev/null || pacmd load-module module-opensles-sink 2>/dev/null || pacmd load-module module-sles-sink 2>/dev/null || true
+            pacmd load-module module-aaudio-source 2>/dev/null || pacmd load-module module-sles-source 2>/dev/null || pacmd load-module module-opensles-source 2>/dev/null || true
+            pacmd set-default-sink Android_AAudio_Output 2>/dev/null || pacmd set-default-sink opensles_output 2>/dev/null || pacmd set-default-sink sles_output 2>/dev/null || true
+            pacmd set-default-source Android_AAudio_Input 2>/dev/null || pacmd set-default-source sles_input 2>/dev/null || pacmd set-default-source opensles_input 2>/dev/null || true
+            success_msg "PulseAudio restarted with mic input enabled"
             sleep 2
             ;;
         4)
