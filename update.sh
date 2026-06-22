@@ -273,11 +273,58 @@ update_scripts() {
 }
 
 update_audio_config() {
-    section_header "🔊 UPDATING AUDIO CONFIGURATION"
+    section_header "🔊 UPDATING AUDIO, GPU & PERFORMANCE CONFIGURATION"
     
-    status_msg "Setting up PulseAudio for permanent audio..."
+    status_msg "Setting up PulseAudio for bit-perfect clean audio..."
     
-    # Create proper client config
+    # 1. Configure Termux side PulseAudio
+    mkdir -p "$PREFIX/etc/pulse"
+    cat > "$PREFIX/etc/pulse/daemon.conf" << 'PULSE_DAEMON_EOF'
+# Bit-perfect & High Performance PulseAudio configuration for Termux
+daemonize = yes
+allow-module-loading = yes
+system-instance = no
+
+# Audio Quality & Bit-Perfect settings
+avoid-resampling = yes
+resample-method = soxr-vhq
+default-sample-format = s24le
+default-sample-rate = 48000
+alternate-sample-rate = 44100
+default-sample-channels = 2
+default-channel-map = front-left,front-right
+
+# Latency & Buffering tuning for smooth playback (no crackle)
+high-priority = yes
+realtime-scheduling = yes
+realtime-priority = 9
+default-fragments = 2
+default-fragment-size-msec = 5
+
+# Performance
+enable-shm = yes
+enable-memfd = yes
+shm-size-bytes = 67108864
+PULSE_DAEMON_EOF
+
+    cat > "$PREFIX/etc/pulse/default.pa" << 'PULSE_DEFAULT_EOF'
+# Load TCP protocol for PRoot connection
+load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1 port=4713
+
+# Load AAudio sink for high quality Android audio (falling back to opensl)
+load-module module-aaudio-sink sink_properties=device.description="Android_AAudio_Output" 2>/dev/null || load-module module-opensles-sink 2>/dev/null || true
+load-module module-aaudio-source source_properties=device.description="Android_AAudio_Input" 2>/dev/null || load-module module-opensles-source 2>/dev/null || true
+
+# Load CLI protocol for pactl
+load-module module-cli
+PULSE_DEFAULT_EOF
+
+    # Restart PulseAudio
+    pulseaudio --kill 2>/dev/null || true
+    pulseaudio --start --exit-idle-time=-1 2>/dev/null || true
+    success_msg "Termux PulseAudio server updated and optimized"
+
+    # 2. Configure Guest Side PulseAudio client
     mkdir -p "$UBUNTU_DIR/etc/pulse"
     cat > "$UBUNTU_DIR/etc/pulse/client.conf" << 'PULSE_EOF'
 # ACRO PRO Edition - PulseAudio Client Config
@@ -288,7 +335,7 @@ enable-shm = false
 enable-memfd = no
 PULSE_EOF
     
-    # Create profile.d script for environment
+    # Create profile.d script for audio environment
     mkdir -p "$UBUNTU_DIR/etc/profile.d"
     cat > "$UBUNTU_DIR/etc/profile.d/acro-audio.sh" << 'AUDIO_ENV_EOF'
 #!/bin/bash
@@ -324,6 +371,7 @@ case "$1" in
 esac
 AUDIO_HELPER_EOF
     chmod +x "$UBUNTU_DIR/usr/local/bin/acro-audio"
+    success_msg "Guest PulseAudio client configured"
     
     # Install acro-settings if not exists
     if [[ -f "$CURR_DIR/distro/settings.sh" ]]; then
@@ -339,25 +387,52 @@ AUDIO_HELPER_EOF
         success_msg "ACRO wallpaper copied"
     fi
     
-    # Fix GPU configuration (v3.3.2 - OpenGL 4.5 for Blender/modern apps)
-    mkdir -p "$UBUNTU_DIR/etc/profile.d"
+    # 3. CPU and GPU Performance optimizations inside Guest
     cat > "$UBUNTU_DIR/etc/profile.d/acro-gpu.sh" << 'GPU_FIX_EOF'
 #!/bin/bash
 # ACRO PRO Edition - GPU Configuration
-export LIBGL_ALWAYS_SOFTWARE=1
-export GALLIUM_DRIVER=llvmpipe
-export LP_NUM_THREADS=$(nproc)
-export MESA_GL_VERSION_OVERRIDE=4.5
-export MESA_GLSL_VERSION_OVERRIDE=450
-export MESA_EXTENSION_MAX_YEAR=2030
+# Optimized for software rendering & VirGL in proot environment
+
+# Auto-detect if VirGL (GPU emulation) is active
+if ss -tuln | grep -q "2345" || [ -S "/tmp/.virgl_test" ] || [ -S "/data/data/com.termux/files/usr/tmp/.virgl_test" ]; then
+    export GALLIUM_DRIVER=virpipe
+    export VIRGL_NO_SURFACE=1
+    export LIBGL_ALWAYS_SOFTWARE=0
+    export MESA_GL_VERSION_OVERRIDE=4.0
+    export MESA_GLSL_VERSION_OVERRIDE=400
+else
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export GALLIUM_DRIVER=llvmpipe
+    export LP_NUM_THREADS=$(nproc)
+    export MESA_GL_VERSION_OVERRIDE=4.5
+    export MESA_GLSL_VERSION_OVERRIDE=450
+fi
+
 export __GL_SYNC_TO_VBLANK=0
 export __GL_SHADER_DISK_CACHE=1
+export __GL_SHADER_DISK_CACHE_PATH="$HOME/.cache/mesa_shader_cache"
+export MESA_EXTENSION_MAX_YEAR=2030
 export QT_XCB_FORCE_SOFTWARE_OPENGL=1
 export CYCLES_OPENCL_TEST=none
 export LIBGL_DRI3_DISABLE=1
 GPU_FIX_EOF
     chmod +x "$UBUNTU_DIR/etc/profile.d/acro-gpu.sh"
-    success_msg "GPU rendering fixed"
+
+    cat > "$UBUNTU_DIR/etc/profile.d/acro-cpu.sh" << 'CPU_FIX_EOF'
+#!/bin/bash
+# ACRO PRO Edition - CPU & Performance Configuration
+export PROOT_NO_SECCOMP=1
+export OMP_NUM_THREADS=$(nproc)
+export MAKEFLAGS="-j$(nproc)"
+export FORCE_MULTITHREADING=1
+export PYTHONMALLOC=malloc
+export MALLOC_CHECK_=0
+export MALLOC_PERTURB_=0
+export NODE_OPTIONS="--max-old-space-size=4096"
+export _JAVA_OPTIONS="-XX:+UseG1GC -XX:+UseStringDeduplication"
+CPU_FIX_EOF
+    chmod +x "$UBUNTU_DIR/etc/profile.d/acro-cpu.sh"
+    success_msg "GPU and CPU hardware/kernel optimizations configured"
     
     # REMOVE OLD .sound files
     rm -f "$HOME/.sound" 2>/dev/null || true

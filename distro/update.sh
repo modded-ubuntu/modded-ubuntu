@@ -26,24 +26,8 @@ TIER_FILE="$HOME/.acro-tier"
 # ═══════════════════════════════════════════════════════════════════════════
 
 detect_tier() {
-    if [ -f "$LICENSE_FILE" ]; then
-        LICENSE_KEY=$(cat "$LICENSE_FILE" 2>/dev/null | head -1)
-        
-        if [[ "$LICENSE_KEY" == ACRO-ULT-* ]]; then
-            echo "ultimate"
-            return
-        elif [[ "$LICENSE_KEY" == ACRO-PP-* ]]; then
-            echo "proplus"
-            return
-        fi
-    fi
-    
-    if [ -f "$TIER_FILE" ]; then
-        cat "$TIER_FILE" 2>/dev/null | head -1
-        return
-    fi
-    
-    echo "free"
+    # All features and packages are now 100% free
+    echo "ultimate"
 }
 
 # ═══════════════════════════════════════════════════════════════════════════

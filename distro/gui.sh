@@ -293,6 +293,12 @@ XFCE_PACKAGES=(
     ristretto tumbler tumbler-plugins-extra
 )
 
+# GNOME Desktop Environment Option
+GNOME_PACKAGES=(
+    gnome-session gnome-terminal gnome-control-center gnome-backgrounds
+    gnome-themes-extra adwaita-icon-theme-full
+)
+
 # VNC
 VNC_PACKAGES=(
     tigervnc-standalone-server tigervnc-common tigervnc-tools
@@ -643,82 +649,73 @@ show_tier_selection() {
     banner
     echo ""
     echo -e "  ${M}╔═══════════════════════════════════════════════════════════════════╗${D}"
-    echo -e "  ${M}║${Y}               🏆 SELECT YOUR ACRO EDITION 🏆                     ${M}║${D}"
+    echo -e "  ${M}║${Y}            🚀 SELECT YOUR INSTALLATION PROFILE 🚀                 ${M}║${D}"
     echo -e "  ${M}╠═══════════════════════════════════════════════════════════════════╣${D}"
     echo -e "  ${M}║${D}                                                                   ${M}║${D}"
-    echo -e "  ${M}║${W}  [1] 🆓 FREE Edition (Basic)${D}                                     ${M}║${D}"
-    echo -e "  ${M}║${GRAY}      • 50 Essential Packages only${D}                               ${M}║${D}"
-    echo -e "  ${M}║${GRAY}      • Basic XFCE Desktop${D}                                       ${M}║${D}"
-    echo -e "  ${M}║${GRAY}      • English Only, Fast Install (~15 min)${D}                     ${M}║${D}"
-    echo -e "  ${M}║${GRAY}      • No vGPU, No Performance Tweaks${D}                           ${M}║${D}"
+    echo -e "  ${M}║${W}  [1] 🆓 MINIMAL Profile (Basic XFCE Desktop)${D}                    ${M}║${D}"
+    echo -e "  ${M}║${GRAY}      • 50 Essential Packages only, fast install (~15 min)${D}          ${M}║${D}"
+    echo -e "  ${M}║${GRAY}      • Basic XFCE, VNC, PulseAudio, English Locales${D}               ${M}║${D}"
     echo -e "  ${M}║${D}                                                                   ${M}║${D}"
-    echo -e "  ${M}║${C}  [2] ⭐ PRO+ Edition (25 ACRON = Rp 75.000)${D}                       ${M}║${D}"
-    echo -e "  ${M}║${W}      • 500 Software Packages${D}                                     ${M}║${D}"
-    echo -e "  ${M}║${W}      • vGPU Gaming + Wine/Box86 (Windows Apps!)${D}                  ${M}║${D}"
-    echo -e "  ${M}║${W}      • Performance Tweaks + 15 Premium Themes${D}                    ${M}║${D}"
-    echo -e "  ${M}║${W}      • OBS Streaming + Dev Tools${D}                                 ${M}║${D}"
+    echo -e "  ${M}║${C}  [2] 🏆 COMPLETE Profile (Install ALL - 1000+ packages)${D}          ${M}║${D}"
+    echo -e "  ${M}║${W}      • Installs all browsers, tools, gaming, audio/video${D}           ${M}║${D}"
+    echo -e "  ${M}║${W}      • Optimized GPU rendering + Wine/Box86 + Termux-X11${D}           ${M}║${D}"
+    echo -e "  ${M}║${W}      • 100% Free - No License Keys required!${D}                      ${M}║${D}"
     echo -e "  ${M}║${D}                                                                   ${M}║${D}"
-    echo -e "  ${M}║${R}  [3] 🏆 ULTIMATE Edition (50 ACRON = Rp 150.000)${D}                  ${M}║${D}"
-    echo -e "  ${M}║${W}      • 1000+ Software Packages (ALL)${D}                             ${M}║${D}"
-    echo -e "  ${M}║${W}      • Super GPU + Super Performance${D}                             ${M}║${D}"
-    echo -e "  ${M}║${W}      • 100+ Security/Hacking Tools${D}                               ${M}║${D}"
-    echo -e "  ${M}║${W}      • Privacy Suite + Full Dev Pack${D}                             ${M}║${D}"
+    echo -e "  ${M}║${R}  [3] ⚙️  CUSTOM Profile (Interactive Checklist)${D}                    ${M}║${D}"
+    echo -e "  ${M}║${W}      • Select exact package groups/features to install${D}             ${M}║${D}"
+    echo -e "  ${M}║${W}      • Customize according to your storage and needs${D}               ${M}║${D}"
     echo -e "  ${M}║${D}                                                                   ${M}║${D}"
-    echo -e "  ${M}╠═══════════════════════════════════════════════════════════════════╣${D}"
-    echo -e "  ${M}║${G}  💳 Purchase: https://aleocrophic-acron.vercel.app${D}                ${M}║${D}"
     echo -e "  ${M}╚═══════════════════════════════════════════════════════════════════╝${D}"
     echo ""
-    read -p "  Select edition [1-3]: " TIER_CHOICE
+    read -p "  Select installation profile [1-3]: " TIER_CHOICE
     
     case "$TIER_CHOICE" in
+        1)
+            SELECTED_TIER="free"
+            echo -e "  ${C}Installing Minimal Profile (50 packages, fast)...${D}"
+            ;;
         2)
-            SELECTED_TIER="proplus"
-            # Check for license
-            if [ -f "$HOME/.acro-license" ]; then
-                LICENSE_KEY=$(cat "$HOME/.acro-license" 2>/dev/null | head -1)
-                if [[ "$LICENSE_KEY" == ACRO-PP-* ]] || [[ "$LICENSE_KEY" == ACRO-ULT-* ]]; then
-                    echo -e "  ${G}✓ Valid PRO+ license detected!${D}"
-                    return 0
-                fi
-            fi
-            echo ""
-            echo -e "  ${Y}PRO+ requires a license key.${D}"
-            read -p "  Enter license key (or press Enter to go FREE): " INPUT_KEY
-            if [[ "$INPUT_KEY" == ACRO-PP-* ]]; then
-                echo "$INPUT_KEY" > "$HOME/.acro-license"
-                echo -e "  ${G}✓ License saved!${D}"
-            else
-                echo -e "  ${Y}Invalid key. Installing FREE edition instead.${D}"
-                SELECTED_TIER="free"
-            fi
+            SELECTED_TIER="ultimate"
+            echo -e "  ${C}Installing Complete Profile (1000+ packages)...${D}"
             ;;
         3)
-            SELECTED_TIER="ultimate"
-            # Check for license
-            if [ -f "$HOME/.acro-license" ]; then
-                LICENSE_KEY=$(cat "$HOME/.acro-license" 2>/dev/null | head -1)
-                if [[ "$LICENSE_KEY" == ACRO-ULT-* ]]; then
-                    echo -e "  ${G}✓ Valid ULTIMATE license detected!${D}"
-                    return 0
-                fi
+            SELECTED_TIER="custom"
+            # Show interactive checklist using whiptail
+            if ! command -v whiptail &>/dev/null; then
+                apt-get install -y whiptail >> "$LOG_FILE" 2>&1
             fi
-            echo ""
-            echo -e "  ${Y}ULTIMATE requires a license key.${D}"
-            read -p "  Enter license key (or press Enter to go FREE): " INPUT_KEY
-            if [[ "$INPUT_KEY" == ACRO-ULT-* ]]; then
-                echo "$INPUT_KEY" > "$HOME/.acro-license"
-                echo -e "  ${G}✓ License saved!${D}"
-            else
-                echo -e "  ${Y}Invalid key. Installing FREE edition instead.${D}"
+            
+            CHOICES=$(whiptail --title "Custom Package Selection" --checklist \
+            "Choose the package categories you want to install (Space to select, Enter to confirm):" 20 78 15 \
+            "BASE" "Essential System Utilities (htop, tmux, git, etc.)" ON \
+            "DESKTOP_XFCE" "XFCE Desktop Environment" ON \
+            "DESKTOP_GNOME" "GNOME Desktop Environment" OFF \
+            "BROWSERS" "Firefox & Chromium Web Browsers" ON \
+            "DEV" "Dev Pack (Python, Node, Go, Rust, Java, VSCode)" ON \
+            "OFFICE" "Office Suite (LibreOffice, PDF Readers, Calibre)" ON \
+            "GRAPHICS" "Graphics & Design (GIMP, Krita, Blender, Inkscape)" ON \
+            "AUDIO" "Audio Production (Audacity, LMMS, Ardour, MIDI)" ON \
+            "VIDEO" "Video Production (VLC, Kdenlive, OBS, FFmpeg)" ON \
+            "DB" "Database Clients (SQLite, MariaDB, PostgreSQL)" ON \
+            "NET" "Network & Remote Tools (FileZilla, RDP, VPN)" ON \
+            "SEC" "Security & Pentesting Tools (Nmap, Wireshark)" OFF \
+            "WINE" "Wine & Box86 Emulation (Mobox-style)" ON \
+            "GPU" "GPU & 3D rendering optimization (Mesa VirGL)" ON \
+            "FLATPAK" "Flatpak & Gnome Software Center" OFF \
+            "LOCALES" "Locales & CJK/Arabic language fonts" OFF \
+            3>&1 1>&2 2>&3)
+            
+            # If user cancels, default to free
+            if [ $? -ne 0 ] || [ -z "$CHOICES" ]; then
                 SELECTED_TIER="free"
+                echo -e "  ${Y}No selection made. Installing Minimal Profile.${D}"
             fi
             ;;
         *)
             SELECTED_TIER="free"
-            echo -e "  ${C}Installing FREE Edition (50 packages, fast)...${D}"
+            echo -e "  ${C}Defaulting to Minimal Profile...${D}"
             ;;
     esac
-    
     sleep 1
 }
 
@@ -782,21 +779,80 @@ configure_wine_box86() {
 export WINEDLLOVERRIDES="mscoree,mshtml="
 export WINEARCH=win32
 export WINEPREFIX="$HOME/.wine32"
+
+# Box86 & Box64 Dynarec optimizations (Low-level execution tuning)
+export BOX86_DYNAREC=1
+export BOX64_DYNAREC=1
+export BOX86_DYNAREC_FASTROUND=1
+export BOX64_DYNAREC_FASTROUND=1
+export BOX86_DYNAREC_SAFEFLAGS=1
+export BOX64_DYNAREC_SAFEFLAGS=1
+export BOX86_DYNAREC_BIGBLOCK=1
+export BOX64_DYNAREC_BIGBLOCK=1
+export BOX86_STRONG_MEM=1
+export BOX64_STRONG_MEM=1
 export BOX86_LOG=0
 export BOX86_NOBANNER=1
 export BOX64_LOG=0
 export BOX64_NOBANNER=1
 
-# Wine display fix for VNC
-export DISPLAY=:1
+# Audio & Display
+export DISPLAY="${DISPLAY:-:1}"
+export PULSE_SERVER="tcp:127.0.0.1:4713"
 
 # Performance optimizations
 export WINEDEBUG=-all
-export MESA_GL_VERSION_OVERRIDE=4.5
-export MESA_GLSL_VERSION_OVERRIDE=450
+export MESA_GL_VERSION_OVERRIDE=4.0
+export MESA_GLSL_VERSION_OVERRIDE=400
 WINE_ENV
     chmod +x /etc/profile.d/wine-proot.sh
     
+    # Create Wine Registry Optimizer Script
+    cat > /usr/local/bin/acro-wine-optimize << 'WINE_OPT_EOF'
+#!/bin/bash
+# ACRO PRO Edition - Wine Performance Optimizer
+# Tunes registry settings for Windows emulation on ARM devices
+
+export WINEPREFIX="${WINEPREFIX:-$HOME/.wine32}"
+export WINEARCH=win32
+
+echo "Applying registry optimizations to Wine prefix: $WINEPREFIX"
+
+# Create a temporary .reg file
+cat > /tmp/acro_wine_opt.reg << 'REG_EOF'
+REGEDIT4
+
+[HKEY_CURRENT_USER\Software\Wine\Direct3D]
+"CSMT"=dword:00000001
+"MaxShaderModelVS"=dword:0000000f
+"MaxShaderModelPS"=dword:0000000f
+"StrictShaderTemplates"="enabled"
+"VideoMemorySize"="4096"
+"OffscreenRenderingMode"="fbo"
+"AlwaysOffscreen"="enabled"
+"Multisampling"="enabled"
+
+[HKEY_CURRENT_USER\Software\Wine\Drivers]
+"Audio"="pulse"
+
+[HKEY_CURRENT_USER\Software\Wine\MSHTML]
+"GeckoUrl"=""
+
+[HKEY_CURRENT_USER\Software\Wine\Gecko]
+"Disable"=dword:00000001
+
+[HKEY_CURRENT_USER\Software\Wine\Mono]
+"Disable"=dword:00000001
+REG_EOF
+
+# Import into Wine
+wine regedit /tmp/acro_wine_opt.reg >/dev/null 2>&1
+rm -f /tmp/acro_wine_opt.reg
+
+echo "✓ Wine Registry Optimizations applied (CSMT, VRAM=4096MB, Disable Gecko/Mono Popups)"
+WINE_OPT_EOF
+    chmod +x /usr/local/bin/acro-wine-optimize
+
     # Create Wine launcher script
     cat > /usr/local/bin/acro-wine << 'WINELAUNCHER'
 #!/bin/bash
@@ -812,9 +868,22 @@ D=$'\033[0m'
 export WINEDLLOVERRIDES="mscoree,mshtml="
 export WINEARCH=win32
 export WINEPREFIX="$HOME/.wine32"
+
+# Box86 & Box64 Dynarec optimizations (Low-level execution tuning)
+export BOX86_DYNAREC=1
+export BOX64_DYNAREC=1
+export BOX86_DYNAREC_FASTROUND=1
+export BOX64_DYNAREC_FASTROUND=1
+export BOX86_DYNAREC_SAFEFLAGS=1
+export BOX64_DYNAREC_SAFEFLAGS=1
+export BOX86_DYNAREC_BIGBLOCK=1
+export BOX64_DYNAREC_BIGBLOCK=1
+export BOX86_STRONG_MEM=1
+export BOX64_STRONG_MEM=1
 export BOX86_LOG=0
 export BOX86_NOBANNER=1
-export DISPLAY=:1
+
+export DISPLAY="${DISPLAY:-:1}"
 export WINEDEBUG=-all
 
 echo ""
@@ -825,7 +894,7 @@ echo ""
 
 if [ -z "$1" ]; then
     echo "${Y}Usage:${D}"
-    echo "  ${G}acro-wine setup${D}      - Initialize Wine prefix"
+    echo "  ${G}acro-wine setup${D}      - Initialize and optimize Wine prefix"
     echo "  ${G}acro-wine winetricks${D} - Run Winetricks"
     echo "  ${G}acro-wine winecfg${D}    - Configure Wine"
     echo "  ${G}acro-wine file.exe${D}   - Run Windows executable"
@@ -838,6 +907,7 @@ case "$1" in
     setup)
         echo "${Y}Initializing Wine prefix...${D}"
         wineboot --init
+        /usr/local/bin/acro-wine-optimize
         echo "${G}✓ Wine prefix created at $WINEPREFIX${D}"
         ;;
     winetricks)
@@ -851,6 +921,13 @@ case "$1" in
         wine explorer
         ;;
     *)
+        # Optimize registry on execution if not done
+        if [ ! -d "$WINEPREFIX" ]; then
+             echo "${Y}Creating and optimizing default wineprefix...${D}"
+             wineboot --init
+             /usr/local/bin/acro-wine-optimize
+        fi
+        
         if [ -f "$1" ]; then
             echo "${Y}Running: $1${D}"
             wine "$1"
@@ -1558,44 +1635,72 @@ VNCRESET_EOF
 # ═══════════════════════════════════════════════════════════════════════════
 
 configure_gpu() {
-    section_header "🎮 GPU & 3D OPTIMIZATION"
+    section_header "🎮 GPU, CPU & KERNEL OPTIMIZATION"
     
-    info_msg "Configuring GPU environment for proot..."
+    info_msg "Configuring GPU environment for proot (VirGL + llvmpipe auto-detect)..."
     
     # Create GPU environment configuration
     cat > /etc/profile.d/acro-gpu.sh << 'GPU_ENV_EOF'
 #!/bin/bash
 # ACRO PRO Edition - GPU Configuration
-# Optimized for software rendering in proot environment
+# Optimized for 3D rendering and graphics performance in proot
 
-# Mesa/OpenGL settings - Enable software rendering for compatibility
-export LIBGL_ALWAYS_SOFTWARE=1
-export GALLIUM_DRIVER=llvmpipe
-export LP_NUM_THREADS=$(nproc)
+# Auto-detect if VirGL (GPU emulation) is active
+if ss -tuln | grep -q "2345" || [ -S "/tmp/.virgl_test" ] || [ -S "/data/data/com.termux/files/usr/tmp/.virgl_test" ]; then
+    export GALLIUM_DRIVER=virpipe
+    export VIRGL_NO_SURFACE=1
+    export LIBGL_ALWAYS_SOFTWARE=0
+    export MESA_GL_VERSION_OVERRIDE=4.0
+    export MESA_GLSL_VERSION_OVERRIDE=400
+else
+    # Fallback to software rendering (fully optimized)
+    export LIBGL_ALWAYS_SOFTWARE=1
+    export GALLIUM_DRIVER=llvmpipe
+    export LP_NUM_THREADS=$(nproc)
+    export MESA_GL_VERSION_OVERRIDE=4.5
+    export MESA_GLSL_VERSION_OVERRIDE=450
+fi
 
-# Mesa version override - MUST BE 4.5+ for Blender and modern apps
-export MESA_GL_VERSION_OVERRIDE=4.5
-export MESA_GLSL_VERSION_OVERRIDE=450
-export MESA_EXTENSION_MAX_YEAR=2030
-
-# Shader cache for performance
+# Performance tweaks
 export __GL_SYNC_TO_VBLANK=0
 export __GL_SHADER_DISK_CACHE=1
 export __GL_SHADER_DISK_CACHE_PATH="$HOME/.cache/mesa_shader_cache"
+export MESA_EXTENSION_MAX_YEAR=2030
 
-# Blender specific
-export BLENDER_SYSTEM_SCRIPTS=/usr/share/blender/scripts
+# Blender and Qt specific rendering overrides
 export CYCLES_OPENCL_TEST=none
-
-# Krita/Qt software rendering
 export QT_XCB_FORCE_SOFTWARE_OPENGL=1
-
-# General fixes for proot
 export LIBGL_DRI3_DISABLE=1
 GPU_ENV_EOF
     chmod +x /etc/profile.d/acro-gpu.sh
-    
     success_msg "GPU environment configured"
+
+    info_msg "Configuring CPU & Kernel optimizations..."
+    
+    # Create CPU optimization script
+    cat > /etc/profile.d/acro-cpu.sh << 'CPU_ENV_EOF'
+#!/bin/bash
+# ACRO PRO Edition - CPU & Performance Configuration
+
+# Low-level system overrides
+export PROOT_NO_SECCOMP=1
+
+# Multi-threading optimization
+export OMP_NUM_THREADS=$(nproc)
+export MAKEFLAGS="-j$(nproc)"
+export FORCE_MULTITHREADING=1
+
+# Low-level memory speedups
+export PYTHONMALLOC=malloc
+export MALLOC_CHECK_=0
+export MALLOC_PERTURB_=0
+
+# Virtual Machine memory allocations (Java/Node)
+export NODE_OPTIONS="--max-old-space-size=4096"
+export _JAVA_OPTIONS="-XX:+UseG1GC -XX:+UseStringDeduplication"
+CPU_ENV_EOF
+    chmod +x /etc/profile.d/acro-cpu.sh
+    success_msg "CPU and kernel emulator tweaks configured"
     
     # Create GPU info script
     info_msg "Creating GPU tools..."
@@ -1955,18 +2060,18 @@ COMPLETE_ASCII
     
     # Show tier-specific message
     if [[ "$SELECTED_TIER" == "free" ]]; then
-        echo -e "  ${GREEN_L}║${W}  ✓ Edition: ${C}FREE${W} - 50 Essential Packages                        ${GREEN_L}║${D}"
-    elif [[ "$SELECTED_TIER" == "proplus" ]]; then
-        echo -e "  ${GREEN_L}║${W}  ✓ Edition: ${M}PRO+${W} - 500 Software Packages                        ${GREEN_L}║${D}"
+        echo -e "  ${GREEN_L}║${W}  ✓ Profile: ${C}MINIMAL${W} - 50 Essential Packages                     ${GREEN_L}║${D}"
+    elif [[ "$SELECTED_TIER" == "custom" ]]; then
+        echo -e "  ${GREEN_L}║${W}  ✓ Profile: ${M}CUSTOM${W} - Selected Package Groups                       ${GREEN_L}║${D}"
     else
-        echo -e "  ${GREEN_L}║${W}  ✓ Edition: ${R}ULTIMATE${W} - 1000+ Software Packages                  ${GREEN_L}║${D}"
+        echo -e "  ${GREEN_L}║${W}  ✓ Profile: ${R}COMPLETE${W} - 1000+ Software Packages                     ${GREEN_L}║${D}"
     fi
     
-    echo -e "  ${GREEN_L}║${W}  ✓ XFCE Desktop Environment configured                           ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}  ✓ PulseAudio sound system ready                                  ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}  ✓ VNC Server ready to connect                                    ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${W}  ✓ Desktop Environment configured                                 ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${W}  ✓ PulseAudio sound system ready (Bit-Perfect)                    ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${W}  ✓ VNC Server & Termux-X11 ready to connect                       ${GREEN_L}║${D}"
     
-    if [[ "$SELECTED_TIER" != "free" ]]; then
+    if [[ "$SELECTED_TIER" == "ultimate" ]] || [[ "$CHOICES" =~ "WINE" ]]; then
         echo -e "  ${GREEN_L}║${W}  ✓ Wine/Box86 configured for Windows apps                        ${GREEN_L}║${D}"
     fi
     
@@ -1977,10 +2082,10 @@ COMPLETE_ASCII
     echo -e "  ${GREEN_L}║${CYAN_L}  🚀 QUICK START:${D}                                                   ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}║${W}    ${Y}vncstart${D}         →  Start VNC server                          ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}    ${Y}vncstop${D}          →  Stop VNC server                           ${GREEN_L}║${D}"
+    echo -e "  ${GREEN_L}║${W}    ${Y}x11start${D}         →  Start Termux-X11 session                  ${GREEN_L}║${D}"
     echo -e "  ${GREEN_L}║${W}    ${Y}vncreset${D}         →  Hard reset session                        ${GREEN_L}║${D}"
     
-    if [[ "$SELECTED_TIER" != "free" ]]; then
+    if [[ "$SELECTED_TIER" == "ultimate" ]] || [[ "$CHOICES" =~ "WINE" ]]; then
         echo -e "  ${GREEN_L}║${W}    ${Y}acro-wine${D}        →  Run Windows apps                          ${GREEN_L}║${D}"
     fi
     
@@ -2043,11 +2148,11 @@ main() {
     
     if [[ "$SELECTED_TIER" == "free" ]]; then
         # ═══════════════════════════════════════════════════════════════
-        # FREE TIER - 50 PACKAGES, FAST, ENGLISH ONLY
+        # MINIMAL PROFILE - 50 PACKAGES, FAST, ENGLISH ONLY
         # ═══════════════════════════════════════════════════════════════
         
         echo -e "  ${C}╔═══════════════════════════════════════════════════════════════════╗${D}"
-        echo -e "  ${C}║${W}            🆓 FREE EDITION - FAST INSTALLATION 🆓                ${C}║${D}"
+        echo -e "  ${C}║${W}            🆓 MINIMAL PROFILE - FAST INSTALLATION 🆓              ${C}║${D}"
         echo -e "  ${C}╠═══════════════════════════════════════════════════════════════════╣${D}"
         echo -e "  ${C}║${D}                                                                   ${C}║${D}"
         echo -e "  ${C}║${W}  Installing 50 essential packages only:                          ${C}║${D}"
@@ -2078,109 +2183,147 @@ main() {
         
     else
         # ═══════════════════════════════════════════════════════════════
-        # PREMIUM TIER - FULL INSTALLATION (PRO+ or ULTIMATE)
+        # COMPLETE OR CUSTOM PROFILE - FREE SELECTION
         # ═══════════════════════════════════════════════════════════════
         
-        # Calculate total packages
-        TOTAL_PACKAGES=$((
-            ${#BASE_PACKAGES[@]} +
-            ${#XFCE_PACKAGES[@]} +
-            ${#VNC_PACKAGES[@]} +
-            ${#FONT_PACKAGES[@]} +
-            ${#THEME_PACKAGES[@]} +
-            ${#DEV_PACKAGES[@]} +
-            ${#DATABASE_PACKAGES[@]} +
-            ${#GPU_PACKAGES[@]} +
-            ${#SOFTWARE_PACKAGES[@]} +
-            ${#OFFICE_PACKAGES[@]} +
-            ${#GRAPHICS_PACKAGES[@]} +
-            ${#AUDIO_PACKAGES[@]} +
-            ${#VIDEO_PACKAGES[@]} +
-            ${#UTILITY_PACKAGES[@]} +
-            ${#NETWORK_PACKAGES[@]} +
-            ${#SECURITY_PACKAGES[@]} +
-            ${#VIRTUALIZATION_PACKAGES[@]} +
-            ${#LOCALE_PACKAGES[@]} +
-            10
-        ))
-        
-        if [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "x86_64" ]]; then
-            TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#VIDEO_EDITING_64[@]}))
-        fi
-        
-        local tier_name="PRO+"
-        local tier_color="${M}"
+        # If complete profile is chosen, select all categories
         if [[ "$SELECTED_TIER" == "ultimate" ]]; then
-            tier_name="ULTIMATE"
-            tier_color="${R}"
+            CHOICES="BASE DESKTOP_XFCE BROWSERS DEV OFFICE GRAPHICS AUDIO VIDEO DB NET SEC WINE GPU FLATPAK LOCALES"
         fi
         
-        echo -e "  ${tier_color}╔═══════════════════════════════════════════════════════════════════╗${D}"
-        echo -e "  ${tier_color}║${W}           🏆 ${tier_name} EDITION - FULL INSTALLATION 🏆              ${tier_color}║${D}"
-        echo -e "  ${tier_color}╠═══════════════════════════════════════════════════════════════════╣${D}"
-        echo -e "  ${tier_color}║${D}                                                                   ${tier_color}║${D}"
-        echo -e "  ${tier_color}║${W}  Installing 1000+ software packages including:                    ${tier_color}║${D}"
-        echo -e "  ${tier_color}║${CYAN_L}  • VSCode, LibreOffice, GIMP, Inkscape, Krita                   ${tier_color}║${D}"
-        echo -e "  ${tier_color}║${CYAN_L}  • Wine/Box86 for Windows apps (Mobox-style)                    ${tier_color}║${D}"
-        echo -e "  ${tier_color}║${CYAN_L}  • vGPU Optimization + Performance Tweaks                       ${tier_color}║${D}"
-        echo -e "  ${tier_color}║${CYAN_L}  • 100+ fonts for all languages                                 ${tier_color}║${D}"
-        echo -e "  ${tier_color}║${D}                                                                   ${tier_color}║${D}"
-        echo -e "  ${tier_color}║${GREEN_L}  Estimated time: 60-120 minutes                                 ${tier_color}║${D}"
-        echo -e "  ${tier_color}║${ORANGE}  Storage required: ~15-20 GB                                    ${tier_color}║${D}"
-        echo -e "  ${tier_color}║${D}                                                                   ${tier_color}║${D}"
-        echo -e "  ${tier_color}╚═══════════════════════════════════════════════════════════════════╝${D}"
+        # Calculate total packages based on selections
+        TOTAL_PACKAGES=0
+        if [[ "$CHOICES" =~ "BASE" ]]; then TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#BASE_PACKAGES[@]} + ${#UTILITY_PACKAGES[@]})); fi
+        if [[ "$CHOICES" =~ "DESKTOP_XFCE" ]]; then TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#XFCE_PACKAGES[@]} + ${#THEME_PACKAGES[@]} + ${#VNC_PACKAGES[@]})); fi
+        if [[ "$CHOICES" =~ "DESKTOP_GNOME" ]]; then TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#GNOME_PACKAGES[@]} + ${#VNC_PACKAGES[@]})); fi
+        if [[ "$CHOICES" =~ "LOCALES" ]]; then TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#LOCALE_PACKAGES[@]} + ${#FONT_PACKAGES[@]})); fi
+        if [[ "$CHOICES" =~ "DEV" ]]; then TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#DEV_PACKAGES[@]} + 3)); fi
+        if [[ "$CHOICES" =~ "DB" ]]; then TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#DATABASE_PACKAGES[@]})); fi
+        if [[ "$CHOICES" =~ "GPU" ]]; then TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#GPU_PACKAGES[@]})); fi
+        if [[ "$CHOICES" =~ "FLATPAK" ]]; then TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#SOFTWARE_PACKAGES[@]})); fi
+        if [[ "$CHOICES" =~ "OFFICE" ]]; then TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#OFFICE_PACKAGES[@]})); fi
+        if [[ "$CHOICES" =~ "GRAPHICS" ]]; then TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#GRAPHICS_PACKAGES[@]})); fi
+        if [[ "$CHOICES" =~ "AUDIO" ]]; then TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#AUDIO_PACKAGES[@]})); fi
+        if [[ "$CHOICES" =~ "VIDEO" ]]; then TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#VIDEO_PACKAGES[@]})); fi
+        if [[ "$CHOICES" =~ "NET" ]]; then TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#NETWORK_PACKAGES[@]})); fi
+        if [[ "$CHOICES" =~ "SEC" ]]; then TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#SECURITY_PACKAGES[@]})); fi
+        if [[ "$CHOICES" =~ "BROWSERS" ]]; then TOTAL_PACKAGES=$((TOTAL_PACKAGES + 2)); fi
+        if [[ "$CHOICES" =~ "WINE" ]]; then TOTAL_PACKAGES=$((TOTAL_PACKAGES + 3)); fi
+        
+        # 64-bit only check
+        if [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "x86_64" ]]; then
+            if [[ "$CHOICES" =~ "VIDEO" ]] || [[ "$CHOICES" =~ "GRAPHICS" ]]; then
+                TOTAL_PACKAGES=$((TOTAL_PACKAGES + ${#VIDEO_EDITING_64[@]}))
+            fi
+        fi
+        
+        echo -e "  ${PURPLE}╔═══════════════════════════════════════════════════════════════════╗${D}"
+        echo -e "  ${PURPLE}║${W}            🚀 PROFILES INSTALLATION - DEPLOYING PACKAGES          ${PURPLE}║${D}"
+        echo -e "  ${PURPLE}╠═══════════════════════════════════════════════════════════════════╣${D}"
+        echo -e "  ${PURPLE}║${D}                                                                   ${PURPLE}║${D}"
+        echo -e "  ${PURPLE}║${W}  Installing selected package groups dynamically...              ${PURPLE}║${D}"
+        echo -e "  ${PURPLE}║${W}  Total Packages to process: ~${TOTAL_PACKAGES}                              ${PURPLE}║${D}"
+        echo -e "  ${PURPLE}║${D}                                                                   ${PURPLE}║${D}"
+        echo -e "  ${PURPLE}╚═══════════════════════════════════════════════════════════════════╝${D}"
         echo ""
         
-        sleep 3
+        sleep 2
         
         # Fix package manager
         fix_dpkg
         
-        # Install all package categories
-        install_category "BASE SYSTEM" "${BASE_PACKAGES[@]}"
-        install_category "XFCE DESKTOP" "${XFCE_PACKAGES[@]}"
-        install_category "VNC SERVER" "${VNC_PACKAGES[@]}"
-        install_category "FONTS (All Languages)" "${FONT_PACKAGES[@]}"
-        install_category "THEMES & APPEARANCE" "${THEME_PACKAGES[@]}"
-        install_category "DEVELOPMENT TOOLS" "${DEV_PACKAGES[@]}"
-        install_category "DATABASES" "${DATABASE_PACKAGES[@]}"
-        install_category "GPU & 3D GRAPHICS" "${GPU_PACKAGES[@]}"
-        install_category "SOFTWARE CENTER" "${SOFTWARE_PACKAGES[@]}"
-        install_category "OFFICE SUITE" "${OFFICE_PACKAGES[@]}"
-        install_category "GRAPHICS & DESIGN" "${GRAPHICS_PACKAGES[@]}"
-        install_category "AUDIO PRODUCTION" "${AUDIO_PACKAGES[@]}"
-        install_category "VIDEO & MEDIA" "${VIDEO_PACKAGES[@]}"
-        install_category "SYSTEM UTILITIES" "${UTILITY_PACKAGES[@]}"
-        install_category "NETWORK TOOLS" "${NETWORK_PACKAGES[@]}"
-        install_category "SECURITY TOOLS" "${SECURITY_PACKAGES[@]}"
-        install_category "VIRTUALIZATION" "${VIRTUALIZATION_PACKAGES[@]}"
-        install_category "LOCALES (All Languages)" "${LOCALE_PACKAGES[@]}"
-        
-        # 64-bit only packages
-        if [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "x86_64" ]]; then
-            install_category "VIDEO EDITING (64-bit)" "${VIDEO_EDITING_64[@]}"
+        # Install selected package categories
+        if [[ "$CHOICES" =~ "BASE" ]]; then
+            install_category "BASE SYSTEM" "${BASE_PACKAGES[@]}"
+            install_category "SYSTEM UTILITIES" "${UTILITY_PACKAGES[@]}"
+        fi
+        if [[ "$CHOICES" =~ "DESKTOP_XFCE" ]]; then
+            install_category "XFCE DESKTOP" "${XFCE_PACKAGES[@]}"
+            install_category "VNC SERVER" "${VNC_PACKAGES[@]}"
+            install_category "THEMES & APPEARANCE" "${THEME_PACKAGES[@]}"
+        fi
+        if [[ "$CHOICES" =~ "DESKTOP_GNOME" ]]; then
+            section_header "🐧 GNOME DESKTOP OPTION"
+            apt-get install -y gnome-session gnome-terminal gnome-control-center gnome-backgrounds gnome-themes-extra adwaita-icon-theme-full >> "$LOG_FILE" 2>&1 || true
+            install_category "VNC SERVER" "${VNC_PACKAGES[@]}"
+        fi
+        if [[ "$CHOICES" =~ "LOCALES" ]]; then
+            install_category "LOCALES (All Languages)" "${LOCALE_PACKAGES[@]}"
+            install_category "FONTS (All Languages)" "${FONT_PACKAGES[@]}"
+        else
+            # Ensure basic fonts are loaded if VNC is selected
+            if [[ "$CHOICES" =~ "DESKTOP_XFCE" ]] || [[ "$CHOICES" =~ "DESKTOP_GNOME" ]]; then
+                install_category "ESSENTIAL FONTS" fonts-dejavu-core fonts-liberation fonts-noto
+            fi
+        fi
+        if [[ "$CHOICES" =~ "DEV" ]]; then
+            install_category "DEVELOPMENT TOOLS" "${DEV_PACKAGES[@]}"
+            install_vscode
+            install_sublime
+            install_nodejs
+        fi
+        if [[ "$CHOICES" =~ "DB" ]]; then
+            install_category "DATABASES" "${DATABASE_PACKAGES[@]}"
+        fi
+        if [[ "$CHOICES" =~ "GPU" ]]; then
+            install_category "GPU & 3D GRAPHICS" "${GPU_PACKAGES[@]}"
+        fi
+        if [[ "$CHOICES" =~ "FLATPAK" ]]; then
+            install_category "SOFTWARE CENTER" "${SOFTWARE_PACKAGES[@]}"
+        fi
+        if [[ "$CHOICES" =~ "OFFICE" ]]; then
+            install_category "OFFICE SUITE" "${OFFICE_PACKAGES[@]}"
+        fi
+        if [[ "$CHOICES" =~ "GRAPHICS" ]]; then
+            install_category "GRAPHICS & DESIGN" "${GRAPHICS_PACKAGES[@]}"
+        fi
+        if [[ "$CHOICES" =~ "AUDIO" ]]; then
+            install_category "AUDIO PRODUCTION" "${AUDIO_PACKAGES[@]}"
+        fi
+        if [[ "$CHOICES" =~ "VIDEO" ]]; then
+            install_category "VIDEO & MEDIA" "${VIDEO_PACKAGES[@]}"
+        fi
+        if [[ "$CHOICES" =~ "NET" ]]; then
+            install_category "NETWORK TOOLS" "${NETWORK_PACKAGES[@]}"
+        fi
+        if [[ "$CHOICES" =~ "SEC" ]]; then
+            install_category "SECURITY TOOLS" "${SECURITY_PACKAGES[@]}"
+        fi
+        if [[ "$CHOICES" =~ "BROWSERS" ]]; then
+            install_firefox
+            install_chromium
         fi
         
-        # Special installations
-        install_firefox
-        install_chromium
-        install_vscode
-        install_sublime
-        install_nodejs
+        # 64-bit only categories
+        if [[ "$ARCH" == "aarch64" ]] || [[ "$ARCH" == "x86_64" ]]; then
+            if [[ "$CHOICES" =~ "VIDEO" ]] || [[ "$CHOICES" =~ "GRAPHICS" ]]; then
+                install_category "VIDEO EDITING (64-bit)" "${VIDEO_EDITING_64[@]}"
+            fi
+        fi
         
-        # Configure system
-        configure_audio
-        configure_gpu
-        configure_flatpak
-        install_themes
+        # Configure systems
+        if [[ "$CHOICES" =~ "DESKTOP_XFCE" ]] || [[ "$CHOICES" =~ "DESKTOP_GNOME" ]] || [[ "$CHOICES" =~ "AUDIO" ]]; then
+            configure_audio
+        fi
+        if [[ "$CHOICES" =~ "GPU" ]]; then
+            configure_gpu
+        fi
+        if [[ "$CHOICES" =~ "FLATPAK" ]]; then
+            configure_flatpak
+        fi
+        if [[ "$CHOICES" =~ "DESKTOP_XFCE" ]]; then
+            install_themes
+        fi
+        
         fix_neofetch
         fix_apps
         fix_window_glitches
         configure_language
         configure_storage_sharing
         
-        # Wine/Box86 for premium tiers
-        configure_wine_box86
+        if [[ "$CHOICES" =~ "WINE" ]]; then
+            configure_wine_box86
+        fi
         
         final_cleanup
     fi

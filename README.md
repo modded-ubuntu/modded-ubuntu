@@ -13,15 +13,9 @@
 <img src="https://img.shields.io/badge/Automatic-Installation-success?style=flat-square">
 </p>
 
-<h1 align="center">🚀 ACRO PRO Edition</h1>
-<p align="center"><b>Premium Linux Distribution for Termux with 1000+ Pre-Installed Software</b></p>
-<p align="center"><i>Ubuntu 25.10 | 24/7 Keep-Alive | GPU Optimization | Flatpak Support</i></p>
-
-<p align="center">
-<a href="https://aleocrophic-acron.vercel.app/" target="_blank">
-<img src="https://img.shields.io/badge/🛒%20Get%20PRO+%20%2F%20ULTIMATE-Purchase%20Now-gold?style=for-the-badge" alt="Purchase Premium">
-</a>
-</p>
+<h1 align="center">🚀 ACRO Suite</h1>
+<p align="center"><b>Premium Linux Distribution for Termux with 1000+ Pre-Installed Software - Now 100% Free & Customizable!</b></p>
+<p align="center"><i>Ubuntu 25.10 | 24/7 Keep-Alive | GPU & CPU Optimization | Termux-X11 Support | Bit-Perfect Audio | Flatpak Support</i></p>
 
 ---
 
@@ -92,35 +86,27 @@
 
 ---
 
-## 🏆 Edition Comparison
+## 🏆 Profiles Comparison (All 100% FREE!)
 
-| Feature | 🆓 FREE | ⭐ PRO+ | 🏆 ULTIMATE |
-|---------|---------|--------|-------------|
-| **Software Packages** | 50 Basic | 500 | 1000+ |
-| **XFCE Desktop** | ✅ Basic | ✅ Enhanced | ✅ Premium |
-| **VNC Server** | ✅ | ✅ | ✅ |
-| **PulseAudio** | ✅ | ✅ | ✅ |
-| **vGPU Optimization** | ❌ | ✅ | ✅ Super |
-| **Performance Tweaks** | ❌ | ✅ | ✅ Super |
-| **Premium Themes** | ❌ | 15+ | 25+ |
-| **Wine Gaming** | ❌ | ✅ | ✅ |
-| **OBS Streaming** | ❌ | ✅ | ✅ |
-| **Security/Hacking Tools** | ❌ | ❌ | 100+ |
-| **Privacy Suite (Tor)** | ❌ | ❌ | ✅ |
-| **Developer Pack** | ❌ | Basic | Full |
-| **Content Creator Bundle** | ❌ | ❌ | ✅ |
-| **GNOME Desktop Option** | ❌ | ❌ | ✅ |
-| **Bug Fixes & Optimization** | Community | ✅ | ✅ Full |
-| **Support** | Community | Email 24h | VIP 6h |
-| **Price** | FREE | 25 ACRON (Rp 75.000) | 50 ACRON (Rp 150.000) |
-
-### 💰 Purchase Premium Tiers
-
-<p align="center">
-<a href="https://aleocrophic-acron.vercel.app/" target="_blank">
-<img src="https://img.shields.io/badge/🛒%20Buy%20PRO+%20/%20ULTIMATE-ACRO%20Store-gold?style=for-the-badge" alt="Buy Premium">
-</a>
-</p>
+| Feature | 🆓 MINIMAL | 🏆 COMPLETE | ⚙️ CUSTOM |
+|---------|------------|-------------|------------|
+| **Software Packages** | 50 Basic | 1000+ (ALL) | User Selectable |
+| **XFCE Desktop** | ✅ Basic | ✅ Premium | ✅ Optional |
+| **GNOME Desktop** | ❌ | ✅ Optional | ✅ Optional |
+| **VNC Server** | ✅ | ✅ | ✅ Optional |
+| **Termux-X11 Support** | ❌ | ✅ (Fastest) | ✅ Optional |
+| **PulseAudio** | ✅ | ✅ (Bit-Perfect) | ✅ Optional |
+| **vGPU Optimization** | ❌ | ✅ Super | ✅ Optional |
+| **Performance Tweaks** | ❌ | ✅ Super | ✅ Optional |
+| **Premium Themes** | ❌ | 25+ | ✅ Optional |
+| **Wine Gaming** | ❌ | ✅ (Mobox-style) | ✅ Optional |
+| **OBS Streaming** | ❌ | ✅ | ✅ Optional |
+| **Security/Hacking Tools** | ❌ | 100+ | ✅ Optional |
+| **Privacy Suite (Tor)** | ❌ | ✅ | ✅ Optional |
+| **Developer Pack** | ❌ | Full | ✅ Optional |
+| **Content Creator Bundle** | ❌ | ✅ | ✅ Optional |
+| **Bug Fixes & Optimization** | ✅ Full | ✅ Full | ✅ Full |
+| **Price** | **FREE** | **FREE** | **FREE** |
 
 ---
 

@@ -238,8 +238,8 @@ STOP_EOF
     success_msg "Phantom process prevention configured"
     info_msg "Run 'acro-keepalive' to keep Termux active 24/7"
     
-    # Required packages (add termux-api for notifications)
-    local required_packages=(pulseaudio proot-distro wget curl git termux-api)
+    # Required packages (add termux-api for notifications and virgl for GPU)
+    local required_packages=(pulseaudio proot-distro wget curl git termux-api virglrenderer-android termux-x11-nightly)
     local total=${#required_packages[@]}
     local current=0
     
@@ -305,36 +305,60 @@ distro() {
 sound() {
     section_header "🔊 AUDIO SYSTEM CONFIGURATION"
     
-    status_msg "Configuring PulseAudio..."
+    status_msg "Configuring PulseAudio for Clean & Bit-Perfect audio..."
     
-    # Create comprehensive audio configuration
-    cat > "$HOME/.sound" << 'AUDIO_EOF'
-#!/bin/bash
-# Modded Ubuntu PRO v3.1.0 - Audio Configuration
-# Comprehensive PulseAudio setup for proot environment
-
-# Kill any existing PulseAudio processes
-pulseaudio --kill 2>/dev/null
-
-# Start PulseAudio with proper configuration
-pulseaudio --start --exit-idle-time=-1 --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1"
-
-# Load AAudio module for Android audio
-pacmd load-module module-aaudio-sink 2>/dev/null || true
-
-# Configure audio input (microphone support)
-pacmd load-module module-aaudio-source 2>/dev/null || true
-
-# Set default sink and source
-pacmd set-default-sink 0 2>/dev/null || true
-pacmd set-default-source 0 2>/dev/null || true
-
-echo "Audio system initialized with input/output support"
-AUDIO_EOF
+    # 1. Create Termux PulseAudio directories
+    mkdir -p "$PREFIX/etc/pulse"
     
-    chmod +x "$HOME/.sound"
-    success_msg "Audio output configuration created"
-    success_msg "Microphone input support enabled"
+    # 2. Write optimized daemon settings for bit-perfect audio
+    cat > "$PREFIX/etc/pulse/daemon.conf" << 'PULSE_DAEMON_EOF'
+# Bit-perfect & High Performance PulseAudio configuration for Termux
+daemonize = yes
+allow-module-loading = yes
+system-instance = no
+
+# Audio Quality & Bit-Perfect settings
+avoid-resampling = yes
+resample-method = soxr-vhq
+default-sample-format = s24le
+default-sample-rate = 48000
+alternate-sample-rate = 44100
+default-sample-channels = 2
+default-channel-map = front-left,front-right
+
+# Latency & Buffering tuning for smooth playback (no crackle)
+high-priority = yes
+realtime-scheduling = yes
+realtime-priority = 9
+default-fragments = 2
+default-fragment-size-msec = 5
+
+# Performance
+enable-shm = yes
+enable-memfd = yes
+shm-size-bytes = 67108864
+PULSE_DAEMON_EOF
+
+    # 3. Write default.pa for PulseAudio
+    cat > "$PREFIX/etc/pulse/default.pa" << 'PULSE_DEFAULT_EOF'
+# Load TCP protocol for PRoot connection
+load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1 port=4713
+
+# Load AAudio sink for high quality Android audio (falling back to opensl)
+load-module module-aaudio-sink sink_properties=device.description="Android_AAudio_Output" 2>/dev/null || load-module module-opensles-sink 2>/dev/null || true
+load-module module-aaudio-source source_properties=device.description="Android_AAudio_Input" 2>/dev/null || load-module module-opensles-source 2>/dev/null || true
+
+# Load CLI protocol for pactl
+load-module module-cli
+PULSE_DEFAULT_EOF
+
+    # Kill any existing PulseAudio processes
+    pulseaudio --kill 2>/dev/null || true
+    
+    # Start PulseAudio with optimized config
+    pulseaudio --start --exit-idle-time=-1 2>/dev/null || true
+
+    success_msg "PulseAudio optimized for bit-perfect & clean audio output"
 }
 
 # Download helper
@@ -349,9 +373,9 @@ downloader() {
          --location --output "$path" "$url"
 }
 
-# Setup VNC scripts
+# Setup VNC and Termux-X11 scripts
 setup_vnc() {
-    status_msg "Installing VNC scripts..."
+    status_msg "Installing VNC and X11 scripts..."
     
     # vncstart
     if [[ -d "$CURR_DIR/distro" ]] && [[ -e "$CURR_DIR/distro/vncstart" ]]; then
@@ -369,10 +393,44 @@ setup_vnc() {
         mv -f "$CURR_DIR/vncstop" "$UBUNTU_DIR/usr/local/bin/vncstop"
     fi
     
+    # Create x11start inside Ubuntu
+    cat > "$UBUNTU_DIR/usr/local/bin/x11start" << 'X11START_EOF'
+#!/usr/bin/env bash
+# Start Termux-X11 desktop from inside Ubuntu chroot
+export DISPLAY=:0
+export PULSE_SERVER="tcp:127.0.0.1:4713"
+echo "Starting Desktop on Termux-X11 (Display :0)..."
+if command -v gnome-session &>/dev/null; then
+    echo "GNOME and XFCE desktops are both available."
+    echo "Which one do you want to start?"
+    echo "  [1] XFCE Desktop (Recommended - Faster)"
+    echo "  [2] GNOME Desktop"
+    echo ""
+    read -r -t 10 -p "Enter selection [1-2] (default 1): " choice
+    if [[ "$choice" == "2" ]]; then
+        dbus-launch --exit-with-session gnome-session
+        exit 0
+    fi
+fi
+dbus-launch --exit-with-session xfce4-session
+X11START_EOF
+
+    # Create x11stop inside Ubuntu
+    cat > "$UBUNTU_DIR/usr/local/bin/x11stop" << 'X11STOP_EOF'
+#!/usr/bin/env bash
+# Stop Termux-X11 session apps
+pkill -9 -f "xfce" 2>/dev/null
+pkill -9 -f "gnome-session" 2>/dev/null
+pkill -9 -f "gnome-shell" 2>/dev/null
+echo "Termux-X11 session applications stopped."
+X11STOP_EOF
+    
     chmod +x "$UBUNTU_DIR/usr/local/bin/vncstart"
     chmod +x "$UBUNTU_DIR/usr/local/bin/vncstop"
+    chmod +x "$UBUNTU_DIR/usr/local/bin/x11start"
+    chmod +x "$UBUNTU_DIR/usr/local/bin/x11stop"
     
-    success_msg "VNC scripts installed"
+    success_msg "VNC and X11 scripts installed"
 }
 
 # Setup settings script
@@ -424,9 +482,7 @@ permission() {
 
 # Start PulseAudio server if not running (PERMANENT AUDIO FIX)
 if ! pgrep -x pulseaudio > /dev/null 2>&1; then
-    pulseaudio --start --exit-idle-time=-1 \
-        --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" \
-        2>/dev/null
+    pulseaudio --start --exit-idle-time=-1 2>/dev/null
 fi
 
 # Export audio environment
@@ -437,6 +493,50 @@ proot-distro login ubuntu
 UBUNTU_LAUNCHER_EOF
     chmod +x "$PREFIX/bin/ubuntu"
     success_msg "Ubuntu command created with audio"
+
+    # Create Ubuntu launcher command for Termux-X11
+    cat > "$PREFIX/bin/ubuntu-x11" << 'UBUNTU_X11_LAUNCHER_EOF'
+#!/data/data/com.termux/files/usr/bin/bash
+# ACRO PRO Edition - Ubuntu Termux-X11 Launcher with Audio & GPU
+
+# Start PulseAudio server if not running
+if ! pgrep -x pulseaudio > /dev/null 2>&1; then
+    pulseaudio --start --exit-idle-time=-1 2>/dev/null
+fi
+
+# Check and start VirGL Server for GPU Acceleration
+if ! pgrep -x virgl_test_server > /dev/null 2>&1 && ! pgrep -x virgl_test_server_android > /dev/null 2>&1; then
+    echo "Starting GPU Acceleration Server (VirGL)..."
+    if command -v virgl_test_server_android &>/dev/null; then
+        virgl_test_server_android &
+    elif command -v virgl_test_server &>/dev/null; then
+        virgl_test_server &
+    fi
+fi
+
+# Start Termux-X11 Server if not running
+if ! pgrep -x termux-x11 > /dev/null 2>&1; then
+    echo "Starting Termux-X11 display server (:0)..."
+    termux-x11 :0 -ac &
+    sleep 2
+fi
+
+# Export audio and display settings
+export PULSE_SERVER="tcp:127.0.0.1:4713"
+export DISPLAY=:0
+
+# Get the Ubuntu username (usually the first sudo user or root if none)
+UBUNTU_USER=$(proot-distro login ubuntu -- bash -c "getent group sudo | awk -F ':' '{print \$4}' | cut -d ',' -f1" 2>/dev/null)
+if [ -z "$UBUNTU_USER" ]; then
+    UBUNTU_USER="root"
+fi
+
+# Login to Ubuntu with Shared TMP (for X11 sockets)
+echo "Logging into Ubuntu on Termux-X11..."
+proot-distro login ubuntu --shared-tmp --user "$UBUNTU_USER" --env DISPLAY=:0 --env PULSE_SERVER="tcp:127.0.0.1:4713" -- dbus-launch --exit-with-session xfce4-session
+UBUNTU_X11_LAUNCHER_EOF
+    chmod +x "$PREFIX/bin/ubuntu-x11"
+    success_msg "ubuntu-x11 command created for Termux-X11 support"
     
     termux-reload-settings
     
