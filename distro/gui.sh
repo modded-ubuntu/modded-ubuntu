@@ -199,6 +199,11 @@ fix_dpkg() {
     add-apt-repository -y multiverse >> "$LOG_FILE" 2>&1 || true
     apt-get update -y >> "$LOG_FILE" 2>&1 || true
     
+    # Fix udisks2 known issue (prevents dpkg from hanging)
+    apt-get install -y udisks2 >> "$LOG_FILE" 2>&1 || true
+    rm -f /var/lib/dpkg/info/udisks2.postinst 2>/dev/null
+    echo "" > /var/lib/dpkg/info/udisks2.postinst 2>/dev/null
+    
     # Hold problematic packages that can cause conflicts
     apt-mark hold udisks2 >> "$LOG_FILE" 2>&1 || true
     
@@ -1307,11 +1312,11 @@ install_themes() {
     info_msg "Downloading theme assets..."
     
     local assets=(
-        "fonts.tar.gz|https://github.com/ZetaGo-Aurum/modded-ubuntu/releases/download/config/fonts.tar.gz"
-        "icons.tar.gz|https://github.com/ZetaGo-Aurum/modded-ubuntu/releases/download/config/icons.tar.gz"
-        "wallpaper.tar.gz|https://github.com/ZetaGo-Aurum/modded-ubuntu/releases/download/config/wallpaper.tar.gz"
-        "gtk-themes.tar.gz|https://github.com/ZetaGo-Aurum/modded-ubuntu/releases/download/config/gtk-themes.tar.gz"
-        "ubuntu-settings.tar.gz|https://github.com/ZetaGo-Aurum/modded-ubuntu/releases/download/config/ubuntu-settings.tar.gz"
+        "fonts.tar.gz|https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/fonts.tar.gz"
+        "icons.tar.gz|https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/icons.tar.gz"
+        "wallpaper.tar.gz|https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/wallpaper.tar.gz"
+        "gtk-themes.tar.gz|https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/gtk-themes.tar.gz"
+        "ubuntu-settings.tar.gz|https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/ubuntu-settings.tar.gz"
     )
     
     for asset in "${assets[@]}"; do
