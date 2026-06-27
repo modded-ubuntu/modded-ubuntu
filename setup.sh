@@ -260,7 +260,8 @@ STOP_EOF
         progress_bar $current $total
         echo -n "${GRAY}${pkg_name}${D}"
         
-        if ! command -v "$pkg_name" &> /dev/null; then
+        # Check if package is installed via dpkg (more reliable than command -v)
+        if ! dpkg -s "$pkg_name" &>/dev/null 2>&1; then
             yes | pkg install "$pkg_name" -y > /dev/null 2>&1
         fi
         echo -e "\r$(printf ' %.0s' {1..70})\r"

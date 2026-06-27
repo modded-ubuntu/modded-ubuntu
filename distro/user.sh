@@ -167,8 +167,22 @@ create_user() {
     
     success_msg "User account created"
     
-    # Update Ubuntu login command with proper proot options
-    echo "proot-distro login --user $user ubuntu --bind /dev/null:/proc/sys/kernel/cap_last_last --shared-tmp --fix-low-ports" > /data/data/com.termux/files/usr/bin/ubuntu
+    # Update Ubuntu login command with proper proot options and PulseAudio startup
+    cat > /data/data/com.termux/files/usr/bin/ubuntu << UBUNTU_LAUNCHER_EOF
+#!/data/data/com.termux/files/usr/bin/bash
+# ACRO PRO Edition - Ubuntu Launcher with Audio
+
+# Start PulseAudio server if not running (PERMANENT AUDIO FIX)
+if ! pgrep -x pulseaudio > /dev/null 2>&1; then
+    pulseaudio --start --exit-idle-time=-1 2>/dev/null
+fi
+
+# Export audio environment
+export PULSE_SERVER="tcp:127.0.0.1:4713"
+
+# Login to Ubuntu
+proot-distro login --user $user ubuntu --shared-tmp --fix-low-ports
+UBUNTU_LAUNCHER_EOF
     chmod +x /data/data/com.termux/files/usr/bin/ubuntu
     
     success_msg "Ubuntu login configured for user: $user"
@@ -176,8 +190,13 @@ create_user() {
     # Copy GUI script
     status_msg "Preparing GUI installer..."
     
-    if [[ -e '/data/data/com.termux/files/home/modded-ubuntu/distro/gui.sh' ]]; then
+    # Try multiple paths to find gui.sh
+    if [[ -f "/data/data/com.termux/files/home/modded-ubuntu/distro/gui.sh" ]]; then
         cp /data/data/com.termux/files/home/modded-ubuntu/distro/gui.sh /home/$user/gui.sh
+    elif [[ -f "/root/gui.sh" ]]; then
+        cp /root/gui.sh /home/$user/gui.sh
+    elif [[ -f "$(dirname "$(realpath "$0")")/gui.sh" ]]; then
+        cp "$(dirname "$(realpath "$0")")/gui.sh" /home/$user/gui.sh
     else
         wget -q --show-progress https://raw.githubusercontent.com/ZetaGo-Aurum/modded-ubuntu/master/distro/gui.sh -O /home/$user/gui.sh
     fi

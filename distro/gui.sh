@@ -40,7 +40,16 @@ BG_PURPLE=$'\033[48;5;54m'
 
 # System info
 ARCH=$(uname -m)
+# Try multiple methods to detect the non-root username
 USERNAME=$(getent group sudo | awk -F ':' '{print $4}' | cut -d ',' -f1)
+if [ -z "$USERNAME" ]; then
+    # Try finding first non-root user with a home directory
+    USERNAME=$(ls /home/ 2>/dev/null | head -1)
+fi
+if [ -z "$USERNAME" ]; then
+    # Try from /etc/passwd
+    USERNAME=$(awk -F: '($3 >= 1000 && $3 < 65534) {print $1; exit}' /etc/passwd 2>/dev/null)
+fi
 VERSION="3.5.1"
 DISTRO_NAME="ACRO PRO Edition"
 LOG_FILE="/tmp/acro-install.log"
@@ -960,23 +969,6 @@ WINEDESKTOP
 # INSTALLATION FUNCTIONS
 # ═══════════════════════════════════════════════════════════════════════════
 
-fix_dpkg() {
-    section_header "🔧 FIXING PACKAGE MANAGER"
-    
-    # Fix udisks2 known issue
-    apt-get update -y >> "$LOG_FILE" 2>&1
-    apt-get install -y udisks2 >> "$LOG_FILE" 2>&1 || true
-    rm -f /var/lib/dpkg/info/udisks2.postinst 2>/dev/null
-    echo "" > /var/lib/dpkg/info/udisks2.postinst 2>/dev/null
-    dpkg --configure -a >> "$LOG_FILE" 2>&1 || true
-    apt-mark hold udisks2 >> "$LOG_FILE" 2>&1 || true
-    
-    # Fix broken installs
-    apt-get -f install -y >> "$LOG_FILE" 2>&1 || true
-    
-    success_msg "Package manager fixed"
-}
-
 install_category() {
     local category_name=$1
     shift
@@ -1013,9 +1005,12 @@ install_firefox() {
     # Remove snap version
     snap remove firefox 2>/dev/null || true
     
+    # Detect Ubuntu codename
+    UBUNTU_CODENAME=$(lsb_release -cs 2>/dev/null || echo "jammy")
+    
     # Add Mozilla PPA
     add-apt-repository -y ppa:mozillateam/ppa >> "$LOG_FILE" 2>&1 || {
-        echo "deb https://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu jammy main" | tee /etc/apt/sources.list.d/mozillateam.list >> "$LOG_FILE" 2>&1
+        echo "deb https://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu $UBUNTU_CODENAME main" | tee /etc/apt/sources.list.d/mozillateam.list >> "$LOG_FILE" 2>&1
     }
     
     # Priority settings
@@ -1047,15 +1042,22 @@ install_chromium() {
     
     apt-get purge -y chromium* snapd >> "$LOG_FILE" 2>&1 || true
     
-    # Debian repository for Chromium
-    echo -e "deb http://ftp.debian.org/debian buster main\ndeb http://ftp.debian.org/debian buster-updates main" >> /etc/apt/sources.list.d/debian.list
-    
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys DCC9EFBF77E11517 >> "$LOG_FILE" 2>&1 || true
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138 >> "$LOG_FILE" 2>&1 || true
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 112695A0E562B32A >> "$LOG_FILE" 2>&1 || true
-    
-    apt-get update -y >> "$LOG_FILE" 2>&1
-    apt-get install -y chromium >> "$LOG_FILE" 2>&1 || apt-get install -y chromium-browser >> "$LOG_FILE" 2>&1 || true
+    # Try multiple methods to install Chromium
+    # Method 1: Direct apt install (works on Ubuntu 24.04+)
+    apt-get install -y chromium-browser >> "$LOG_FILE" 2>&1 || \
+    apt-get install -y chromium >> "$LOG_FILE" 2>&1 || {
+        # Method 2: Debian bookworm repository (more stable than buster)
+        UBUNTU_CODENAME=$(lsb_release -cs 2>/dev/null || echo "jammy")
+        echo "deb http://ftp.debian.org/debian bookworm main" > /etc/apt/sources.list.d/debian.list
+        echo "deb http://ftp.debian.org/debian bookworm-updates main" >> /etc/apt/sources.list.d/debian.list
+        
+        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys DCC9EFBF77E11517 >> "$LOG_FILE" 2>&1 || true
+        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138 >> "$LOG_FILE" 2>&1 || true
+        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 112695A0E562B32A >> "$LOG_FILE" 2>&1 || true
+        
+        apt-get update -y >> "$LOG_FILE" 2>&1
+        apt-get install -y chromium >> "$LOG_FILE" 2>&1 || true
+    }
     
     # Patch for sandbox
     sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop 2>/dev/null || true
@@ -1305,11 +1307,11 @@ install_themes() {
     info_msg "Downloading theme assets..."
     
     local assets=(
-        "fonts.tar.gz|https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/fonts.tar.gz"
-        "icons.tar.gz|https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/icons.tar.gz"
-        "wallpaper.tar.gz|https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/wallpaper.tar.gz"
-        "gtk-themes.tar.gz|https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/gtk-themes.tar.gz"
-        "ubuntu-settings.tar.gz|https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/ubuntu-settings.tar.gz"
+        "fonts.tar.gz|https://github.com/ZetaGo-Aurum/modded-ubuntu/releases/download/config/fonts.tar.gz"
+        "icons.tar.gz|https://github.com/ZetaGo-Aurum/modded-ubuntu/releases/download/config/icons.tar.gz"
+        "wallpaper.tar.gz|https://github.com/ZetaGo-Aurum/modded-ubuntu/releases/download/config/wallpaper.tar.gz"
+        "gtk-themes.tar.gz|https://github.com/ZetaGo-Aurum/modded-ubuntu/releases/download/config/gtk-themes.tar.gz"
+        "ubuntu-settings.tar.gz|https://github.com/ZetaGo-Aurum/modded-ubuntu/releases/download/config/ubuntu-settings.tar.gz"
     )
     
     for asset in "${assets[@]}"; do
