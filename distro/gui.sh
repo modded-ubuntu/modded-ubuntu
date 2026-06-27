@@ -78,26 +78,7 @@ spinner() {
     printf "\r"
 }
 
-# Pip-style progress bar
-pip_progress() {
-    local current=$1
-    local total=$2
-    local pkg_name=$3
-    local width=30
-    local percentage=$((current * 100 / total))
-    local filled=$((width * current / total))
-    local empty=$((width - filled))
-    
-    # Build the bar with proper characters
-    local bar_filled=""
-    local bar_empty=""
-    for ((i=0; i<filled; i++)); do bar_filled+="▓"; done
-    for ((i=0; i<empty; i++)); do bar_empty+="░"; done
-    
-    # Print with proper color handling
-    printf "\r  ${PURPLE}Installing${D} ${PURPLE}[${GREEN_L}%s${GRAY}%s${PURPLE}]${D} ${W}%3d%%${D} ${GRAY}(%d/%d)${D} ${CYAN_L}%s${D}          " \
-        "$bar_filled" "$bar_empty" $percentage $current $total "$pkg_name"
-}
+# (removed pip-style bar in favor of dialog gauge)
 
 # ═══════════════════════════════════════════════════════════════════════════
 # UI COMPONENTS
@@ -221,7 +202,12 @@ install_pkg() {
     local alternatives="${2:-}"
     
     CURRENT_PACKAGE=$((CURRENT_PACKAGE + 1))
-    pip_progress $CURRENT_PACKAGE $TOTAL_PACKAGES "$pkg"
+    
+    # Update gauge if running
+    if [ -n "$GAUGE_PID" ] && kill -0 "$GAUGE_PID" 2>/dev/null; then
+        local pct=$((CURRENT_PACKAGE * 100 / TOTAL_PACKAGES))
+        gauge_set "$pct" "$pkg ($CURRENT_PACKAGE/$TOTAL_PACKAGES)"
+    fi
     
     # Check if already installed
     if dpkg -s "$pkg" &> /dev/null 2>&1; then
@@ -255,7 +241,6 @@ install_pkg_check() {
     local cmd="${2:-$pkg}"
     
     CURRENT_PACKAGE=$((CURRENT_PACKAGE + 1))
-    pip_progress $CURRENT_PACKAGE $TOTAL_PACKAGES "$pkg"
     
     if command -v "$cmd" &> /dev/null; then
         echo "[SKIP] $pkg already installed (command: $cmd)" >> "$LOG_FILE"
@@ -655,79 +640,90 @@ FREE_TIER_PACKAGES=(
 # Global tier variable
 SELECTED_TIER="free"
 
+# ─── Progress Gauge via FIFO ────────────────────────────────────────────
+
+GAUGE_FIFO=$(mktemp -u /tmp/acro-gauge-XXXXXX 2>/dev/null || echo "/tmp/acro-gauge-$$")
+GAUGE_PID=""
+
+gauge_start() {
+    local title="$1"
+    mkfifo "$GAUGE_FIFO" 2>/dev/null || true
+    dialog --colors --gauge "\Zb\Z6$title\Zn" 8 55 0 < "$GAUGE_FIFO" &
+    GAUGE_PID=$!
+}
+
+gauge_set() {
+    local pct="$1"
+    local msg="$2"
+    echo "XXX" > "$GAUGE_FIFO" 2>/dev/null || true
+    echo "$pct" > "$GAUGE_FIFO" 2>/dev/null || true
+    echo "$msg" > "$GAUGE_FIFO" 2>/dev/null || true
+    echo "XXX" > "$GAUGE_FIFO" 2>/dev/null || true
+}
+
+gauge_stop() {
+    gauge_set "100" "Complete!" 2>/dev/null || true
+    sleep 1
+    rm -f "$GAUGE_FIFO" 2>/dev/null || true
+}
+
 # ═══════════════════════════════════════════════════════════════════════════
 # TIER SELECTION MENU
 # ═══════════════════════════════════════════════════════════════════════════
 
 show_tier_selection() {
-    banner
-    echo ""
-    echo -e "  ${M}╔═══════════════════════════════════════════════════════════════════╗${D}"
-    echo -e "  ${M}║${Y}            🚀 SELECT YOUR INSTALLATION PROFILE 🚀                 ${M}║${D}"
-    echo -e "  ${M}╠═══════════════════════════════════════════════════════════════════╣${D}"
-    echo -e "  ${M}║${D}                                                                   ${M}║${D}"
-    echo -e "  ${M}║${W}  [1] 🆓 MINIMAL Profile (Basic XFCE Desktop)${D}                    ${M}║${D}"
-    echo -e "  ${M}║${GRAY}      • 50 Essential Packages only, fast install (~15 min)${D}          ${M}║${D}"
-    echo -e "  ${M}║${GRAY}      • Basic XFCE, VNC, PulseAudio, English Locales${D}               ${M}║${D}"
-    echo -e "  ${M}║${D}                                                                   ${M}║${D}"
-    echo -e "  ${M}║${C}  [2] 🏆 COMPLETE Profile (Install ALL - 1000+ packages)${D}          ${M}║${D}"
-    echo -e "  ${M}║${W}      • Installs all browsers, tools, gaming, audio/video${D}           ${M}║${D}"
-    echo -e "  ${M}║${W}      • Optimized GPU rendering + Wine/Box86 + Termux-X11${D}           ${M}║${D}"
-    echo -e "  ${M}║${W}      • 100% Free - No License Keys required!${D}                      ${M}║${D}"
-    echo -e "  ${M}║${D}                                                                   ${M}║${D}"
-    echo -e "  ${M}║${R}  [3] ⚙️  CUSTOM Profile (Interactive Checklist)${D}                    ${M}║${D}"
-    echo -e "  ${M}║${W}      • Select exact package groups/features to install${D}             ${M}║${D}"
-    echo -e "  ${M}║${W}      • Customize according to your storage and needs${D}               ${M}║${D}"
-    echo -e "  ${M}║${D}                                                                   ${M}║${D}"
-    echo -e "  ${M}╚═══════════════════════════════════════════════════════════════════╝${D}"
-    echo ""
-    read -p "  Select installation profile [1-3]: " TIER_CHOICE
+    local choice
+    choice=$(dialog --colors --stdout --menu "\Zb\Z6Select Installation Profile\Zn\n\
+Choose how many packages to install:" 16 60 3 \
+        "1" "Minimal - 50 essential packages (fast)" \
+        "2" "Complete - ALL 1000+ packages" \
+        "3" "Custom - Choose package groups manually")
     
-    case "$TIER_CHOICE" in
+    case "$choice" in
         1)
             SELECTED_TIER="free"
-            echo -e "  ${C}Installing Minimal Profile (50 packages, fast)...${D}"
+            dialog --infobox "Installing Minimal Profile (50 packages)..." 5 50
+            sleep 1
             ;;
         2)
             SELECTED_TIER="ultimate"
-            echo -e "  ${C}Installing Complete Profile (1000+ packages)...${D}"
+            dialog --infobox "Installing Complete Profile (1000+ packages)..." 5 50
+            sleep 1
             ;;
         3)
             SELECTED_TIER="custom"
-            # Show interactive checklist using whiptail
-            if ! command -v whiptail &>/dev/null; then
-                apt-get install -y whiptail >> "$LOG_FILE" 2>&1
-            fi
+            local checklist
+            checklist=$(dialog --colors --stdout --checklist "\Zb\Z6Select Package Categories\Zn\n\
+Use SPACE to toggle, ENTER to confirm:" 22 68 15 \
+                "BASE" "Essential System Utilities" ON \
+                "DESKTOP_XFCE" "XFCE Desktop Environment" ON \
+                "DESKTOP_GNOME" "GNOME Desktop Environment" OFF \
+                "BROWSERS" "Firefox & Chromium" ON \
+                "DEV" "Development Tools (Python, Node, etc.)" ON \
+                "OFFICE" "Office Suite & PDF Readers" ON \
+                "GRAPHICS" "Graphics & Design (GIMP, Krita)" ON \
+                "AUDIO" "Audio Production (Audacity, LMMS)" ON \
+                "VIDEO" "Video (VLC, Kdenlive, OBS)" ON \
+                "DB" "Database Clients (SQLite, MariaDB)" ON \
+                "NET" "Network & Remote Tools" ON \
+                "SEC" "Security & Pentesting" OFF \
+                "WINE" "Wine & Box86 (Windows apps)" ON \
+                "GPU" "GPU & 3D Optimization (VirGL)" ON \
+                "FLATPAK" "Flatpak & Gnome Software" OFF \
+                "LOCALES" "All Languages & Fonts" OFF)
             
-            CHOICES=$(whiptail --title "Custom Package Selection" --checklist \
-            "Choose the package categories you want to install (Space to select, Enter to confirm):" 20 78 15 \
-            "BASE" "Essential System Utilities (htop, tmux, git, etc.)" ON \
-            "DESKTOP_XFCE" "XFCE Desktop Environment" ON \
-            "DESKTOP_GNOME" "GNOME Desktop Environment" OFF \
-            "BROWSERS" "Firefox & Chromium Web Browsers" ON \
-            "DEV" "Dev Pack (Python, Node, Go, Rust, Java, VSCode)" ON \
-            "OFFICE" "Office Suite (LibreOffice, PDF Readers, Calibre)" ON \
-            "GRAPHICS" "Graphics & Design (GIMP, Krita, Blender, Inkscape)" ON \
-            "AUDIO" "Audio Production (Audacity, LMMS, Ardour, MIDI)" ON \
-            "VIDEO" "Video Production (VLC, Kdenlive, OBS, FFmpeg)" ON \
-            "DB" "Database Clients (SQLite, MariaDB, PostgreSQL)" ON \
-            "NET" "Network & Remote Tools (FileZilla, RDP, VPN)" ON \
-            "SEC" "Security & Pentesting Tools (Nmap, Wireshark)" OFF \
-            "WINE" "Wine & Box86 Emulation (Mobox-style)" ON \
-            "GPU" "GPU & 3D rendering optimization (Mesa VirGL)" ON \
-            "FLATPAK" "Flatpak & Gnome Software Center" OFF \
-            "LOCALES" "Locales & CJK/Arabic language fonts" OFF \
-            3>&1 1>&2 2>&3)
-            
-            # If user cancels, default to free
-            if [ $? -ne 0 ] || [ -z "$CHOICES" ]; then
+            if [ -z "$checklist" ]; then
                 SELECTED_TIER="free"
-                echo -e "  ${Y}No selection made. Installing Minimal Profile.${D}"
+                dialog --infobox "No selection. Using Minimal Profile." 5 50
+                sleep 1
+            else
+                CHOICES="$checklist"
             fi
             ;;
         *)
             SELECTED_TIER="free"
-            echo -e "  ${C}Defaulting to Minimal Profile...${D}"
+            dialog --infobox "Defaulting to Minimal Profile..." 5 50
+            sleep 1
             ;;
     esac
     sleep 1
@@ -998,7 +994,7 @@ install_firefox() {
     section_header "🦊 FIREFOX BROWSER"
     
     CURRENT_PACKAGE=$((CURRENT_PACKAGE + 1))
-    pip_progress $CURRENT_PACKAGE $TOTAL_PACKAGES "firefox"
+    gauge_set $((CURRENT_PACKAGE * 100 / TOTAL_PACKAGES)) "firefox"
     
     if command -v firefox &> /dev/null; then
         echo "[SKIP] Firefox already installed" >> "$LOG_FILE"
@@ -1036,7 +1032,7 @@ install_chromium() {
     section_header "🌐 CHROMIUM BROWSER"
     
     CURRENT_PACKAGE=$((CURRENT_PACKAGE + 1))
-    pip_progress $CURRENT_PACKAGE $TOTAL_PACKAGES "chromium"
+    gauge_set $((CURRENT_PACKAGE * 100 / TOTAL_PACKAGES)) "chromium"
     
     if command -v chromium &> /dev/null || command -v chromium-browser &> /dev/null; then
         echo "[SKIP] Chromium already installed" >> "$LOG_FILE"
@@ -1079,7 +1075,7 @@ install_vscode() {
     section_header "💻 VISUAL STUDIO CODE"
     
     CURRENT_PACKAGE=$((CURRENT_PACKAGE + 1))
-    pip_progress $CURRENT_PACKAGE $TOTAL_PACKAGES "vscode"
+    gauge_set $((CURRENT_PACKAGE * 100 / TOTAL_PACKAGES)) "vscode"
     
     if command -v code &> /dev/null; then
         echo "[SKIP] VSCode already installed" >> "$LOG_FILE"
@@ -1117,7 +1113,7 @@ install_sublime() {
     section_header "📝 SUBLIME TEXT"
     
     CURRENT_PACKAGE=$((CURRENT_PACKAGE + 1))
-    pip_progress $CURRENT_PACKAGE $TOTAL_PACKAGES "sublime-text"
+    gauge_set $((CURRENT_PACKAGE * 100 / TOTAL_PACKAGES)) "sublime-text"
     
     if command -v subl &> /dev/null; then
         echo "[SKIP] Sublime already installed" >> "$LOG_FILE"
@@ -1139,7 +1135,7 @@ install_nodejs() {
     section_header "⬡ NODE.JS"
     
     CURRENT_PACKAGE=$((CURRENT_PACKAGE + 1))
-    pip_progress $CURRENT_PACKAGE $TOTAL_PACKAGES "nodejs"
+    gauge_set $((CURRENT_PACKAGE * 100 / TOTAL_PACKAGES)) "nodejs"
     
     if command -v node &> /dev/null; then
         echo "[SKIP] Node.js already installed" >> "$LOG_FILE"
@@ -1322,7 +1318,7 @@ install_themes() {
     for asset in "${assets[@]}"; do
         IFS='|' read -r filename url <<< "$asset"
         CURRENT_PACKAGE=$((CURRENT_PACKAGE + 1))
-        pip_progress $CURRENT_PACKAGE $TOTAL_PACKAGES "$filename"
+        gauge_set $((CURRENT_PACKAGE * 100 / TOTAL_PACKAGES)) "$filename"
         curl --progress-bar --insecure --fail --retry-connrefused --retry 3 \
              --retry-delay 2 --location --output "$filename" "$url" >> "$LOG_FILE" 2>&1 || true
     done
@@ -2042,75 +2038,25 @@ show_complete() {
     local minutes=$((duration / 60))
     local seconds=$((duration % 60))
     
-    clear
-    echo ""
-    echo ""
-    echo -e "${CYAN_L}"
-    cat << 'COMPLETE_ASCII'
-    ╔═══════════════════════════════════════════════════════════════════════════╗
-    ║                                                                           ║
-    ║      ██████╗ ██████╗ ███╗   ███╗██████╗ ██╗     ███████╗████████╗███████╗ ║
-    ║     ██╔════╝██╔═══██╗████╗ ████║██╔══██╗██║     ██╔════╝╚══██╔══╝██╔════╝ ║
-    ║     ██║     ██║   ██║██╔████╔██║██████╔╝██║     █████╗     ██║   █████╗   ║
-    ║     ██║     ██║   ██║██║╚██╔╝██║██╔═══╝ ██║     ██╔══╝     ██║   ██╔══╝   ║
-    ║     ╚██████╗╚██████╔╝██║ ╚═╝ ██║██║     ███████╗███████╗   ██║   ███████╗ ║
-    ║      ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚══════╝╚══════╝   ╚═╝   ╚══════╝ ║
-    ║                                                                           ║
-    ╚═══════════════════════════════════════════════════════════════════════════╝
-COMPLETE_ASCII
-    echo -e "${D}"
-    echo ""
-    echo -e "  ${GREEN_L}╔═══════════════════════════════════════════════════════════════════╗${D}"
-    echo -e "  ${GREEN_L}║${W}           🎉 ACRO INSTALLATION COMPLETED SUCCESSFULLY! 🎉        ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}╠═══════════════════════════════════════════════════════════════════╣${D}"
-    echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
+    local profile_name="MINIMAL (50 pkgs)"
+    [[ "$SELECTED_TIER" == "ultimate" ]] && profile_name="COMPLETE (1000+ pkgs)"
+    [[ "$SELECTED_TIER" == "custom" ]] && profile_name="CUSTOM"
     
-    # Show tier-specific message
-    if [[ "$SELECTED_TIER" == "free" ]]; then
-        echo -e "  ${GREEN_L}║${W}  ✓ Profile: ${C}MINIMAL${W} - 50 Essential Packages                     ${GREEN_L}║${D}"
-    elif [[ "$SELECTED_TIER" == "custom" ]]; then
-        echo -e "  ${GREEN_L}║${W}  ✓ Profile: ${M}CUSTOM${W} - Selected Package Groups                       ${GREEN_L}║${D}"
-    else
-        echo -e "  ${GREEN_L}║${W}  ✓ Profile: ${R}COMPLETE${W} - 1000+ Software Packages                     ${GREEN_L}║${D}"
-    fi
-    
-    echo -e "  ${GREEN_L}║${W}  ✓ Desktop Environment configured                                 ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}  ✓ PulseAudio sound system ready (Bit-Perfect)                    ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}  ✓ VNC Server & Termux-X11 ready to connect                       ${GREEN_L}║${D}"
-    
+    local wine_line=""
     if [[ "$SELECTED_TIER" == "ultimate" ]] || [[ "$CHOICES" =~ "WINE" ]]; then
-        echo -e "  ${GREEN_L}║${W}  ✓ Wine/Box86 configured for Windows apps                        ${GREEN_L}║${D}"
+        wine_line="\n  acro-wine       →  Run Windows apps"
     fi
     
-    echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${Y}  ⏱️  Installation time: ${W}${minutes}m ${seconds}s${D}                                   ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}╠═══════════════════════════════════════════════════════════════════╣${D}"
-    echo -e "  ${GREEN_L}║${CYAN_L}  🚀 QUICK START:${D}                                                   ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}    ${Y}vncstart${D}         →  Start VNC server                          ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}    ${Y}x11start${D}         →  Start Termux-X11 session                  ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}    ${Y}vncreset${D}         →  Hard reset session                        ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}    ${Y}acro-settings${D}    →  System Settings Utility (mu-settings)     ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}    ${Y}acro-diy${D}         →  DIY Safe Package Add/Remove (mu-diy)      ${GREEN_L}║${D}"
-    
-    if [[ "$SELECTED_TIER" == "ultimate" ]] || [[ "$CHOICES" =~ "WINE" ]]; then
-        echo -e "  ${GREEN_L}║${W}    ${Y}acro-wine${D}        →  Run Windows apps                          ${GREEN_L}║${D}"
-    fi
-    
-    echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${CYAN_L}  📱 VNC CONNECTION:${D}                                                ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}    Address: ${Y}localhost:1${D}                                            ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${W}    Picture Quality: ${Y}HIGH${D}                                           ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${D}                                                                   ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}╠═══════════════════════════════════════════════════════════════════╣${D}"
-    echo -e "  ${GREEN_L}║${PURPLE}                    ✨ ACRO by ZetaGo-Aurum ✨                      ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}║${PINK}                        ALEOCROPHIC Brand                          ${GREEN_L}║${D}"
-    echo -e "  ${GREEN_L}╚═══════════════════════════════════════════════════════════════════╝${D}"
-    echo ""
-    echo -e "  ${GRAY}📋 Log: ${LOG_FILE}${D}"
-    echo ""
-    echo ""
+    dialog --colors --msgbox "\n\Zb\Z2INSTALLATION COMPLETED!\Zn\n\n\
+Profile: \Z6$profile_name\Zn\n\
+Time: \Z6${minutes}m ${seconds}s\Zn\n\n\
+\Z4QUICK START:\Zn\n\
+  \Zbvncstart\Zn         →  Start VNC server\n\
+  \Zbx11start\Zn         →  Start Termux-X11 session\n\
+  \Zbsettings\Zn          →  System Settings Utility$wine_line\n\n\
+\Z5VNC: localhost:1  |  Quality: HIGH\Zn\n\
+\Z3Log: $LOG_FILE\Zn\n\n\
+\Z5PRO Edition by ZetaGo-Aurum  |  ALEOCROPHIC\Zn" 20 60
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -2118,21 +2064,18 @@ COMPLETE_ASCII
 # ═══════════════════════════════════════════════════════════════════════════
 
 install_free_tier() {
-    # Fast installation for FREE tier - 50 packages, English only
     section_header "🆓 FREE TIER - FAST INSTALLATION"
     
     TOTAL_PACKAGES=${#FREE_TIER_PACKAGES[@]}
     CURRENT_PACKAGE=0
     
-    echo ""
-    echo -e "  ${G}Installing ${TOTAL_PACKAGES} essential packages...${D}"
-    echo -e "  ${GRAY}English only, Basic XFCE, ~15 minutes${D}"
-    echo ""
+    gauge_start "FREE TIER - $TOTAL_PACKAGES packages"
     
     for pkg in "${FREE_TIER_PACKAGES[@]}"; do
         install_pkg "$pkg"
     done
     
+    gauge_stop
     echo ""
     success_msg "FREE tier packages installed"
 }
@@ -2147,6 +2090,11 @@ main() {
     
     # Check root first
     check_root
+    
+    # Install dialog if missing
+    if ! command -v dialog &>/dev/null; then
+        apt-get install -y dialog >> "$LOG_FILE" 2>&1
+    fi
     
     # Show tier selection at the beginning
     show_tier_selection
@@ -2241,6 +2189,9 @@ main() {
         # Fix package manager
         fix_dpkg
         
+        # Start progress gauge
+        gauge_start "ACRO PRO - Installing $TOTAL_PACKAGES packages"
+        
         # Install selected package categories
         if [[ "$CHOICES" =~ "BASE" ]]; then
             install_category "BASE SYSTEM" "${BASE_PACKAGES[@]}"
@@ -2334,6 +2285,7 @@ main() {
             configure_wine_box86
         fi
         
+        gauge_stop
         final_cleanup
     fi
     
