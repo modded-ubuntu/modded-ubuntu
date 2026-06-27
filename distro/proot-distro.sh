@@ -39,7 +39,11 @@ RUNTIME_DIR="@TERMUX_PREFIX@/var/lib/proot-distro"
 DOWNLOAD_CACHE_DIR="${RUNTIME_DIR}/dlcache"
 
 # Where extracted rootfs are stored.
-INSTALLED_ROOTFS_DIR="${RUNTIME_DIR}/installed-rootfs"
+if [ -d "${RUNTIME_DIR}/containers" ]; then
+    INSTALLED_ROOTFS_DIR="${RUNTIME_DIR}/containers"
+else
+    INSTALLED_ROOTFS_DIR="${RUNTIME_DIR}/installed-rootfs"
+fi
 
 # Colors.
 if [ -n "$(command -v tput)" ] && [ $(tput colors) -ge 8 ] && [ -z "${PROOT_DISTRO_FORCE_NO_COLORS-}" ]; then

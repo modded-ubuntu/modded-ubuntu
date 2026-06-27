@@ -48,7 +48,20 @@ UNDERLINE=$'\033[4m'
 BLINK=$'\033[5m'
 
 CURR_DIR=$(realpath "$(dirname "$BASH_SOURCE")")
-UBUNTU_DIR="$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu"
+# Detect proot-distro Ubuntu rootfs path (varies between versions)
+find_ubuntu_dir() {
+    local new_path="$PREFIX/var/lib/proot-distro/containers/ubuntu/rootfs"
+    local old_path="$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu"
+    if [ -d "$new_path" ]; then
+        echo "$new_path"
+    elif [ -d "$old_path" ]; then
+        echo "$old_path"
+    else
+        # Default to new path (proot-distro v5+)
+        echo "$new_path"
+    fi
+}
+UBUNTU_DIR=$(find_ubuntu_dir)
 VERSION="3.5.1"
 DISTRO_NAME="ACRO PRO Edition"
 
@@ -286,15 +299,18 @@ distro() {
         return 0
     fi
     
-    status_msg "Installing Ubuntu 25.10..."
+    status_msg "Installing Ubuntu (latest LTS)..."
     warning_msg "This may take 5-15 minutes depending on your connection"
     echo ""
     
     proot-distro install ubuntu
     termux-reload-settings
     
+    # Refresh Ubuntu directory path after installation
+    UBUNTU_DIR=$(find_ubuntu_dir)
+    
     if [[ -d "$UBUNTU_DIR" ]]; then
-        success_msg "Ubuntu 25.10 installed successfully!"
+        success_msg "Ubuntu installed successfully!"
     else
         error_msg "Failed to install Ubuntu distribution"
         warning_msg "Please check your internet connection and try again"
