@@ -245,7 +245,7 @@ config() {
 	sound_fix
 	bwrap_fix
 
-	curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3B4FE6ACC0B21F32" | gpg --dearmor > /etc/apt/trusted.gpg.d/modded-ubuntu.gpg
+	curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3B4FE6ACC0B21F32" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/modded-ubuntu.gpg > /dev/null
 	yes | apt upgrade
 	yes | apt install gtk2-engines-murrine gtk2-engines-pixbuf sassc optipng inkscape libglib2.0-dev-bin
 	mv -vf /usr/share/backgrounds/xfce/xfce-verticals.png /usr/share/backgrounds/xfce/xfceverticals-old.png
