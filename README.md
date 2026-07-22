@@ -1,4 +1,4 @@
-# DONT TRY THIS BC ITS FOR PATCHING 
+# DONT TRY THIS BECAUSE ITS A WIP BRANCH
 
 <p align="center">
 <img src="./distro/image.jpg">
