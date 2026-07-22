@@ -13,7 +13,7 @@
 <img src="https://img.shields.io/github/stars/modded-ubuntu/modded-ubuntu?style=flat-square">
 <img src="https://img.shields.io/github/issues/modded-ubuntu/modded-ubuntu?color=red&style=flat-square">
 <img src="https://img.shields.io/github/forks/modded-ubuntu/modded-ubuntu?color=teal&style=flat-square">
-<img scr="https://img.shields.io/badge/Fixed_By-Superchavo-green?style=for-the-badge&logo=Github&logoColor=2A2B2A&labelColor=blue">
+<img src="https://img.shields.io/badge/Fixed_By-Superchavo-green?style=for-the-badge&logo=Github&logoColor=2A2B2A&labelColor=blue">
 </p>
 <p align="center"><b>Run Ubuntu GUI on your termux with much features.</b></p>
 
