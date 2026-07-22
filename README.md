@@ -6,7 +6,7 @@
 <p align="center">
 <img src="https://img.shields.io/badge/MADE%20IN-BANGLADESH-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge">
 <img src="https://img.shields.io/badge/Version-2.0-blue?style=for-the-badge">
-<img src="https://img.shields.io/badge/SomePatching_By-Superchavo-green?style=for-the-badge&logo=Github&logoColor=2A2B2A&labelColor=blue">
+<img src="https://img.shields.io/badge/Some_Patching_By-Superchavo-green?style=for-the-badge&logo=Github&logoColor=2A2B2A&labelColor=blue">
 </p>
 <p align="center">
 <img src="https://img.shields.io/badge/Written%20In-Bash-darkgreen?style=flat-square">
