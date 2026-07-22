@@ -115,3 +115,9 @@ run_with_spinner "Updating APT index..." apt-get update
 
 echo ""
 echo "XtraDeb repository setup completed successfully!"
+echo ""
+echo "=================================================="
+echo "Installation Log:"
+echo "=================================================="
+cat "$LOG_FILE"
+echo "=================================================="
