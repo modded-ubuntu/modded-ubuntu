@@ -65,10 +65,10 @@ package() {
 	dpkg --configure -a
 	apt-mark hold udisks2
 	
-	packs=(sudo gnupg2 curl nano git xz-utils at-spi2-core xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common tigervnc[...]
+	packs=(sudo gnupg2 curl nano git xz-utils at-spi2-core xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common tigervnc)
 	for hulu in "${packs[@]}"; do
 		type -p "$hulu" &>/dev/null || {
-			echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$hulu${W}"
+			echo -e "\n${R} [${W}-${R}]${G} Installing package: ${Y}$hulu${W}"
 			apt-get install "$hulu" -y --no-install-recommends
 		}
 	done
@@ -79,9 +79,9 @@ package() {
 
 install_apt() {
 	for apt in "$@"; do
-		[[ `command -v $apt` ]] && echo "${Y}${apt} is already Installed!${W}" || {
+		[[ `command -v "$apt"` ]] && echo "${Y}${apt} is already Installed!${W}" || {
 			echo -e "${G}Installing ${Y}${apt}${W}"
-			apt install -y ${apt}
+			apt install -y "${apt}"
 		}
 	done
 }
@@ -109,7 +109,7 @@ install_softwares() {
 	read -n1 -p "${R} [${G}~${R}]${Y} Select an Option: ${G}" BROWSER_OPTION
 	banner
 
-	[[ ("$arch" != 'armhf') || ("$arch" != *'armv7'*) ]] && {
+	[[ ("$arch" != 'armhf') && ("$arch" != *'armv7'*) ]] && {
 		cat <<- EOF
 			${Y} ---${G} Select IDE ${Y}---
 
@@ -147,7 +147,7 @@ install_softwares() {
 		sleep 1
 	fi
 
-	[[ ("$arch" != 'armhf') || ("$arch" != *'armv7'*) ]] && {
+	[[ ("$arch" != 'armhf') && ("$arch" != *'armv7'*) ]] && {
 		if [[ ${IDE_OPTION} == 1 ]]; then
 			run_script "sublime.sh"
 		elif [[ ${IDE_OPTION} == 2 ]]; then
@@ -177,7 +177,7 @@ install_softwares() {
 downloader(){
 	path="$1"
 	[[ -e "$path" ]] && rm -rf "$path"
-	echo "Downloading $(basename $1)..."
+	echo "Downloading $(basename "$1")..."
 	curl --progress-bar --insecure --fail \
 		 --retry-connrefused --retry 3 --retry-delay 2 \
 		  --location --output ${path} "$2"
@@ -265,7 +265,7 @@ config() {
 		tar -xvzf icons.tar.gz -C "/usr/share/icons/"
 		tar -xvzf wallpaper.tar.gz -C "/usr/share/backgrounds/xfce/"
 		tar -xvzf gtk-themes.tar.gz -C "/usr/share/themes/"
-		tar -xvzf ubuntu-settings.tar.gz -C "/home/$username/" 	
+		tar -xvzf ubuntu-settings.tar.gz -C "/home/$username/"
 		rm -fr $temp_folder
 
 		touch /var/lib/modded-ubuntu-config-done
@@ -296,4 +296,3 @@ package
 install_softwares
 config
 note
-
