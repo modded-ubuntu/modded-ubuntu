@@ -60,14 +60,14 @@ EOF
         cp -f /data/data/com.termux/files/home/modded-ubuntu/distro/sublime.sh /home/$user/softwares/
         chmod +x /home/$user/softwares/*.sh
     else
-        wget -q --show-progress https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test-ubuntu-26.04/distro/gui.sh
+        wget -q --show-progress https://raw.githubusercontent.com/Superchavo/modded-ubuntu-patching/test-ubuntu-26.04/distro/gui.sh
         mv -vf gui.sh /home/$user/gui.sh
         chmod +x /home/$user/gui.sh
         
-        wget -q -P /home/$user/softwares/ https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test-ubuntu-26.04/distro/firefox.sh
-        wget -q -P /home/$user/softwares/ https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test-ubuntu-26.04/distro/chromium.sh
-        wget -q -P /home/$user/softwares/ https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test-ubuntu-26.04/distro/vscode.sh
-        wget -q -P /home/$user/softwares/ https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test-ubuntu-26.04/distro/sublime.sh
+        wget -q -P /home/$user/softwares/ https://raw.githubusercontent.com/Superchavo/modded-ubuntu-patching/test-ubuntu-26.04/distro/firefox.sh
+        wget -q -P /home/$user/softwares/ https://raw.githubusercontent.com/Superchavo/modded-ubuntu-patching/test-ubuntu-26.04/distro/chromium.sh
+        wget -q -P /home/$user/softwares/ https://raw.githubusercontent.com/Superchavo/modded-ubuntu-patching/test-ubuntu-26.04/distro/vscode.sh
+        wget -q -P /home/$user/softwares/ https://raw.githubusercontent.com/Superchavo/modded-ubuntu-patching/test-ubuntu-26.04/distro/sublime.sh
         chmod +x /home/$user/softwares/*.sh
     fi
 
