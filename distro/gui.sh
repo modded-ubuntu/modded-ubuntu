@@ -65,7 +65,7 @@ package() {
 	dpkg --configure -a
 	apt-mark hold udisks2
 	
-	packs=(sudo gnupg2 curl nano git xz-utils at-spi2-core xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common tigervnc-tools dbus-x11 fonts-beng fonts-beng-extra gtk2-engines-murrine gtk2-engines-pixbuf apt-transport-https)
+	packs=(sudo gnupg2 curl nano git xz-utils at-spi2-core xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common tigervnc[...]
 	for hulu in "${packs[@]}"; do
 		type -p "$hulu" &>/dev/null || {
 			echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$hulu${W}"
@@ -91,7 +91,7 @@ run_script() {
 	if [[ -f "/home/$username/softwares/$script_name" ]]; then
 		bash "/home/$username/softwares/$script_name"
 	else
-		bash <(curl -fsSL "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/test-ubuntu-26.04/distro/$script_name")
+		bash <(curl -fsSL "https://raw.githubusercontent.com/Superchavo/modded-ubuntu-patching/test-ubuntu-26.04/distro/$script_name")
 	fi
 }
 
@@ -254,18 +254,18 @@ config() {
 		{ banner; sleep 1; cd $temp_folder; }
 
 		echo -e "${R} [${W}-${R}]${C} Downloading Required Files..\n"${W}
-		downloader "fonts.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/fonts.tar.gz"
-		downloader "icons.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/icons.tar.gz"
-		downloader "wallpaper.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/wallpaper.tar.gz"
-		downloader "gtk-themes.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/gtk-themes.tar.gz"
-		downloader "ubuntu-settings.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/ubuntu-settings.tar.gz"
+		downloader "fonts.tar.gz" "https://github.com/Superchavo/modded-ubuntu-patching/releases/download/config/fonts.tar.gz"
+		downloader "icons.tar.gz" "https://github.com/Superchavo/modded-ubuntu-patching/releases/download/config/icons.tar.gz"
+		downloader "wallpaper.tar.gz" "https://github.com/Superchavo/modded-ubuntu-patching/releases/download/config/wallpaper.tar.gz"
+		downloader "gtk-themes.tar.gz" "https://github.com/Superchavo/modded-ubuntu-patching/releases/download/config/gtk-themes.tar.gz"
+		downloader "ubuntu-settings.tar.gz" "https://github.com/Superchavo/modded-ubuntu-patching/releases/download/config/ubuntu-settings.tar.gz"
 
 		echo -e "${R} [${W}-${R}]${C} Unpacking Files..\n"${W}
 		tar -xvzf fonts.tar.gz -C "/usr/local/share/fonts/"
 		tar -xvzf icons.tar.gz -C "/usr/share/icons/"
 		tar -xvzf wallpaper.tar.gz -C "/usr/share/backgrounds/xfce/"
 		tar -xvzf gtk-themes.tar.gz -C "/usr/share/themes/"
-		tar -xvzf ubuntu-settings.tar.gz -C "/home/$username/"	
+		tar -xvzf ubuntu-settings.tar.gz -C "/home/$username/" 	
 		rm -fr $temp_folder
 
 		touch /var/lib/modded-ubuntu-config-done
