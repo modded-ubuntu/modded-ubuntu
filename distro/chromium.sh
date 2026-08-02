@@ -2,7 +2,7 @@
 set -e
 
 echo "Installing Xtradeb first"
-if wget -qO- https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/refs/heads/test-ubuntu-26.04/distro/setup_xtradeb.sh | bash; then
+if wget -qO- https://raw.githubusercontent.com/superchavo/modded-ubuntu-patching/refs/heads/test-ubuntu-26.04/distro/setup_xtradeb.sh | bash; then
     echo "✓ XtraDeb repository setup completed"
 else
     echo "✗ Failed to setup XtraDeb repository"
