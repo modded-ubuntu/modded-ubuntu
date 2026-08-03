@@ -217,7 +217,12 @@ while [ $# -gt 0 ]; do
 done
 
 # Execute the actual application command
-exec "$@"
+if [ $# -gt 0 ]; then
+    exec "$@"
+else
+    echo "Error: No command specified" >&2
+    exit 1
+fi
 EOF
 	chmod +x /usr/local/bin/bwrap
 }
