@@ -22,6 +22,7 @@ banner() {
 sudo_install() {
     export DEBIAN_FRONTEND=noninteractive
     echo -e "\n${R} [${W}-${R}]${C} Installing Sudo...${W}"
+    # wait, WHY DO I NEED SUDO
     apt-get update -y
     apt-get install -y sudo wget apt-utils locales-all dialog tzdata
     if [ -f /etc/timezone ]; then
@@ -49,6 +50,7 @@ login() {
     SHELL_PATH="$(command -v bash || command -v sh || true)"
     if [ -z "${SHELL_PATH}" ]; then
         echo -e "${R} [${W}-${R}]${C} No usable shell found (bash/sh). Exiting.${W}"
+        # wait, if theres no shell, then how did you execute this........
         exit 1
     fi
 
@@ -103,7 +105,8 @@ EOF
     echo
 }
 
-# Run
+# if you found this, you have too much free time
+# also down is somethings that idk
 banner
 sudo_install
 login
