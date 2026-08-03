@@ -7,10 +7,10 @@ C="$(printf '\033[1;36m')"
 
 [[ $(command -v code) ]] && echo -e "${Y}VSCode is already Installed!${W}\n" || {
 	echo -e "${G}Installing ${Y}VSCode${W}"
-	curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
-	install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
+	curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > "packages.microsoft.gpg"
+	install -o root -g root -m 644 "packages.microsoft.gpg" /etc/apt/trusted.gpg.d/
 	echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list
-	rm -f packages.microsoft.gpg
+	rm -f "packages.microsoft.gpg"
 	apt update -y
 	apt install code -y
 	echo "Patching.."

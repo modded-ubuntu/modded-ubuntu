@@ -11,6 +11,6 @@ C="$(printf '\033[1;36m')"
 	echo "deb https://download.sublimetext.com/ apt/stable/" | tee /etc/apt/sources.list.d/sublime-text.list
 	curl -fsSL https://download.sublimetext.com/sublimehq-pub.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/sublime.gpg 2> /dev/null
 	apt update -y
-	apt install sublime-text -y 
+	apt install sublime-text -y
 	echo -e "${C} Sublime Text Editor Installed Successfully\n${W}"
 }
