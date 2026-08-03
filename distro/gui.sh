@@ -17,7 +17,7 @@ check_root(){
 	if [ "$(id -u)" -ne 0 ]; then
 		echo -ne " ${R}Run this program as root!\n\n"${W}
 		echo -ne "  Run ${G}'sudo bash gui.sh'${W}\n\n"
-		echo -ne "\n Note: you don't need to have an actual rooted device.\n\n"${W}
+		echo -ne "\n Note: you don't need to have an actual rooted device or a custom rom.\n\n"${W}
 		exit 1
 	fi
 }
@@ -199,6 +199,21 @@ bwrap_fix() {
 	mkdir -p /usr/local/bin
 	cat << 'EOF' > /usr/local/bin/bwrap
 #!/bin/sh
+# oh look, someone is viewing the code! welp, heres a easter egg: Ten feet twenty, the Flower Man
+# Is waiting for the touch of his hand
+# Straightening petals out without a plan
+# Like the every daily
+# Wish that bothers the Flower Man
+# Could I do something to make him laugh?
+# Inside my little chamber made of glass
+# So he lived the
+
+[Chorus]
+# Flower Man, Flower Man
+# his heart in the sand
+# So he stands
+# To watch the whole wide world
+# .... thats it
 # Shim to bypass sandboxing for Termux proot environments
 # This ignores all sandbox-related flags and executes the target directly.
 
@@ -259,11 +274,11 @@ config() {
 		{ banner; sleep 1; cd $temp_folder; }
 
 		echo -e "${R} [${W}-${R}]${C} Downloading Required Files..\n"${W}
-		downloader "fonts.tar.gz" "https://github.com/modded-ubuntu/config/releases/download/config/fonts.tar.gz"
-		downloader "icons.tar.gz" "https://github.com/modded-ubuntu/config/releases/download/config/icons.tar.gz"
-		downloader "wallpaper.tar.gz" "https://github.com/modded-ubuntu/config/releases/download/config/wallpaper.tar.gz"
-		downloader "gtk-themes.tar.gz" "https://github.com/modded-ubuntu/config/releases/download/config/gtk-themes.tar.gz"
-		downloader "ubuntu-settings.tar.gz" "https://github.com/modded-ubuntu/config/releases/download/config/ubuntu-settings.tar.gz"
+		downloader "fonts.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/fonts.tar.gz"
+		downloader "icons.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/icons.tar.gz"
+		downloader "wallpaper.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/wallpaper.tar.gz"
+		downloader "gtk-themes.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/gtk-themes.tar.gz"
+		downloader "ubuntu-settings.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/ubuntu-settings.tar.gz"
 
 		echo -e "${R} [${W}-${R}]${C} Unpacking Files..\n"${W}
 		tar -xvzf fonts.tar.gz -C "/usr/local/share/fonts/"
