@@ -1,5 +1,4 @@
-# DONT TRY THIS BRANCH RIGHT NOW. ITS A WORKING PROGRESS....
-
+# DONT TRY THIS BECAUSE ITS A WIP BRANCH
 
 <p align="center">
 <img src="./distro/image.jpg">
@@ -11,9 +10,9 @@
 <p align="center">
 <img src="https://img.shields.io/badge/Written%20In-Bash-darkgreen?style=flat-square">
 <img src="https://img.shields.io/badge/Open%20Source-Yes-darkviolet?style=flat-square">
-<img src="https://img.shields.io/github/stars/modded-ubuntu/modded-ubuntu?style=flat-square">
-<img src="https://img.shields.io/github/issues/modded-ubuntu/modded-ubuntu?color=red&style=flat-square">
-<img src="https://img.shields.io/github/forks/modded-ubuntu/modded-ubuntu?color=teal&style=flat-square">
+<img src="https://img.shields.io/github/stars/Superchavo/modded-ubuntu-patching?style=flat-square">
+<img src="https://img.shields.io/github/issues/Superchavo/modded-ubuntu-patching?color=red&style=flat-square">
+<img src="https://img.shields.io/github/forks/Superchavo/modded-ubuntu-patching?color=teal&style=flat-square">
 </p>
 <p align="center"><b>Run Ubuntu GUI on your termux with much features.</b></p>
 
@@ -35,7 +34,7 @@
 
   - `yes | pkg up`
   - `pkg install git wget -y`
-  - `git clone --depth=1 -b test-ubuntu-26.04 https://github.com/modded-ubuntu/modded-ubuntu.git`
+  - `git clone --depth=1 -b test-ubuntu-26.04 https://github.com/Superchavo/modded-ubuntu-patching.git`
   - `cd modded-ubuntu`
   - `bash setup.sh`
 
@@ -98,6 +97,9 @@ Termux Proot Distro - https://github.com/termux/proot-distro
 - [**Tahmid Rayat**](https://github.com/htr-tech)
 - [**0xBaryonyx**](https://github.com/Mahfuz-THBD)
 
+## Contributers
+
+- [**Superchavo**](https://github.com/Superchavo)
 
 ### If you like our work then dont forget to give a Star :)
 
