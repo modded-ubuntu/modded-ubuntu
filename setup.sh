@@ -5,7 +5,7 @@ G="$(printf '\033[1;32m')"
 Y="$(printf '\033[1;33m')"
 B="$(printf '\033[1;34m')"
 C="$(printf '\033[1;36m')"
-W="$(printf '\033[1;37m')" 
+W="$(printf '\033[1;37m')"
 
 CURR_DIR=$(realpath "$(dirname "$BASH_SOURCE")")
 UBUNTU_DIR="$PREFIX/var/lib/proot-distro/containers/ubuntu/rootfs"
@@ -34,7 +34,7 @@ package() {
 		packs=(pulseaudio proot-distro)
 		for x in "${packs[@]}"; do
 			type -p "$x" &>/dev/null || {
-				echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$x${C}"${W}
+				echo -e "\n${R} [${W}-${R}]${G} Installing package: ${Y}$x${C}"${W}
 				yes | pkg install "$x"
 			}
 		done
@@ -73,7 +73,7 @@ EOF
 downloader(){
 	path="$1"
 	[ -e "$path" ] && rm -rf "$path"
-	echo "Downloading $(basename $1)..."
+	echo "Downloading $(basename "$1")..."
 	curl --progress-bar --insecure --fail \
 		 --retry-connrefused --retry 3 --retry-delay 2 \
 		  --location --output ${path} "$2"
@@ -108,7 +108,7 @@ permission() {
 		downloader "$CURR_DIR/user.sh" "https://raw.githubusercontent.com/Superchavo/modded-ubuntu-patching/test-ubuntu-26.04/distro/user.sh"
 		mv -f "$CURR_DIR/user.sh" "$UBUNTU_DIR/root/user.sh"
 	fi
-	chmod +x $UBUNTU_DIR/root/user.sh
+	chmod +x "$UBUNTU_DIR/root/user.sh"
 
 	setup_vnc
 	echo "$(getprop persist.sys.timezone)" > $UBUNTU_DIR/etc/timezone
