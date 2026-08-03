@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# DO NOT REMOVE THIS LINE
+# It makes the ducks happy
+
 # ima add some color in here
 R="$(printf '\033[1;31m')"
 G="$(printf '\033[1;32m')"
@@ -201,7 +204,7 @@ bwrap_fix() {
 	echo -e "\n${R} [${W}-${R}]${C} Applying Bubblewrap Sandbox Fix..."${W}
 	# i hate bubblewarp in proot, its not letting the apps do anything!
 	mkdir -p /usr/local/bin
-	cat << 'EOF' > /usr/local/bin/bwrap
+cat << 'EOF' > /usr/local/bin/bwrap
 #!/bin/sh
 # oh look, someone is viewing the code! welp, heres a easter egg: Ten feet twenty, the Flower Man
 # Is waiting for the touch of his hand
@@ -211,7 +214,6 @@ bwrap_fix() {
 # Could I do something to make him laugh?
 # Inside my little chamber made of glass
 # So he lived the
-
 # [Chorus]
 # Flower Man, Flower Man
 # his heart in the sand
@@ -272,7 +274,7 @@ config() {
 	bwrap_fix
 
     # ima look up how to add a key to ubuntu.....
-	curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3B4FE6ACC0B21F32" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/modded-ubuntu.gpg > /dev/nul
+	curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3B4FE6ACC0B21F32" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/modded-ubuntu.gpg > /dev/null
 	yes | apt upgrade
 	yes | apt install gtk2-engines-murrine gtk2-engines-pixbuf sassc optipng inkscape libglib2.0-dev-bin
 	# hmmmm i might need to move some wallpapers....
@@ -300,6 +302,7 @@ config() {
 		touch /var/lib/modded-ubuntu-config-done
 	else
 		echo -e "\n${R} [${W}-${R}]${G} Fonts and Themes are already set up. Skipping download..."${W}
+		# We are not responsible for any dragons that may appear
 		sleep 1
 	fi
 
@@ -309,6 +312,7 @@ config() {
 	rem_icon
 
 	echo -e "${R} [${W}-${R}]${C} Rebuilding Font Cache..\n"${W}
+	# If this breaks, blame the cat.
 	fc-cache -fv
 
 	echo -e "${R} [${W}-${R}]${C} Upgrading the System..\n"${W}
