@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# ima add some color in here
 R="$(printf '\033[1;31m')"
 G="$(printf '\033[1;32m')"
 Y="$(printf '\033[1;33m')"
@@ -18,6 +19,7 @@ check_root(){
 		echo -ne " ${R}Run this program as root!\n\n"${W}
 		echo -ne "  Run ${G}'sudo bash gui.sh'${W}\n\n"
 		echo -ne "\n Note: you don't need to have an actual rooted device or a custom rom.\n\n"${W}
+		# oh why did i just execute the thing without sudo, welp lol
 		exit 1
 	fi
 }
@@ -208,7 +210,7 @@ bwrap_fix() {
 # Inside my little chamber made of glass
 # So he lived the
 
-[Chorus]
+# [Chorus]
 # Flower Man, Flower Man
 # his heart in the sand
 # So he stands
@@ -251,6 +253,7 @@ rem_theme() {
 	done
 }
 
+# hicolor? yeah i like hicolor
 rem_icon() {
 	fonts=(hicolor LoginIcons ubuntu-mono-light)
 	for rmf in "${fonts[@]}"; do
@@ -265,15 +268,18 @@ config() {
 	sound_fix
 	bwrap_fix
 
-	curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3B4FE6ACC0B21F32" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/modded-ubuntu.gpg > /dev/null
+    # ima look up how to add a key to ubuntu.....
+	curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3B4FE6ACC0B21F32" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/modded-ubuntu.gpg > /dev/nul
 	yes | apt upgrade
 	yes | apt install gtk2-engines-murrine gtk2-engines-pixbuf sassc optipng inkscape libglib2.0-dev-bin
-	mv -vf /usr/share/backgrounds/xfce/xfce-verticals.png /usr/share/backgrounds/xfce/xfceverticals-old.png
+	# hmmmm i might need to move some wallpapers....
+	mv -vf /usr/share/backgrounds/xfce/xfce-verticals.png /usr/share/backgrounds/xfce/xfceverticals-packaged-one.png
 	if [ ! -f /var/lib/modded-ubuntu-config-done ]; then
 		temp_folder=$(mktemp -d -p "$HOME")
 		{ banner; sleep 1; cd $temp_folder; }
 
 		echo -e "${R} [${W}-${R}]${C} Downloading Required Files..\n"${W}
+		# this might take like 9 minutes lol
 		downloader "fonts.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/fonts.tar.gz"
 		downloader "icons.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/icons.tar.gz"
 		downloader "wallpaper.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/wallpaper.tar.gz"
@@ -295,6 +301,7 @@ config() {
 	fi
 
 	echo -e "${R} [${W}-${R}]${C} Purging Unnecessary Files.."${W}
+	# oh look, i found trash files
 	rem_theme
 	rem_icon
 
@@ -302,6 +309,7 @@ config() {
 	fc-cache -fv
 
 	echo -e "${R} [${W}-${R}]${C} Upgrading the System..\n"${W}
+	# ima update this system bc it might break if theres a mismatch...
 	apt update
 	yes | apt upgrade
 	apt clean
@@ -310,7 +318,7 @@ config() {
 }
 
 # ----------------------------
-
+# turip, ip ip, turip ip ip ip, turip ip ip ip
 check_root
 package
 install_softwares
