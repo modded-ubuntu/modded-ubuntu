@@ -14,6 +14,7 @@ else
 	username=${username:-ubuntu}
 fi
 
+# bad things happen if u run things with root but u can trust this one
 check_root(){
 	if [ "$(id -u)" -ne 0 ]; then
 		echo -ne " ${R}Run this program as root!\n\n"${W}
@@ -198,6 +199,7 @@ EOF
 
 bwrap_fix() {
 	echo -e "\n${R} [${W}-${R}]${C} Applying Bubblewrap Sandbox Fix..."${W}
+	# i hate bubblewarp in proot, its not letting the apps do anything!
 	mkdir -p /usr/local/bin
 	cat << 'EOF' > /usr/local/bin/bwrap
 #!/bin/sh
@@ -244,6 +246,7 @@ EOF
 	chmod +x /usr/local/bin/bwrap
 }
 
+# NOOOO MY THEMES, NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 rem_theme() {
 	theme=(Bright Daloa Emacs Moheli Retro Smoke)
 	for rmi in "${theme[@]}"; do
@@ -253,7 +256,7 @@ rem_theme() {
 	done
 }
 
-# hicolor? yeah i like hicolor
+# hicolor? yeah i like hicolor NOOOOO NOT HICOLOR
 rem_icon() {
 	fonts=(hicolor LoginIcons ubuntu-mono-light)
 	for rmf in "${fonts[@]}"; do
