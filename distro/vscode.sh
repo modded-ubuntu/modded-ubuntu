@@ -19,5 +19,5 @@ C="$(printf '\033[1;36m')"
 	echo "Patching.."
 	curl -fsSL https://raw.githubusercontent.com/Superchavo/modded-ubuntu-patching/test-ubuntu-26.04/patches/code.desktop > /usr/share/applications/code.desktop
 	echo -e "${C} Visual Studio Code Installed Successfully\n${W}"
-	# finally, this finished, wait, why are u still reading this? looks like you ignored my message in chromium.sh, welp, lol, i would do the same
+	# finally, this finished, wait, why are u still reading this? looks like you ignored my message in user.sh, welp, lol, i would do the same
 }
