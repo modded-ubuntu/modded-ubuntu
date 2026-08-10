@@ -17,7 +17,7 @@ C="$(printf '\033[1;36m')"
 	apt install code -y
 	# wait, how do i execute code? i just type code or what, or its vscode?
 	echo "Patching.."
-	curl -fsSL https://raw.githubusercontent.com/Superchavo/modded-ubuntu-patching/test-ubuntu-26.04/patches/code.desktop > /usr/share/applications/code.desktop
+	curl -fsSL https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/patches/code.desktop > /usr/share/applications/code.desktop
 	echo -e "${C} Visual Studio Code Installed Successfully\n${W}"
 	# finally, this finished, wait, why are u still reading this? looks like you ignored my message in user.sh, welp, lol, i would do the same
 }

@@ -2,7 +2,7 @@
 set -e
 
 echo "Installing Xtradeb first"
-if wget -qO- https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/refs/heads/test-ubuntu-26.04/distro/setup_xtradeb.sh | sudo bash; then
+if wget -qO- https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/setup_xtradeb.sh | sudo bash; then
     echo "✓ XtraDeb repository setup completed"
 else
     echo "✗ Failed to setup XtraDeb repository"
@@ -38,16 +38,4 @@ done
 
 echo ""
 echo "✓ Chromium setup completed successfully!"
-# 🕈︎♒︎♏︎■︎ ⧫︎♒︎♏︎ ●︎♓︎♑︎♒︎⧫︎ ♓︎⬧︎ ❒︎◆︎■︎■︎♓︎■︎♑︎ ●︎□︎⬥︎
-# ✌︎■︎♎︎ ⧫︎♒︎♏︎ ⬧︎♒︎♋︎♎︎□︎⬥︎⬧︎ ⬧︎⧫︎♋︎❒︎⧫︎ ⧫︎□︎ ♑︎❒︎□︎⬥︎
-# ✌︎■︎♎︎ ⧫︎♒︎♏︎ ◻︎●︎♋︎♍︎♏︎⬧︎ ⧫︎♒︎♋︎⧫︎ ⍓︎□︎◆︎ 🙵■︎□︎⬥︎
-# 💧︎♏︎♏︎❍︎ ●︎♓︎🙵♏︎ ♐︎♋︎■︎⧫︎♋︎⬧︎⍓︎
-
-# ❄︎♒︎♏︎❒︎♏︎🕯︎⬧︎ ♋︎ ●︎♓︎♑︎♒︎⧫︎ ♓︎■︎⬧︎♓︎♎︎♏︎ ⍓︎□︎◆︎❒︎ ⬧︎□︎◆︎●︎
-# ❄︎♒︎♋︎⧫︎🕯︎⬧︎ ⬧︎⧫︎♓︎●︎●︎ ⬧︎♒︎♓︎■︎♓︎■︎♑︎ ♓︎■︎ ⧫︎♒︎♏︎ ♍︎□︎●︎♎︎
-# 🕈︎♓︎⧫︎♒︎ ⧫︎♒︎♏︎ ⧫︎❒︎◆︎⧫︎♒︎
-# ❄︎♒︎♏︎ ◻︎❒︎□︎❍︎♓︎⬧︎♏︎ ♓︎■︎ □︎◆︎❒︎ ♒︎♏︎♋︎❒︎⧫︎⬧︎
-
-# 👎︎□︎■︎🕯︎⧫︎ ♐︎□︎❒︎♑︎♏︎⧫︎
-#✋︎🕯︎❍︎ ⬥︎♓︎⧫︎♒︎ ⍓︎□︎◆︎ ♓︎■︎ ⧫︎♒︎♏︎ ♎︎♋︎❒︎🙵
 echo "Setup details saved to /tmp/xtradeb_install.log"

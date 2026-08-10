@@ -28,46 +28,26 @@ check_root(){
 	fi
 }
 
-banner() {
+banner(){
 	clear
 	cat <<- EOF
-		${Y}    _  _ ___  _  _ _  _ ___ _  _    _  _ ____ ___  
-		${C}    |  | |__] |  | |\ |  |  |  |    |\/| |  | |  \ 
-		${G}    |__| |__] |__| | \|  |  |__|    |  | |__| |__/ 
+	${R}
+	                _ _       _   _       _                 _             
+	 _ __ ___   ___   __| | __| | ___  __| |      _   _  ___| |_   _ _ __ | |_ _   _ 
+	| '_ ` _ \ / _ \ / _` |/ _` |/ _ \/ _` |_____| | | |/ __| | | | | '_ \| __| | | |
+	| | | | | | (_) | (_| | (_| |  __/ (_| |_____| |_| | (__| | |_| | |_) | |_| |_| |
+	|_| |_| |_|\___/ \__,_|\__,_|\___|\__,_|      \__,_|\___|_|\__,_| .__/ \__|\__,_|
+	                                                                 |_|              
 
-	EOF
-	echo -e "${G}     A modded gui version of ubuntu for Termux\n"
-}
-
-note() {
-	banner
-	echo -e " ${G} [-] Successfully Installed !\n"${W}
-	sleep 1
-	cat <<- EOF
-		 ${G}[-] Type ${C}vncstart${G} to run Vncserver.
-		 ${G}[-] Type ${C}vncstop${G} to stop Vncserver.
-
-		 ${C}Install VNC VIEWER Apk on your Device.
-
-		 ${C}Open VNC VIEWER & Click on + Button.
-
-		 ${C}Enter the Address localhost:1 & Name anything you like.
-
-		 ${C}Set the Picture Quality to High for better Quality.
-
-		 ${C}Click on Connect & Input the Password.
-
-		 ${C}Enjoy :D${W}
+			${Y}Version : ${G}2.0
+			${Y}github  : ${G}https://github.com/modded-ubuntu/modded-ubuntu
+	${W}
 	EOF
 }
 
 package() {
-	banner
-	echo -e "${R} [${W}-${R}]${C} Checking required packages..."${W}
-	apt-get update -y
-	apt install udisks2 -y
-	rm /var/lib/dpkg/info/udisks2.postinst
-	echo "" > /var/lib/dpkg/info/udisks2.postinst
+	apt update
+	apt --fix-broken install
 	dpkg --configure -a
 	apt-mark hold udisks2
 	
@@ -79,9 +59,8 @@ package() {
 		}
 	done
 	
-	apt-get update -y
-	apt-get upgrade -y
-}
+	echo -e "\n${R} [${W}-${R}]${C} Package Install Completed!\n"${W}
+	}
 
 install_apt() {
 	for apt in "$@"; do
@@ -97,12 +76,11 @@ run_script() {
 	if [[ -f "/home/$username/softwares/$script_name" ]]; then
 		bash "/home/$username/softwares/$script_name"
 	else
-		bash <(curl -fsSL "https://raw.githubusercontent.com/Superchavo/modded-ubuntu-patching/test-ubuntu-26.04/distro/$script_name")
+		bash <(curl -fsSL "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/$script_name")
 	fi
 }
 
 install_softwares() {
-	banner
 	cat <<- EOF
 		${Y} ---${G} Select Browser ${Y}---
 
@@ -119,23 +97,23 @@ install_softwares() {
 		cat <<- EOF
 			${Y} ---${G} Select IDE ${Y}---
 
-			${C} [${W}1${C}] Sublime Text Editor (Recommended)
+			${C} [${W}1${C}] Sublime Text
 			${C} [${W}2${C}] Visual Studio Code
 			${C} [${W}3${C}] Both (Sublime + VSCode)
-			${C} [${W}4${C}] Skip! (Default)
+			${C} [${W}4${C}] Skip!
 
 		EOF
 		read -n1 -p "${R} [${G}~${R}]${Y} Select an Option: ${G}" IDE_OPTION
 		banner
 	}
-	
-	cat <<- EOF
-		${Y} ---${G} Media Player ${Y}---
 
-		${C} [${W}1${C}] MPV Media Player (Recommended)
-		${C} [${W}2${C}] VLC Media Player
-		${C} [${W}3${C}] Both (MPV + VLC)
-		${C} [${W}4${C}] Skip! (Default)
+	cat <<- EOF
+		${Y} ---${G} Select Media Player ${Y}---
+
+		${C} [${W}1${C}] VLC
+		${C} [${W}2${C}] MPV
+		${C} [${W}3${C}] Both (VLC + MPV)
+		${C} [${W}4${C}] Skip!
 
 	EOF
 	read -n1 -p "${R} [${G}~${R}]${Y} Select an Option: ${G}" PLAYER_OPTION
@@ -168,16 +146,38 @@ install_softwares() {
 	}
 
 	if [[ ${PLAYER_OPTION} == 1 ]]; then
-		install_apt "mpv"
+		install_apt vlc
 	elif [[ ${PLAYER_OPTION} == 2 ]]; then
-		install_apt "vlc"
+		install_apt mpv
 	elif [[ ${PLAYER_OPTION} == 3 ]]; then
-		install_apt "mpv" "vlc"
+		install_apt vlc mpv
 	else
 		echo -e "${Y} [!] Skipping Media Player Installation\n"
 		sleep 1
 	fi
+}
 
+note() {
+	cat <<- EOF
+
+		${R} [${W}-${R}]${G} IMPORTANT NOTICE !
+
+		${Y} -> ${C}If You have Problem with display then use
+			 ${R} [${W}-${R}]${G} Vncserver Resolution 1080x700 and other lower resolutions
+			 ${R} [${W}-${R}]${G} 1080x1080 or 1080x700 (recommended)
+
+		${Y} -> ${C}And if your keyboard doesn't appears in vnc then download
+			 Hacker's keyboard apk from this link:
+			 ${Y}https://github.com/klausw/hackerskeyboard/releases
+
+		${Y} -> ${C}If your storage isn't visible then execute this command in termux
+			 ${R} [${W}-${R}]${G} termux-setup-storage
+
+		${Y} -> ${C}If this gui script issue is already solved in our new update then execute this
+			 ${R} [${W}-${R}]${G} cd ~/modded-ubuntu && git pull
+			 ${R} [${W}-${R}]${G} sudo bash gui.sh
+	${W}
+	EOF
 }
 
 downloader(){
@@ -254,8 +254,9 @@ EOF
 rem_theme() {
 	theme=(Bright Daloa Emacs Moheli Retro Smoke)
 	for rmi in "${theme[@]}"; do
-		type -p "$rmi" &>/dev/null || {
-			rm -rf /usr/share/themes/"$rmi"
+		[[ -d "/usr/share/themes/$rmi" ]] && {
+			echo "Removing theme: $rmi"
+			rm -rf "/usr/share/themes/$rmi"
 		}
 	done
 }
@@ -264,8 +265,9 @@ rem_theme() {
 rem_icon() {
 	fonts=(hicolor LoginIcons ubuntu-mono-light)
 	for rmf in "${fonts[@]}"; do
-		type -p "$rmf" &>/dev/null || {
-			rm -rf /usr/share/icons/"$rmf"
+		[[ -d "/usr/share/icons/$rmf" ]] && {
+			echo "Removing icon: $rmf"
+			rm -rf "/usr/share/icons/$rmf"
 		}
 	done
 }
@@ -323,8 +325,7 @@ config() {
 	apt update
 	yes | apt upgrade
 	apt clean
-	yes | apt autoremove
-
+	banner
 }
 
 # ----------------------------

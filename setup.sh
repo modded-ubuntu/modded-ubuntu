@@ -13,24 +13,25 @@ UBUNTU_DIR="$PREFIX/var/lib/proot-distro/containers/ubuntu/rootfs"
 banner() {
 	clear
 	cat <<- EOF
-		${Y}    _  _ ___  _  _ _  _ ___ _  _    _  _ ____ ___  
-		${C}    |  | |__] |  | |\ |  |  |  |    |\/| |  | |  \ 
-		${G}    |__| |__] |__| | \|  |  |__|    |  | |__| |__/ 
+	${R}
+				  _ _       _   _       _                 _             
+		 _ __ ___   ___   __| | __| | ___  __| |      _   _  ___| |_   _ _ __ | |_ _   _ 
+		| '_ ` _ \ / _ \ / _` |/ _` |/ _ \/ _` |_____| | | |/ __| | | | | '_ \| __| | | |
+		| | | | | | (_) | (_| | (_| |  __/ (_| |_____| |_| | (__| | |_| | |_) | |_| |_| |
+		|_| |_| |_|\___/ \__,_|\__,_|\___|\__,_|      \__,_|\___|_|\__,_| .__/ \__|\__,_|
+														 |_|              
 
+						${Y}Version : ${G}2.0
+						${Y}github  : ${G}https://github.com/modded-ubuntu/modded-ubuntu
+	${W}
 	EOF
-	echo -e "${G}     A modded gui version of ubuntu for Termux\n\n"${W}
 }
 
 package() {
-	banner
-	echo -e "${R} [${W}-${R}]${C} Checking required packages..."${W}
-	
-	[ ! -d '/data/data/com.termux/files/home/storage' ] && echo -e "${R} [${W}-${R}]${C} Setting up Storage.."${W} && termux-setup-storage
-
-	if [[ $(command -v pulseaudio) && $(command -v proot-distro) ]]; then
+	if [[ `command -v pulseaudio` && `command -v proot-distro` ]]; then
+		echo ""
 		echo -e "\n${R} [${W}-${R}]${G} Packages already installed."${W}
 	else
-		yes | pkg upgrade
 		packs=(pulseaudio proot-distro)
 		for x in "${packs[@]}"; do
 			type -p "$x" &>/dev/null || {
@@ -42,10 +43,8 @@ package() {
 }
 
 distro() {
-	echo -e "\n${R} [${W}-${R}]${C} Checking for Distro..."${W}
-	termux-reload-settings
-	
-	if [[ -d "$UBUNTU_DIR" ]]; then
+	if [[ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu" ]] || [[ -d "$PREFIX/var/lib/proot-distro/containers/ubuntu" ]]; then
+		echo ""
 		echo -e "\n${R} [${W}-${R}]${G} Distro already installed."${W}
 		exit 0
 	else
@@ -53,12 +52,10 @@ distro() {
 		termux-reload-settings
 	fi
 	
-	if [[ -d "$UBUNTU_DIR" ]]; then
-		echo -e "\n${R} [${W}-${R}]${G} Installed Successfully !!"${W}
-	else
-		echo -e "\n${R} [${W}-${R}]${G} Error Installing Distro !\n"${W}
-		exit 0
-	fi
+	echo ""
+	echo -e "\n${R} [${W}-${R}]${C} Logging to Ubuntu"${W}
+	echo -e "\n${R} [${W}-${R}]${G} This may take sometime depending on your internet speed"${W}
+	proot-distro login ubuntu
 }
 
 sound() {
@@ -77,21 +74,20 @@ downloader(){
 	curl --progress-bar --insecure --fail \
 		 --retry-connrefused --retry 3 --retry-delay 2 \
 		  --location --output ${path} "$2"
-	echo
 }
 
 setup_vnc() {
 	if [[ -d "$CURR_DIR/distro" ]] && [[ -e "$CURR_DIR/distro/vncstart" ]]; then
 		cp -f "$CURR_DIR/distro/vncstart" "$UBUNTU_DIR/usr/local/bin/vncstart"
 	else
-		downloader "$CURR_DIR/vncstart" "https://raw.githubusercontent.com/Superchavo/modded-ubuntu-patching/test-ubuntu-26.04/distro/vncstart"
+		downloader "$CURR_DIR/vncstart" "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/vncstart"
 		mv -f "$CURR_DIR/vncstart" "$UBUNTU_DIR/usr/local/bin/vncstart"
 	fi
 
 	if [[ -d "$CURR_DIR/distro" ]] && [[ -e "$CURR_DIR/distro/vncstop" ]]; then
 		cp -f "$CURR_DIR/distro/vncstop" "$UBUNTU_DIR/usr/local/bin/vncstop"
 	else
-		downloader "$CURR_DIR/vncstop" "https://raw.githubusercontent.com/Superchavo/modded-ubuntu-patching/test-ubuntu-26.04/distro/vncstop"
+		downloader "$CURR_DIR/vncstop" "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/vncstop"
 		mv -f "$CURR_DIR/vncstop" "$UBUNTU_DIR/usr/local/bin/vncstop"
 	fi
 	chmod +x "$UBUNTU_DIR/usr/local/bin/vncstart"
@@ -99,13 +95,16 @@ setup_vnc() {
 }
 
 permission() {
-	banner
-	echo -e "${R} [${W}-${R}]${C} Setting up Environment..."${W}
+	echo ""
+	echo -e "\n${R} [${W}-${R}]${C} Please wait..."${W}
+	echo -e "\n${R} [${W}-${R}]${G} This process can take up to 2-5 Minutes"${W}
+	echo -e "\n${R} [${W}-${R}]${G} Depending on your internet speed"${W}
+	sleep 2
 
 	if [[ -d "$CURR_DIR/distro" ]] && [[ -e "$CURR_DIR/distro/user.sh" ]]; then
 		cp -f "$CURR_DIR/distro/user.sh" "$UBUNTU_DIR/root/user.sh"
 	else
-		downloader "$CURR_DIR/user.sh" "https://raw.githubusercontent.com/Superchavo/modded-ubuntu-patching/test-ubuntu-26.04/distro/user.sh"
+		downloader "$CURR_DIR/user.sh" "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/user.sh"
 		mv -f "$CURR_DIR/user.sh" "$UBUNTU_DIR/root/user.sh"
 	fi
 	chmod +x "$UBUNTU_DIR/root/user.sh"
@@ -117,23 +116,10 @@ permission() {
 	chmod +x "$PREFIX/bin/ubuntu"
 	termux-reload-settings
 
-	if [[ -e "$PREFIX/bin/ubuntu" ]]; then
-		banner
-		cat <<- EOF
-			${R} [${W}-${R}]${G} Ubuntu-26.04 (CLI) is now Installed on your Termux
-			${R} [${W}-${R}]${G} Restart your Termux to Prevent Some Issues.
-			${R} [${W}-${R}]${G} Type ${C}ubuntu${G} to run Ubuntu CLI.
-			${R} [${W}-${R}]${G} If you Want to Use UBUNTU in GUI MODE then ,
-			${R} [${W}-${R}]${G} Run ${C}ubuntu${G} first & then type ${C}bash user.sh${W}
-		EOF
-		{ echo; sleep 2; exit 1; }
-	else
-		echo -e "\n${R} [${W}-${R}]${G} Error Installing Distro !"${W}
-		exit 0
-	fi
-
+	proot-distro login ubuntu --shared-tmp -- /bin/bash /root/user.sh
 }
 
+banner
 package
 distro
 sound
