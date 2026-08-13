@@ -12,7 +12,7 @@ UBUNTU_DIR="$PREFIX/var/lib/proot-distro/containers/ubuntu/rootfs"
 
 # Logging function
 log() {
-    local LOG_FILE="/data/data/com.termux/files/home/modded-ubuntu/logs/script.log"
+    local LOG_FILE="${PREFIX:-/data/data/com.termux/files/usr}/tmp/script.log"
     local LOG_DIR=$(dirname "$LOG_FILE")
     
     if [ ! -d "$LOG_DIR" ]; then

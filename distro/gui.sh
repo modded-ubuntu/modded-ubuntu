@@ -131,15 +131,26 @@ install_apt() {
 install_vscode() {
 	[[ $(command -v code) ]] && echo "${Y}VSCode is already Installed!${W}" || {
 		echo -e "${G}Installing ${Y}VSCode${W}"
-		curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
-		install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
+		apt install -y gpg
+		wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/packages.microsoft.gpg
 		echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list
-		apt update -y
+		apt update
 		apt install code -y
-		echo "Patching.."
 		curl -fsSL https://raw.githubusercontent.com/afonsoft/modded-ubuntu/master/patches/code.desktop > /usr/share/applications/code.desktop
 		echo -e "${C} Visual Studio Code Installed Successfully\n${W}"
 	}
+}
+
+install_opencode() {
+	[[ $(command -v opencode) ]] && echo "${Y}OpenCode is already Installed!${W}" || {
+		echo -e "${G}Installing ${Y}Node.js and OpenCode CLI${W}"
+		apt install -y curl
+		curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
+		apt install -y nodejs
+		npm install -g @opencode-ai/cli
+		echo -e "${C} OpenCode Installed Successfully\n${W}"
+	}
+}
 }
 
 install_sublime() {
@@ -194,13 +205,12 @@ install_tools() {
 
 	[[ ("$arch" != 'armhf') || ("$arch" != *'armv7'*) ]] && {
 		cat <<- EOF
-			${Y} ---${G} Select IDE ${Y}---
-
+			${Y} ---${G} Select IDE & Tools ${Y}---
 			${C} [${W}1${C}] Sublime Text Editor (Recommended)
 			${C} [${W}2${C}] Visual Studio Code
-			${C} [${W}3${C}] Both (Sublime + VSCode)
-			${C} [${W}4${C}] Skip! (Default)
-
+			${C} [${W}3${C}] OpenCode CLI
+			${C} [${W}4${C}] All (Sublime, VSCode, OpenCode)
+			${C} [${W}5${C}] Skip! (Default)
 		EOF
 		read -n1 -p "${R} [${G}~${R}]${Y} Select an Option: ${G}" IDE_OPTION
 		banner
@@ -245,17 +255,16 @@ install_tools() {
 
 	# Install IDEs
 	[[ ("$arch" != 'armhf') || ("$arch" != *'armv7'*) ]] && {
-		if [[ ${IDE_OPTION} == 1 ]]; then
-			install_sublime
-		elif [[ ${IDE_OPTION} == 2 ]]; then
-			install_vscode
-		elif [[ ${IDE_OPTION} == 3 ]]; then
-			install_sublime
-			install_vscode
-		else
-			echo -e "${Y} [!] Skipping IDE Installation\n"
-			sleep 1
-		fi
+		cat <<- EOF
+			${Y} ---${G} Select IDE & Tools ${Y}---
+			${C} [${W}1${C}] Sublime Text Editor (Recommended)
+			${C} [${W}2${C}] Visual Studio Code
+			${C} [${W}3${C}] OpenCode CLI
+			${C} [${W}4${C}] All (Sublime, VSCode, OpenCode)
+			${C} [${W}5${C}] Skip! (Default)
+		EOF
+		read -n1 -p "${R} [${G}~${R}]${Y} Select an Option: ${G}" IDE_OPTION
+		banner
 	}
 
 	# Install Media Players
