@@ -1,0 +1,20 @@
+name: Termux Simulation Test
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  test:
+    name: Run in Termux Docker
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Run setup in Termux container
+      run: |
+        docker run --rm -v ${{ github.workspace }}:/data/data/com.termux/files/home/modded-ubuntu \
+          -w /data/data/com.termux/files/home/modded-ubuntu \
+          termux/termux-docker:latest bash -c "pkg update && pkg install -y pulseaudio proot-distro && bash ./setup.sh"

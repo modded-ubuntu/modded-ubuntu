@@ -8,16 +8,17 @@
 <p align="center">
 <img src="https://img.shields.io/badge/Written%20In-Bash-darkgreen?style=flat-square">
 <img src="https://img.shields.io/badge/Open%20Source-Yes-darkviolet?style=flat-square">
-<img src="https://img.shields.io/github/stars/modded-ubuntu/modded-ubuntu?style=flat-square">
-<img src="https://img.shields.io/github/issues/modded-ubuntu/modded-ubuntu?color=red&style=flat-square">
-<img src="https://img.shields.io/github/forks/modded-ubuntu/modded-ubuntu?color=teal&style=flat-square">
+<img src="https://img.shields.io/github/stars/afonsoft/modded-ubuntu?style=flat-square">
+<img src="https://img.shields.io/github/issues/afonsoft/modded-ubuntu?color=red&style=flat-square">
+<img src="https://img.shields.io/github/forks/afonsoft/modded-ubuntu?color=teal&style=flat-square">
+<a href="https://github.com/afonsoft/modded-ubuntu/actions/workflows/shellcheck.yml"><img src="https://github.com/afonsoft/modded-ubuntu/actions/workflows/shellcheck.yml/badge.svg" alt="ShellCheck Status" style="max-width: 100%;"></a>
 </p>
 <p align="center"><b>Run Ubuntu GUI on your termux with much features.</b></p>
 
 ### Features
 
 - Fixed Audio Output
-- Lightweight {Requires at least 4GB Storage}
+- Lightweight {Requires at least 5GB Storage}
 - 2 Browsers (Chromium & Mozilla Firefox)
 - Supports Bangla Fonts
 - VLC Media Player and MPV media player
@@ -25,28 +26,45 @@
 - Sublime Text Editor (only for arm64/aarch64)
 - Easy for Beginners
 - Comes with some cool themes.
+- Kali linux tools installer. (Metasploit included)
+- Ghost Framework and Wireshark included
 
 ### Installation
 - Firstly install [Termux](https://termux.com) apk from [HERE](https://f-droid.org/repo/com.termux_118.apk)
 - Secondly Clone the Repository & Run the setup File
 
-  - `yes | pkg up`
-  - `pkg install git wget -y`
-  - `git clone --depth=1 https://github.com/modded-ubuntu/modded-ubuntu.git`
-  - `cd modded-ubuntu`
-  - `bash setup.sh`
+   ```bash
+    yes | pkg up
+    ```
+    ```bash
+    pkg install git wget -y
+     ```
+     ```bash
+    git clone --depth=1 https://github.com/afonsoft/modded-ubuntu.git
+     ```
+     ```bash
+    cd modded-ubuntu
+    ```
+    ```bash
+    bash setup.sh
+    ```
 
 - Then Restart your Termux & Type the following commands
-
-   - `ubuntu`
-   - `bash user.sh`
-
+```bash
+   ubuntu
+```
+```bash
+   bash user.sh
+```
+ 
 - Type your ubuntu root username. Must be lowercase & no space included.
 
-- Then Again Restart your Termux & Type the following commands
+ Restart your Termux
 
-   - `ubuntu`
-   - `sudo bash gui.sh`
+- Then for graphical user interface & Type the following commands
+```bash
+   sudo bash gui.sh
+```
 
 - **You have to note your VNC password !!**
 
@@ -67,8 +85,13 @@
 - **Type `ubuntu` to run Ubuntu CLI.**
 - **Type `vncstart` to run Vncserver**
 - **Type `vncstop` to stop Vncserver**
-
 - **Type `bash remove.sh` to remove Ubuntu Modded Os**
+
+### Auto-start VNC Server
+If you want to automatically start the VNC server when you log in, add `vncstart` to your `.bashrc`:
+```bash
+echo "vncstart" >> ~/.bashrc
+```
 
 ### Video Tutorial : 
 
@@ -89,12 +112,10 @@ Full Credit of the Ubuntu image goes to them .
 Termux Proot Distro - https://github.com/termux/proot-distro
 ```
 
-### Maintainers
-
-- [**Mustakim Ahmed**](https://github.com/BDhackers009)
-- [**Tahmid Rayat**](https://github.com/htr-tech)
-- [**0xBaryonyx**](https://github.com/Mahfuz-THBD)
-
-
 ### If you like our work then dont forget to give a Star :)
 
+## Maintainers
+
+**Developed by by <a href="https://github.com/BDhackers009">Mustakim Ahmed</a>** & **Developed by<a href="https://github.com/htr-tech">Tahmid Rayat</a>**
+
+**Developed by <a href="https://github.com/Mahfuz-THBD">0xBaryonyx</a>** & **Enhanced by <a href="https://github.com/Midohajhouj">MIDØ</a>**
