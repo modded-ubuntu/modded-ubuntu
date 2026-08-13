@@ -98,6 +98,10 @@ sound() {
         echo "pacmd load-module module-aaudio-sink" >> "$HOME/.sound"
     fi
 
+    if ! grep -q "pacmd load-module module-aaudio-source" "$HOME/.sound"; then
+        echo "pacmd load-module module-aaudio-source" >> "$HOME/.sound"
+    fi
+
     if ! grep -q "pulseaudio --start --exit-idle-time=-1" "$HOME/.sound"; then
         echo "pulseaudio --start --exit-idle-time=-1" >> "$HOME/.sound"
     fi
