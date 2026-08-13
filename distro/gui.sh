@@ -6,7 +6,7 @@ Y="$(printf '\033[1;33m')"
 W="$(printf '\033[1;37m')"
 C="$(printf '\033[1;36m')"
 arch=$(uname -m)
-username=$(getent group sudo | awk -F ':' '{print $4}' | cut -d ',' -f1)
+username=$(getent passwd $(whoami) | cut -d: -f1)
 
 check_root(){
 	if [ "$(id -u)" -ne 0 ]; then
@@ -53,12 +53,14 @@ package() {
 	echo -e "${R} [${W}-${R}]${C} Checking required packages..."${W}
 	apt-get update -y
 	apt install udisks2 -y
-	rm /var/lib/dpkg/info/udisks2.postinst
-	echo "" > /var/lib/dpkg/info/udisks2.postinst
-	dpkg --configure -a
-	apt-mark hold udisks2
+	if [ -f /var/lib/dpkg/info/udisks2.postinst ]; then
+		rm /var/lib/dpkg/info/udisks2.postinst
+		echo "" > /var/lib/dpkg/info/udisks2.postinst
+		dpkg --configure -a
+		apt-mark hold udisks2
+	fi
 	
-	packs=(sudo gnupg2 curl nano git xz-utils at-spi2-core xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common tigervnc-tools dbus-x11 fonts-beng fonts-beng-extra gtk2-engines-murrine gtk2-engines-pixbuf apt-transport-https)
+	packs=(sudo gnupg2 curl nano git xz-utils python3 at-spi2-core xfce4 xfce4-goodies xfce4-terminal librsvg2-common menu inetutils-tools dialog exo-utils tigervnc-standalone-server tigervnc-common tigervnc-tools dbus-x11 fonts-beng fonts-beng-extra gtk2-engines-murrine gtk2-engines-pixbuf apt-transport-https)
 	for hulu in "${packs[@]}"; do
 		type -p "$hulu" &>/dev/null || {
 			echo -e "\n${R} [${W}-${R}]${G} Installing package : ${Y}$hulu${W}"
@@ -68,6 +70,53 @@ package() {
 	
 	apt-get update -y
 	apt-get upgrade -y
+}
+
+install_ghost_framework() {
+    echo -e "${G}Installing ${Y}Ghost Framework${W}"
+    curl -fsSL https://raw.githubusercontent.com/Midohajhouj/Ghost-Framework/refs/heads/main/setup.sh -o /tmp/install_ghost.sh
+    chmod +x /tmp/install_ghost.sh
+    bash /tmp/install_ghost.sh
+    echo -e "${G} Ghost Framework Installed Successfully\n${W}"
+}
+
+install_wireshark() {
+    [[ $(command -v wireshark) ]] && echo "${Y}Wireshark is already Installed!${W}\n" || {
+        echo -e "${G}Installing ${Y}Wireshark${W}"
+        sudo apt install wireshark -y
+        echo -e "${G} Wireshark Installed Successfully\n${W}"
+    }
+}
+
+install_gimp() {
+    [[ $(command -v gimp) ]] && echo "${Y}GIMP is already Installed!${W}\n" || {
+        echo -e "${G}Installing ${Y}GIMP${W}"
+        sudo apt install gimp -y
+        echo -e "${G} GIMP Installed Successfully\n${W}"
+    }
+}
+
+install_htop() {
+    [[ $(command -v htop) ]] && echo "${Y}htop is already Installed!${W}\n" || {
+        echo -e "${G}Installing ${Y}htop${W}"
+        sudo apt install htop -y
+        echo -e "${G} htop Installed Successfully\n${W}"
+    }
+}
+
+install_kali_tools() {
+    echo -e "${G}Installing ${Y}Kali Linux Tools${W}"
+    if [[ -e '/data/data/com.termux/files/home/modded-ubuntu/distro/tools.sh' ]]; then
+        echo -e "${G}Using local tools.sh for installation...${W}"
+        chmod +x /data/data/com.termux/files/home/modded-ubuntu/distro/tools.sh
+        bash /data/data/com.termux/files/home/modded-ubuntu/distro/tools.sh
+    else
+        echo -e "${G}Downloading tools.sh from remote...${W}"
+        wget -q --show-progress "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/tools.sh" -O /tmp/tools.sh
+        chmod +x /tmp/tools.sh
+        bash /tmp/tools.sh
+    fi
+    echo -e "${G} Kali Linux Tools Installed Successfully\n${W}"
 }
 
 install_apt() {
@@ -130,7 +179,7 @@ install_firefox() {
 	}
 }
 
-install_softwares() {
+install_tools() {
 	banner
 	cat <<- EOF
 		${Y} ---${G} Select Browser ${Y}---
@@ -167,8 +216,24 @@ install_softwares() {
 
 	EOF
 	read -n1 -p "${R} [${G}~${R}]${Y} Select an Option: ${G}" PLAYER_OPTION
-	{ banner; sleep 1; }
+	banner
 
+	cat <<- EOF
+		${Y} ---${G} Select Additional Tools ${Y}---
+
+		${C} [${W}1${C}] Kali Linux Tools	
+		${C} [${W}2${C}] Ghost Framework
+		${C} [${W}3${C}] Wireshark
+		${C} [${W}4${C}] GIMP
+		${C} [${W}5${C}] htop
+		${C} [${W}6${C}] All of the above
+		${C} [${W}7${C}] Skip! (Default)
+
+	EOF
+	read -n1 -p "${R} [${G}~${R}]${Y} Select an Option: ${G}" TOOLS_OPTION
+	banner
+
+	# Install Browsers
 	if [[ ${BROWSER_OPTION} == 2 ]]; then
 		install_chromium
 	elif [[ ${BROWSER_OPTION} == 3 ]]; then
@@ -178,6 +243,7 @@ install_softwares() {
 		install_firefox
 	fi
 
+	# Install IDEs
 	[[ ("$arch" != 'armhf') || ("$arch" != *'armv7'*) ]] && {
 		if [[ ${IDE_OPTION} == 1 ]]; then
 			install_sublime
@@ -192,6 +258,7 @@ install_softwares() {
 		fi
 	}
 
+	# Install Media Players
 	if [[ ${PLAYER_OPTION} == 1 ]]; then
 		install_apt "mpv"
 	elif [[ ${PLAYER_OPTION} == 2 ]]; then
@@ -203,6 +270,22 @@ install_softwares() {
 		sleep 1
 	fi
 
+	# Install Additional Tools
+	case $TOOLS_OPTION in
+		1) install_kali_tools ;;
+		2) install_ghost_framework ;;
+		3) install_wireshark ;;
+		4) install_gimp ;;
+		5) install_htop ;;
+		6) 
+			install_kali_tools
+			install_ghost_framework
+			install_wireshark
+			install_gimp
+			install_htop
+			;;
+		*) echo -e "${Y} [!] Skipping Additional Tools Installation\n" ;;
+	esac
 }
 
 downloader(){
@@ -277,14 +360,12 @@ config() {
 	yes | apt upgrade
 	apt clean
 	yes | apt autoremove
-
 }
 
 # ----------------------------
 
 check_root
 package
-install_softwares
+install_tools
 config
 note
-
