@@ -12,7 +12,7 @@ UBUNTU_DIR="$PREFIX/var/lib/proot-distro/containers/ubuntu/rootfs"
 
 # Logging function
 log() {
-    local LOG_FILE="/data/data/com.termux/files/home/modded-ubuntu/logs/script.log"
+    local LOG_FILE="${PREFIX:-/data/data/com.termux/files/usr}/tmp/script.log"
     local LOG_DIR=$(dirname "$LOG_FILE")
     
     if [ ! -d "$LOG_DIR" ]; then
@@ -96,6 +96,10 @@ sound() {
     
     if ! grep -q "pacmd load-module module-aaudio-sink" "$HOME/.sound"; then
         echo "pacmd load-module module-aaudio-sink" >> "$HOME/.sound"
+    fi
+
+    if ! grep -q "pacmd load-module module-aaudio-source" "$HOME/.sound"; then
+        echo "pacmd load-module module-aaudio-source" >> "$HOME/.sound"
     fi
 
     if ! grep -q "pulseaudio --start --exit-idle-time=-1" "$HOME/.sound"; then

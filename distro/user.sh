@@ -8,13 +8,12 @@ C="$(printf '\033[1;36m')"
 
 # Logging function
 log() {
-    local LOG_FILE="/data/data/com.termux/files/home/modded-ubuntu/logs/script.log"
+    local LOG_FILE="${PREFIX:-/data/data/com.termux/files/usr}/tmp/user-script.log"
     local LOG_DIR=$(dirname "$LOG_FILE")
     
     if [ ! -d "$LOG_DIR" ]; then
         mkdir -p "$LOG_DIR" || { echo "Failed to create log directory"; exit 1; }
     fi
-    
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE" || { echo "Failed to write to log file"; exit 1; }
 }
 

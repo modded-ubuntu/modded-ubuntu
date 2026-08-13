@@ -85,8 +85,13 @@
 - **Type `ubuntu` to run Ubuntu CLI.**
 - **Type `vncstart` to run Vncserver**
 - **Type `vncstop` to stop Vncserver**
-
 - **Type `bash remove.sh` to remove Ubuntu Modded Os**
+
+### Auto-start VNC Server
+If you want to automatically start the VNC server when you log in, add `vncstart` to your `.bashrc`:
+```bash
+echo "vncstart" >> ~/.bashrc
+```
 
 ### Video Tutorial : 
 
