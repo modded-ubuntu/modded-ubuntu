@@ -8,9 +8,10 @@
 <p align="center">
 <img src="https://img.shields.io/badge/Written%20In-Bash-darkgreen?style=flat-square">
 <img src="https://img.shields.io/badge/Open%20Source-Yes-darkviolet?style=flat-square">
-<img src="https://img.shields.io/github/stars/modded-ubuntu/modded-ubuntu?style=flat-square">
-<img src="https://img.shields.io/github/issues/modded-ubuntu/modded-ubuntu?color=red&style=flat-square">
-<img src="https://img.shields.io/github/forks/modded-ubuntu/modded-ubuntu?color=teal&style=flat-square">
+<img src="https://img.shields.io/github/stars/afonsoft/modded-ubuntu?style=flat-square">
+<img src="https://img.shields.io/github/issues/afonsoft/modded-ubuntu?color=red&style=flat-square">
+<img src="https://img.shields.io/github/forks/afonsoft/modded-ubuntu?color=teal&style=flat-square">
+<a href="https://github.com/afonsoft/modded-ubuntu/actions/workflows/shellcheck.yml"><img src="https://github.com/afonsoft/modded-ubuntu/actions/workflows/shellcheck.yml/badge.svg" alt="ShellCheck Status" style="max-width: 100%;"></a>
 </p>
 <p align="center"><b>Run Ubuntu GUI on your termux with much features.</b></p>
 
@@ -26,6 +27,7 @@
 - Easy for Beginners
 - Comes with some cool themes.
 - Kali linux tools installer. (Metasploit included)
+- Ghost Framework and Wireshark included
 
 ### Installation
 - Firstly install [Termux](https://termux.com) apk from [HERE](https://f-droid.org/repo/com.termux_118.apk)
@@ -38,7 +40,7 @@
     pkg install git wget -y
      ```
      ```bash
-    git clone --depth=1 https://github.com/modded-ubuntu/modded-ubuntu.git
+    git clone --depth=1 https://github.com/afonsoft/modded-ubuntu.git
      ```
      ```bash
     cd modded-ubuntu
