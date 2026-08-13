@@ -73,7 +73,7 @@ login() {
         cp /data/data/com.termux/files/home/modded-ubuntu/distro/gui.sh "/home/$user/gui.sh"
         chmod +x "/home/$user/gui.sh" || { log "Failed to set permissions for gui.sh"; exit 1; }
     else
-        wget -q --show-progress "https://raw.githubusercontent.com/Midohajhouj/modded-ubuntu/master/distro/gui.sh" -O "/home/$user/gui.sh"
+        wget -q --show-progress "https://raw.githubusercontent.com/afonsoft/modded-ubuntu/master/distro/gui.sh" -O "/home/$user/gui.sh"
         chmod +x "/home/$user/gui.sh" || { log "Failed to set permissions for gui.sh"; exit 1; }
     fi
 

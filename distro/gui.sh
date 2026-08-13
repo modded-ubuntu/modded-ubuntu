@@ -112,7 +112,7 @@ install_kali_tools() {
         bash /data/data/com.termux/files/home/modded-ubuntu/distro/tools.sh
     else
         echo -e "${G}Downloading tools.sh from remote...${W}"
-        wget -q --show-progress "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/tools.sh" -O /tmp/tools.sh
+        wget -q --show-progress "https://raw.githubusercontent.com/afonsoft/modded-ubuntu/master/distro/tools.sh" -O /tmp/tools.sh
         chmod +x /tmp/tools.sh
         bash /tmp/tools.sh
     fi
@@ -137,7 +137,7 @@ install_vscode() {
 		apt update -y
 		apt install code -y
 		echo "Patching.."
-		curl -fsSL https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/patches/code.desktop > /usr/share/applications/code.desktop
+		curl -fsSL https://raw.githubusercontent.com/afonsoft/modded-ubuntu/master/patches/code.desktop > /usr/share/applications/code.desktop
 		echo -e "${C} Visual Studio Code Installed Successfully\n${W}"
 	}
 }
@@ -174,7 +174,7 @@ install_chromium() {
 install_firefox() {
 	[[ $(command -v firefox) ]] && echo "${Y}Firefox is already Installed!${W}\n" || {
 		echo -e "${G}Installing ${Y}Firefox${W}"
-		bash <(curl -fsSL "https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu/master/distro/firefox.sh")
+		bash <(curl -fsSL "https://raw.githubusercontent.com/afonsoft/modded-ubuntu/master/distro/firefox.sh")
 		echo -e "${G} Firefox Installed Successfully\n${W}"
 	}
 }
@@ -334,11 +334,11 @@ config() {
 	{ banner; sleep 1; cd $temp_folder; }
 
 	echo -e "${R} [${W}-${R}]${C} Downloading Required Files..\n"${W}
-	downloader "fonts.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/fonts.tar.gz"
-	downloader "icons.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/icons.tar.gz"
-	downloader "wallpaper.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/wallpaper.tar.gz"
-	downloader "gtk-themes.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/gtk-themes.tar.gz"
-	downloader "ubuntu-settings.tar.gz" "https://github.com/modded-ubuntu/modded-ubuntu/releases/download/config/ubuntu-settings.tar.gz"
+	downloader "fonts.tar.gz" "https://github.com/afonsoft/modded-ubuntu/releases/download/config/fonts.tar.gz"
+	downloader "icons.tar.gz" "https://github.com/afonsoft/modded-ubuntu/releases/download/config/icons.tar.gz"
+	downloader "wallpaper.tar.gz" "https://github.com/afonsoft/modded-ubuntu/releases/download/config/wallpaper.tar.gz"
+	downloader "gtk-themes.tar.gz" "https://github.com/afonsoft/modded-ubuntu/releases/download/config/gtk-themes.tar.gz"
+	downloader "ubuntu-settings.tar.gz" "https://github.com/afonsoft/modded-ubuntu/releases/download/config/ubuntu-settings.tar.gz"
 
 	echo -e "${R} [${W}-${R}]${C} Unpacking Files..\n"${W}
 	tar -xvzf fonts.tar.gz -C "/usr/local/share/fonts/"
