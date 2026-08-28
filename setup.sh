@@ -11,14 +11,13 @@ CURR_DIR=$(realpath "$(dirname "$BASH_SOURCE")")
 UBUNTU_DIR="$PREFIX/var/lib/proot-distro/containers/ubuntu/rootfs"
 
 banner() {
-	clear
-	cat <<- EOF
-		${Y}    _  _ ___  _  _ _  _ ___ _  _    _  _ ____ ___  
-		${C}    |  | |__] |  | |\ |  |  |  |    |\/| |  | |  \ 
-		${G}    |__| |__] |__| | \|  |  |__|    |  | |__| |__/ 
-
-	EOF
-	echo -e "${G}     A modded gui version of ubuntu for Termux\n\n"${W}
+    clear
+    printf "\033[33m    _  _ ___  _  _ _  _ ___ _  _    _  _ ____ ___  \033[0m\n"
+    printf "\033[36m    |  | |__] |  | |\ |  |  |  |    |\/| |  | |  \ \033[0m\n"
+    printf "\033[32m    |__| |__] |__| | \|  |  |__|    |  | |__| |__/ \033[0m\n"
+    printf "\033[0m\n"
+    printf "     \033[32mA modded gui version of ubuntu for Termux\033[0m\n"
+    printf "                 \033[33mVersion : \033[32m2.0\033[0m\n\n"
 }
 
 package() {

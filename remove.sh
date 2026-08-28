@@ -14,8 +14,7 @@ banner() {
     printf "\033[32m    |__| |__] |__| | \|  |  |__|    |  | |__| |__/ \033[0m\n"
     printf "\033[0m\n"
     printf "     \033[32mA modded gui version of ubuntu for Termux\033[0m\n"
-    printf "\033[0m\n"
-
+    printf "                 \033[33mVersion : \033[32m2.0\033[0m\n\n"
 }
 
 package() {
