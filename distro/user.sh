@@ -11,15 +11,12 @@ export DEBIAN_FRONTEND=noninteractive
 
 banner() {
     clear
-    printf "\033[31m"
-    printf " _   _       _                 _             \n"
-    printf "| | | |_   _| |__  _   _ _ __ | |_ _   _ \n"
-    printf "| |_| | | | | '_ \| | | | '_ \| __| | | |\n"
-    printf "|  _  | |_| | |_) | |_| | | | | |_| |_| |\n"
-    printf "|_| |_|\__,_|_.__/ \__,_|_| |_|\__|\__,_|\n"
+    printf "\033[33m    _  _ ___  _  _ _  _ ___ _  _    _  _ ____ ___  \033[0m\n"
+    printf "\033[36m    |  | |__] |  | |\ |  |  |  |    |\/| |  | |  \ \033[0m\n"
+    printf "\033[32m    |__| |__] |__| | \|  |  |__|    |  | |__| |__/ \033[0m\n"
     printf "\033[0m\n"
     printf "     \033[32mA modded gui version of ubuntu for Termux\033[0m\n"
-    printf "\033[0m\n"
+    printf "                 \033[33mVersion : \033[32m2.0\033[0m\n\n"
 }
 
 sudo_install() {
