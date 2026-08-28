@@ -11,20 +11,13 @@ CURR_DIR=$(realpath "$(dirname "$BASH_SOURCE")")
 UBUNTU_DIR="$PREFIX/var/lib/proot-distro/containers/ubuntu/rootfs"
 
 banner() {
-	clear
-	cat <<- EOF
-	${R}
-				  _ _       _   _       _                 _             
-		 _ __ ___   ___   __| | __| | ___  __| |      _   _  ___| |_   _ _ __ | |_ _   _ 
-		| '_ ` _ \ / _ \ / _` |/ _` |/ _ \/ _` |_____| | | |/ __| | | | | '_ \| __| | | |
-		| | | | | | (_) | (_| | (_| |  __/ (_| |_____| |_| | (__| | |_| | |_) | |_| |_| |
-		|_| |_| |_|\___/ \__,_|\__,_|\___|\__,_|      \__,_|\___|_|\__,_| .__/ \__|\__,_|
-														 |_|              
-
-						${Y}Version : ${G}2.0
-						${Y}github  : ${G}https://github.com/modded-ubuntu/modded-ubuntu
-	${W}
-	EOF
+    clear
+    printf "\033[33m    _  _ ___  _  _ _  _ ___ _  _    _  _ ____ ___  \033[0m\n"
+    printf "\033[36m    |  | |__] |  | |\ |  |  |  |    |\/| |  | |  \ \033[0m\n"
+    printf "\033[32m    |__| |__] |__| | \|  |  |__|    |  | |__| |__/ \033[0m\n"
+    printf "\033[0m\n"
+    printf "     \033[32mA modded gui version of ubuntu for Termux\033[0m\n"
+    printf "                 \033[33mVersion : \033[32m2.0\033[0m\n\n"
 }
 
 package() {
