@@ -1,4 +1,6 @@
 #!/bin/bash
+export DEBIAN_FRONTEND=noninteractive
+export TZ=Etc/UTC
 
 # DO NOT REMOVE THIS LINE
 # It makes the ducks happy
