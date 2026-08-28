@@ -8,7 +8,11 @@ C="$(printf '\033[1;36m')"
 W="$(printf '\033[1;37m')"
 
 CURR_DIR=$(realpath "$(dirname "$BASH_SOURCE")")
-UBUNTU_DIR="$PREFIX/var/lib/proot-distro/containers/ubuntu/rootfs"
+if [[ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu" ]]; then
+	UBUNTU_DIR="$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu"
+else
+	UBUNTU_DIR="$PREFIX/var/lib/proot-distro/containers/ubuntu/rootfs"
+fi
 
 banner() {
     clear
@@ -24,6 +28,7 @@ package() {
 	if [[ `command -v pulseaudio` && `command -v proot-distro` ]]; then
 		echo ""
 		echo -e "\n${R} [${W}-${R}]${G} Packages already installed."${W}
+		sleep 1.5
 	else
 		packs=(pulseaudio proot-distro)
 		for x in "${packs[@]}"; do
@@ -39,16 +44,15 @@ distro() {
 	if [[ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu" ]] || [[ -d "$PREFIX/var/lib/proot-distro/containers/ubuntu" ]]; then
 		echo ""
 		echo -e "\n${R} [${W}-${R}]${G} Distro already installed."${W}
+		sleep 1.5
 		exit 0
 	else
+		echo -e "\n${R} [${W}-${R}]${C} Installing Ubuntu rootfs..."${W}
 		proot-distro install ubuntu:26.04
 		termux-reload-settings
+		echo -e "\n${R} [${W}-${R}]${G} Ubuntu image successfully installed!"${W}
+		sleep 2
 	fi
-	
-	echo ""
-	echo -e "\n${R} [${W}-${R}]${C} Logging to Ubuntu"${W}
-	echo -e "\n${R} [${W}-${R}]${G} This may take sometime depending on your internet speed"${W}
-	proot-distro login ubuntu
 }
 
 sound() {
@@ -58,6 +62,7 @@ pacmd load-module module-aaudio-sink
 pulseaudio --start --exit-idle-time=-1
 pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1
 EOF
+	sleep 1.5
 }
 
 downloader(){
@@ -88,8 +93,7 @@ setup_vnc() {
 }
 
 permission() {
-	echo ""
-	echo -e "\n${R} [${W}-${R}]${C} Please wait..."${W}
+	echo -e "\n${R} [${W}-${R}]${C} Preparing user environment..."${W}
 	echo -e "\n${R} [${W}-${R}]${G} This process can take up to 2-5 Minutes"${W}
 	echo -e "\n${R} [${W}-${R}]${G} Depending on your internet speed"${W}
 	sleep 2
@@ -103,13 +107,24 @@ permission() {
 	chmod +x "$UBUNTU_DIR/root/user.sh"
 
 	setup_vnc
-	echo "$(getprop persist.sys.timezone)" > $UBUNTU_DIR/etc/timezone
+	[ -f /etc/timezone ] && cp -f /etc/timezone "$UBUNTU_DIR/etc/timezone" || true
 	echo "#!$PREFIX/bin/sh" > $PREFIX/bin/ubuntu
 	echo "exec proot-distro login ubuntu" >> $PREFIX/bin/ubuntu
 	chmod +x "$PREFIX/bin/ubuntu"
 	termux-reload-settings
 
+	echo -e "\n${R} [${W}-${R}]${C} Running user configuration script (user.sh)..."${W}
+	sleep 2
+
+	# Automatically run user.sh inside container
 	proot-distro login ubuntu --shared-tmp -- /bin/bash /root/user.sh
+
+	# Print completion messages AFTER user.sh finishes
+	sleep 1.5
+	echo -e "\n${R} [${W}-${R}]${G} Setup Successfully Completed!"${W}
+	sleep 1
+	echo -e "\n${R} [${W}-${R}]${G} Restart your Termux & Type ${C}ubuntu"${W}
+	echo -e "\n${R} [${W}-${R}]${G} Then Type ${C}sudo bash gui.sh "${W}\n
 }
 
 banner
