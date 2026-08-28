@@ -109,7 +109,7 @@ permission() {
 	chmod +x "$PREFIX/bin/ubuntu"
 	termux-reload-settings
 
-	proot-distro login ubuntu --shared-tmp -- /bin/bash /root/user.sh
+	#proot-distro login ubuntu --shared-tmp -- /bin/bash /root/user.sh
 }
 
 banner
