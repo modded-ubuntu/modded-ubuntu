@@ -1,4 +1,6 @@
 #!/bin/bash
+export DEBIAN_FRONTEND=noninteractive
+export TZ=Etc/UTC
 
 R="$(printf '\033[1;31m')"
 G="$(printf '\033[1;32m')"
@@ -45,7 +47,6 @@ note() {
 
 		 ${C}Enjoy :D${W}
 	EOF
->>>>>>> origin/master
 }
 
 package() {

@@ -17,10 +17,14 @@ banner() {
 }
 
 sudo() {
+    export DEBIAN_FRONTEND=noninteractive
+    export TZ=Etc/UTC
     echo -e "\n${R} [${W}-${R}]${C} Installing Sudo..."${W}
     apt update -y
     apt install sudo -y
+    ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
     apt install wget apt-utils locales-all dialog tzdata -y
+    dpkg-reconfigure -f noninteractive tzdata
     echo -e "\n${R} [${W}-${R}]${G} Sudo Successfully Installed !"${W}
 
 }
