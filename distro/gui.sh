@@ -47,7 +47,6 @@ note() {
 
 		 ${C}Enjoy :D${W}
 	EOF
->>>>>>> origin/master
 }
 
 package() {
