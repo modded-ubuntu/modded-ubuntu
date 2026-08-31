@@ -36,14 +36,10 @@
   - `cd modded-ubuntu`
   - `bash setup.sh`
 
-- Then Restart your Termux & Type the following commands
-
-   - `ubuntu`
-   - `bash user.sh`
 
 - Type your ubuntu root username. Must be lowercase & no space included.
 
-- Then Again Restart your Termux & Type the following commands
+- Then  Restart your Termux & Type the following commands
 
    - `ubuntu`
    - `sudo bash gui.sh`
