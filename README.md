@@ -1,98 +1,179 @@
+<div align="center">
+
+# 🐧 Modded Ubuntu for Termux
+
+### *Modern Ubuntu Desktop (XFCE4) environment for Android without root.*
+
 <p align="center">
-<img src="./distro/image.jpg">
+  <a href="#"><img src="https://img.shields.io/badge/Ubuntu-26.04%20LTS-E95420?style=for-the-badge&logo=ubuntu&logoColor=white" alt="Ubuntu 26.04 LTS" /></a>
+  <a href="#"><img src="https://img.shields.io/badge/Platform-Termux%20%7C%20Android-17B877?style=for-the-badge&logo=android&logoColor=white" alt="Termux" /></a>
+  <a href="#"><img src="https://img.shields.io/badge/Desktop-XFCE4-0099FF?style=for-the-badge&logo=xfce&logoColor=white" alt="XFCE4" /></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=for-the-badge" alt="License" /></a>
 </p>
+
 <p align="center">
-<img src="https://img.shields.io/badge/MADE%20IN-BANGLADESH-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge">
-<img src="https://img.shields.io/badge/Version-2.1-blue?style=for-the-badge">
+  <img src="./distro/image.jpg" alt="Preview" width="100%"/>
 </p>
+
 <p align="center">
-<img src="https://img.shields.io/badge/Written%20In-Bash-darkgreen?style=flat-square">
-<img src="https://img.shields.io/badge/Open%20Source-Yes-darkviolet?style=flat-square">
-<img src="https://img.shields.io/github/stars/modded-ubuntu/modded-ubuntu?style=flat-square">
-<img src="https://img.shields.io/github/issues/modded-ubuntu/modded-ubuntu?color=red&style=flat-square">
-<img src="https://img.shields.io/github/forks/modded-ubuntu/modded-ubuntu?color=teal&style=flat-square">
+  <a href="https://github.com/modded-ubuntu/modded-ubuntu/stargazers"><img src="https://img.shields.io/github/stars/modded-ubuntu/modded-ubuntu?style=flat-square&logo=github&color=gold" alt="Stars" /></a>
+  <a href="https://github.com/modded-ubuntu/modded-ubuntu/network/members"><img src="https://img.shields.io/github/forks/modded-ubuntu/modded-ubuntu?style=flat-square&logo=github&color=teal" alt="Forks" /></a>
+  <a href="https://github.com/modded-ubuntu/modded-ubuntu/issues"><img src="https://img.shields.io/github/issues/modded-ubuntu/modded-ubuntu?style=flat-square&color=red" alt="Issues" /></a>
+  <a href="https://github.com/modded-ubuntu/modded-ubuntu/pulls"><img src="https://img.shields.io/github/issues-pr/modded-ubuntu/modded-ubuntu?style=flat-square&color=orange" alt="PRs" /></a>
+  <a href="https://github.com/modded-ubuntu/modded-ubuntu/commits/master"><img src="https://img.shields.io/github/last-commit/modded-ubuntu/modded-ubuntu?style=flat-square&logo=git&color=informational" alt="Last Commit" /></a>
+  <a href="./CHANGELOG.md"><img src="https://img.shields.io/badge/Version-2.1.0-blue?style=flat-square" alt="2.1.0" /></a>
 </p>
-<p align="center"><b>Run Ubuntu GUI on your termux with much features.</b></p>
 
-### Features
+<p align="center">
+  <a href="#-features">Features</a> •
+  <a href="#-system-requirements">Requirements</a> •
+  <a href="#-installation">Installation</a> •
+  <a href="#-video-tutorial">Video Tutorial</a> •
+  <a href="#-contributors">Contributors</a> •
+  <a href="./CHANGELOG.md">Changelog</a>
+</p>
 
-- Fixed Audio Output
-- Lightweight {Requires at least 4GB Storage}
-- 2 Browsers (Chromium & Mozilla Firefox)
-- Supports Bangla Fonts
-- VLC Media Player and MPV media player
-- Visual Studio Code (buggy on arm )
-- Sublime Text Editor (only for arm64/aarch64)
-- Easy for Beginners
-- Comes with some cool themes.
+---
 
-### Installation
-- Firstly install [Termux](https://termux.com) apk from [HERE](https://f-droid.org/repo/com.termux_118.apk)
-- Secondly Clone the Repository & Run the setup File
+</div>
 
-  - `yes | pkg up`
-  - `pkg install git wget -y`
-  - `git clone --depth=1 https://github.com/modded-ubuntu/modded-ubuntu.git`
-  - `cd modded-ubuntu`
-  - `bash setup.sh`
+## 🌟 Features
+
+- 🔒 **No Root Required**
+- 🚀 **Latest Ubuntu 26.04**
+- ⚡ **Fully Automatic Setup**
+- 🌐 **Pre-patched Web Browsers**
+- 🔊 **Fixed Audio Output**
+- 🎨 **Beautiful Desktop Look**
+- 🖱️ **Lightweight & Modular**
+
+---
+
+## 📋 System Requirements
+
+| Requirement | Recommended Specification |
+|:---|:---|
+| **Operating System** | Android 7.0 (Nougat) or higher |
+| **Terminal App** | Termux *(v0.118+ from F-Droid or GitHub)* • [**F-Droid**](https://f-droid.org/en/packages/com.termux/) • [Github](https://github.com/termux/termux-app/releases/latest) |
+| **Available Storage** | At least **4 GB - 8 GB** free space |
+| **Architecture** | `aarch64` / `arm64` *(recommended)*, `armhf`, `x86_64` |
+| **VNC Client** | [**RealVNC Viewer**](https://play.google.com/store/apps/details?id=com.realvnc.viewer.android) or [AVNC](https://f-droid.org/packages/com.gaurav.avnc/) |
+
+---
+
+## ⚡ Installation
+
+> [!IMPORTANT]
+> Always install **Termux** from [F-Droid](https://f-droid.org/en/packages/com.termux/) or [GitHub Releases](https://github.com/termux/termux-app/releases/latest).
+
+### Step 1: Clone & Run Installer
+
+Open Termux and execute the following commands:
+
+```bash
+yes | pkg up
+
+pkg install git wget -y
+
+# Clone repository
+git clone --depth=1 https://github.com/modded-ubuntu/modded-ubuntu.git
+cd modded-ubuntu
+bash setup.sh
+```
+
+> [!NOTE]
+> During setup, you will be prompted to enter a **username** for your Ubuntu environment *(must be lowercase, no spaces)*.
+
+---
+
+### Step 2: Configure Desktop GUI
+
+After the base environment finishes installing, restart Termux and run:
+
+```bash
+ubuntu
+sudo bash gui.sh
+```
+
+> [!NOTE]
+> Follow the on-screen prompts to select your desired desktop components and **set your VNC password**.
+
+---
+
+## 🖥️ How to Connect
+
+### 1. Start the VNC Server
+
+Inside Ubuntu start the VNC server:
+
+```bash
+vncstart
+```
+
+To shut down the server:
+
+```bash
+vncstop
+```
+
+### 2. Connect via VNC Viewer
+
+1. Tap the **`+`** (Add) button.
+2. Configure the connection:
+   - **Address**: `localhost:1`
+   - **Name**: `Modded Ubuntu` (or anything you prefer)
+3. Set **Picture Quality** to **High**.
+4. Tap **Connect**, enter the password and enjoy your Linux desktop!
+
+---
+
+## 📹 Video Tutorial
+
+Need a step-by-step demonstration? Watch the video below:
+
+<div align="center">
+  <a href="https://mega.nz/embed/QvIC1TLQ#3z27MRNPwANAg6JTtx1Ei8kDouOZsZgk00bg4TsJMNQ!1m" target="_blank" rel="noopener noreferrer">
+    <img src="./distro/image1.jpg" alt="Tutorial" width="85%" />
+  </a>
+</div>
+
+---
+
+## 👥 Contributors
+
+A huge shoutout to everyone who has contributed to improving this project!
+
+<div align="center">
+  <a href="https://github.com/modded-ubuntu/modded-ubuntu/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=modded-ubuntu/modded-ubuntu" alt="Contributors" style="border-radius: 8px;" />
+  </a>
+</div>
 
 
-- Type your ubuntu root username. Must be lowercase & no space included.
-
-- Then  Restart your Termux & Type the following commands
-
-   - `ubuntu`
-   - `sudo bash gui.sh`
-
-- **You have to note your VNC password !!**
-
-- Ubuntu image is now successfully installed .
-
-  - Type `vncstart` to run Vncserver
-  - Type `vncstop` to stop Vncserver
-
-- Install VNC VIEWER Apk on your Device. [Google Play Store](https://play.google.com/store/apps/details?id=com.realvnc.viewer.android&hl=en)
-
-- Open VNC VIEWER & Click on + Button & Enter the Address `localhost:1` & Name anything you like
-- Set the Picture Quality to High for better Quality
-- Click on Connect & Input the Password 
-- Enjoy :D
-
-### NOTE :
-
-- **Type `ubuntu` to run Ubuntu CLI.**
-- **Type `vncstart` to run Vncserver**
-- **Type `vncstop` to stop Vncserver**
-
-- **Type `bash remove.sh` to remove Ubuntu Modded Os**
-
-### Video Tutorial : 
-
-[![Watch the Tutorial](./distro/image1.jpg)](https://mega.nz/embed/QvIC1TLQ#3z27MRNPwANAg6JTtx1Ei8kDouOZsZgk00bg4TsJMNQ!1m)
-
-#
-### Click to see the [Changelog](./CHANGELOG.md)
-Licensed under [Apache License](./LICENSE)
-#
-
-### Credits : 
+## 📄 Credits
 
 ```
-This Tool Uses the ubuntu image provided by the termux package `proot-distro` 
+This project utilizes the official Ubuntu rootfs distribution powered by Termux PRoot-Distro
 
-Full Credit of the Ubuntu image goes to them .
+All credit for base container distribution goes to the PRoot-Distro maintainers.
 
 Termux Proot Distro - https://github.com/termux/proot-distro
 ```
 
-### Maintainers
+### See the full [Changelog](./CHANGELOG.md) for version release notes.
 
-- [**Mustakim Ahmed**](https://github.com/BDhackers009)
-- [**Tahmid Rayat**](https://github.com/htr-tech)
-- [**0xBaryonyx**](https://github.com/Mahfuz-THBD)
+---
 
-## Contributers
+## Star History
 
-- [**Superchavo**](https://github.com/Superchavo)
+<a href="https://www.star-history.com/?repos=modded-ubuntu%2Fmodded-ubuntu&type=date&legend=top-left">
+ <picture>
+   <source srcset="https://api.star-history.com/chart?repos=modded-ubuntu/modded-ubuntu&type=date&theme=dark&legend=top-left" />
+   <source srcset="https://api.star-history.com/chart?repos=modded-ubuntu/modded-ubuntu&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=modded-ubuntu/modded-ubuntu&type=date&legend=top-left" />
+ </picture>
+</a>
 
-### If you like our work then dont forget to give a Star :)
+<div align="center">
+  <h4>⭐ If you find this project helpful, please consider giving it a star! ⭐</h4>
+</div>
