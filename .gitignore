@@ -1,1 +1,71 @@
+# ==========================================
+# Editors & IDEs
+# ==========================================
 .vscode/
+.vs/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.project
+.settings/
+.classpath
+*.swp
+*.swo
+*~
+*.bak
+*.orig
+*.rej
+
+# ==========================================
+# Operating System Files
+# ==========================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
+.Trash-*
+.fuse_hidden*
+
+# ==========================================
+# Shell, Logs & Runtime
+# ==========================================
+*.log
+*.pid
+*bash_history
+.bash_history
+.zsh_history
+wget-log*
+curl-log*
+
+# ==========================================
+# Termux & Container Testing Artifacts
+# ==========================================
+.config-done
+.sound
+rootfs/
+ubuntu-fs/
+*.tar.gz
+*.tar.xz
+*.tar.bz2
+
+# ==========================================
+# Sensitive & Environment Files
+# ==========================================
+.env
+.env.*
+*.key
+*.pem
