@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <img src="./distro/image.jpg" alt="Preview" width="100%"/>
+  <img src="https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu.github.io/refs/heads/master/img/1.png" alt="Preview" aspect width="100%"/>
 </p>
 
 <p align="center">
@@ -46,6 +46,12 @@
 - 🔊 **Fixed Audio Output**
 - 🎨 **Beautiful Desktop Look**
 - 🖱️ **Lightweight & Modular**
+
+
+  |Web Browsers|IDE|
+  |--|--|
+  |![firefox](https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu.github.io/refs/heads/master/img/3.png)|![vscode](https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu.github.io/refs/heads/master/img/5.png)|
+  |![chromium](https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu.github.io/refs/heads/master/img/2.png)|![sublime](https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu.github.io/refs/heads/master/img/4.png)|
 
 ---
 
