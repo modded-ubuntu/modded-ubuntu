@@ -138,8 +138,8 @@ vncstop
 Need a step-by-step demonstration? Watch the video below:
 
 <div align="center">
-  <a href="https://mega.nz/embed/QvIC1TLQ#3z27MRNPwANAg6JTtx1Ei8kDouOZsZgk00bg4TsJMNQ!1m" target="_blank" rel="noopener noreferrer">
-    <img src="./distro/image1.jpg" alt="Tutorial" width="85%" />
+  <a href="https://modded-ubuntu.github.io/#tutorial" target="_blank" rel="noopener noreferrer">
+    <img src="https://raw.githubusercontent.com/modded-ubuntu/modded-ubuntu.github.io/refs/heads/master/img/7.png" alt="Tutorial" width="85%" />
   </a>
 </div>
 
