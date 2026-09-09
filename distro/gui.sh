@@ -37,7 +37,7 @@ banner() {
     printf "\033[32m    |__| |__] |__| | \|  |  |__|    |  | |__| |__/ \033[0m\n"
     printf "\033[0m\n"
     printf "     \033[32mA modded gui version of ubuntu for Termux\033[0m\n"
-    printf "                 \033[33mVersion : \033[32m2.0\033[0m\n\n"
+    printf "                 \033[33mVersion : \033[32m2.1\033[0m\n\n"
 }
 
 package() {
@@ -112,7 +112,16 @@ install_softwares() {
 
 	EOF
 	read -n1 -p "${R} [${G}~${R}]${Y} Select an Option: ${G}" PLAYER_OPTION
-	{ banner; sleep 1; }
+	banner
+
+	echo -e "${G}Software selections saved.${W}"
+	echo -e "${Y}They will be installed after the required packages.${W}\n"
+	sleep 1
+}
+
+
+install_selected_softs() {
+	echo -e "${R} [${W}-${R}]${C} Installing Selected Software...${W}\n"
 
 	if [[ ${BROWSER_OPTION} == 1 ]] || [[ -z ${BROWSER_OPTION} ]]; then
 		run_script "firefox.sh"
@@ -150,6 +159,9 @@ install_softwares() {
 		echo -e "${Y} [!] Skipping Media Player Installation\n"
 		sleep 1
 	fi
+
+	echo -e "${R} [${W}-${R}]${G} Selected Software Installation Completed!${W}\n"
+	sleep 1
 }
 
 note() {
@@ -326,7 +338,8 @@ config() {
 # ----------------------------
 # turip, ip ip, turip ip ip ip, turip ip ip ip
 check_root
-package
 install_softwares
+package
+install_selected_softs
 config
 note
